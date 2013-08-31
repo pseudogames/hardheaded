@@ -2,6 +2,7 @@
 #define _HARDHEADED_H
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include "sprite.h"
 
 typedef enum {
   STATE_MENU,
@@ -18,25 +19,33 @@ typedef enum {
   CREDITS_SOUND
 } Credits;
 
-typedef struct { int x,y; } point;
-
 typedef struct {
-    point origin;
-    point frame_size;
-    int frame_count;
-    SDL_Surface *source;
-    point rotated_frame_size;
-    SDL_Surface *rotated;
-} Sprite;
+  SDL_Rect pos;
+  Action action;
+  float angle; // degree
+  float frame;
+  Sprite *sprite;
+} Body;
 
 typedef struct{
-  Sprite indy;
+  Sprite sprite;
+  Body body;
+} Player;
+
+typedef struct{
+  Player indy;
+  Player zombie;
+  Player head;
 } Board;
+
+typedef struct {
+  Board board;
+} Game;
 
 typedef struct {
   SDL_Surface *screen;
   AppState state;
-  Board board;
+  Game game;
 } App;
 
 typedef struct {

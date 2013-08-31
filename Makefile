@@ -11,6 +11,8 @@ else
   OUTPUT=hardheaded
 endif
 
+OBJS=hardheaded.o keyboard.o font.o sprite.o
+
 .PHONY: all clean depend
 
 all: depend $(OUTPUT)
@@ -20,11 +22,11 @@ clean:
 
 depend: .depend
 
-.depend: $(wildcard *.c)
+.depend: $(patsubst %.o,%.c,$(OBJS))
 	$(CC) $(CFLAGS) -MM $^ > .depend
 
 include .depend
 
-$(OUTPUT): hardheaded.o keyboard.o font.o
+$(OUTPUT): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 

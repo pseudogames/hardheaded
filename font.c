@@ -20,11 +20,11 @@ void terminate_font()
 	TTF_Quit();
 }
 
-TTF_Font *setup_ttf(int points){
+TTF_Font *setup_ttf(int points, char* font){
 	if(points >= TTF_POINT_LIMIT) return NULL;
     TTF_Font *ttf_tmp = ttf_point_cache[points];
 	if(ttf_tmp) return ttf_tmp;
-    ttf_point_cache[points] = ttf_tmp = TTF_OpenFont("data/indiana.ttf", points);
+    ttf_point_cache[points] = ttf_tmp = TTF_OpenFont(font, points);
 
     int renderstyle = TTF_STYLE_NORMAL;
     int outline = 0;
@@ -36,18 +36,23 @@ TTF_Font *setup_ttf(int points){
 
 void text_write(SDL_Surface *screen, int x, int y, char *message, int selected){
     SDL_Color color;
-    SDL_Color red = {0x00, 0XFF, 0x00};
+    SDL_Color red = {0xFF, 0X00, 0x00};
     SDL_Color white = {0xFF, 0XFF, 0xFF};
+	SDL_Color gold = {0xff, 0xd7, 0x00};
 
-    color = (selected) ? white : red;
+    color = (selected) ? gold : red;
 
-    text_write_raw(screen, x, y, message, color, 72);
+    text_write_raw_ttf(screen, x, y, message, color, 72, "data/drawing.ttf");
 }
 
 void text_write_raw(SDL_Surface *screen, int x, int y, char *message, SDL_Color color, int points) {
+	text_write_raw_ttf(screen, x, y ,message, color, points, "data/indiana.ttf");
+}
+
+void text_write_raw_ttf(SDL_Surface *screen, int x, int y, char *message, SDL_Color color, int points, char* font) {
     TTF_Font *tmp;
 
-    tmp = setup_ttf(points);
+    tmp = setup_ttf(points, font);
     SDL_Rect dstrect;
     SDL_Surface *text;
 
@@ -62,3 +67,4 @@ void text_write_raw(SDL_Surface *screen, int x, int y, char *message, SDL_Color 
 
     SDL_FreeSurface(text);
 }
+

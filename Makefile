@@ -5,7 +5,7 @@ ifdef WIN
   CC=i386-mingw32-gcc
   OUTPUT=hardheaded.exe
 else
-  CFLAGS=`sdl-config --cflags` -ggdb -pg
+  CFLAGS=`sdl-config --cflags` -Iincludes -ggdb -pg
   LIBS=`sdl-config --libs` -L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf -lm -pg
   CC=gcc
   OUTPUT=hardheaded
@@ -25,6 +25,6 @@ depend: .depend
 
 include .depend
 
-$(OUTPUT): hardheaded.o keyboard.o font.o
+$(OUTPUT): hardheaded.o keyboard.o font.o menu.o gameplay.o
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 

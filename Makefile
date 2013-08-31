@@ -5,8 +5,8 @@ ifdef WIN
   CC=i386-mingw32-gcc
   OUTPUT=hardheaded.exe
 else
-  CFLAGS=`sdl-config --cflags` -ggdb -pg
-  LIBS=`sdl-config --libs` -L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf -lm -pg
+  CFLAGS=`sdl-config --cflags` -DRELEASE # -ggdb -pg
+  LIBS=`sdl-config --libs` -L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf -lm # -pg
   CC=gcc
   OUTPUT=hardheaded
 endif
@@ -16,7 +16,7 @@ endif
 all: depend $(OUTPUT)
 
 clean:
-	rm -fv hardheaded hardheaded.exe *.o .depend
+	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out
 
 depend: .depend
 

@@ -18,9 +18,25 @@ typedef enum {
   CREDITS_SOUND
 } Credits;
 
+typedef struct { int x,y; } point;
+
+typedef struct {
+    point origin;
+    point frame_size;
+    int frame_count;
+    SDL_Surface *source;
+    point rotated_frame_size;
+    SDL_Surface *rotated;
+} Sprite;
+
+typedef struct{
+  Sprite indy;
+} Board;
+
 typedef struct {
   SDL_Surface *screen;
   AppState state;
+  Board board;
 } App;
 
 typedef struct {

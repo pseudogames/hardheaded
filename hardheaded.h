@@ -23,4 +23,8 @@ typedef struct {
   AppState state;
 } App;
 
+typedef struct {
+
+} Menu;
+
 #endif

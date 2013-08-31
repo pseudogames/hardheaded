@@ -23,7 +23,6 @@ int main(int argc, char* args[]) {
   memset(&app, 0, sizeof(app));
 
   renderInit(&app);
-  appInit(&app);
   init_font();
 
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0 ) return 1;

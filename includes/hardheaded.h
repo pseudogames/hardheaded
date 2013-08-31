@@ -42,12 +42,24 @@ typedef struct {
 typedef struct{
   Sprite sprite;
   Body body;
+  float life;
+  char* name;
 } Player;
 
 typedef struct{
+	SDL_Surface *full;
+	SDL_Surface *empty;
+	SDL_Surface *onequarter;
+	SDL_Surface *twoquarter;
+	SDL_Surface *threequarter;
+}Hearts;
+
+typedef struct{
   Player indy;
+  Player allan;
   Player zombie;
   Player head;
+  Hearts hearts;
 } Board;
 
 typedef struct {

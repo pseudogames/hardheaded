@@ -38,6 +38,18 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_ESCAPE:
 			app->state = STATE_PAUSED;
 			break;
+		case SDLK_i:
+			app->game.board.indy.life += 0.25;
+			break;
+		case SDLK_o:
+			app->game.board.indy.life -= 0.25;
+			break;
+		case SDLK_a:
+			app->game.board.allan.life += 0.25;
+			break;
+		case SDLK_s:
+			app->game.board.allan.life -= 0.25;
+			break;
 	}
 }
 

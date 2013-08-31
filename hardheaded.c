@@ -20,6 +20,11 @@ void renderInit(App *app){
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE);
   app->logo = IMG_Load("data/logo.png");
   app->menu.indiana = IMG_Load("data/goldhead.jpg");
+  app->game.board.hearts.full = IMG_Load("data/fullheart_small.png");
+  app->game.board.hearts.onequarter= IMG_Load("data/14heart_small.png");
+  app->game.board.hearts.twoquarter= IMG_Load("data/24heart_small.png");
+  app->game.board.hearts.threequarter= IMG_Load("data/34heart_small.png");
+  app->game.board.hearts.empty = IMG_Load("data/emptyheart_small.png");
 
   sprite_init(&app->game.board.indy.sprite, 
 	  0, 0, // origin
@@ -28,6 +33,7 @@ void renderInit(App *app){
   );
   app->game.board.indy.body.sprite = &app->game.board.indy.sprite;
   app->game.board.indy.body.pos.x = 100;
+  app->game.board.indy.body.pos.y = 600;
 
   sprite_init(&app->game.board.zombie.sprite, 
 	  0, 0, // origin
@@ -36,6 +42,7 @@ void renderInit(App *app){
   );
   app->game.board.zombie.body.sprite = &app->game.board.zombie.sprite;
   app->game.board.zombie.body.pos.x = 200;
+  app->game.board.zombie.body.pos.y = 600;
 
   sprite_init(&app->game.board.head.sprite, 
 	  0, 0, // origin
@@ -44,13 +51,18 @@ void renderInit(App *app){
   );
   app->game.board.head.body.sprite = &app->game.board.head.sprite;
   app->game.board.head.body.pos.x = 300;
+  app->game.board.head.body.pos.y = 600;
 
 }
 
 void appInit(App *app){
+  memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
-  memset(app, 0, sizeof(App));
+  app->game.board.indy.name = "Mr. Indy J.";
+  app->game.board.indy.life= 10.0;
+  app->game.board.allan.name = "Mr. Allan Q.";
+  app->game.board.allan.life= 10.0;
 }
 
 void sprite_demo(App *app, Body *body) {

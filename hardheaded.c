@@ -101,6 +101,8 @@ int main(int argc, char* args[]) {
 
   while(app.state != STATE_EXIT){
 	  Uint32 startTime = SDL_GetTicks();
+	  Uint32 color = SDL_MapRGB(app.screen->format, 0x40, 0x40, 0x40 );
+	  SDL_FillRect(app.screen, NULL , color);
 	  bindKeyboard(&app);
 
 	  switch(app.state){

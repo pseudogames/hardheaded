@@ -24,7 +24,7 @@ TTF_Font *setup_ttf(int points){
 	if(points >= TTF_POINT_LIMIT) return NULL;
     TTF_Font *ttf_tmp = ttf_point_cache[points];
 	if(ttf_tmp) return ttf_tmp;
-    ttf_point_cache[points] = ttf_tmp = TTF_OpenFont("data/pixelsix00.ttf", points);
+    ttf_point_cache[points] = ttf_tmp = TTF_OpenFont("data/indiana.ttf", points);
 
     int renderstyle = TTF_STYLE_NORMAL;
     int outline = 0;
@@ -35,7 +35,6 @@ TTF_Font *setup_ttf(int points){
 }
 
 void text_write(SDL_Surface *screen, int x, int y, char *message, int selected){
-
     SDL_Color color;
     SDL_Color red = {0x00, 0XFF, 0x00};
     SDL_Color white = {0xFF, 0XFF, 0xFF};

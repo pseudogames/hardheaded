@@ -42,7 +42,7 @@ void text_write(SDL_Surface *screen, int x, int y, char *message, int selected){
 
     color = (selected) ? gold : red;
 
-    text_write_raw_ttf(screen, x, y, message, color, 72, "data/drawing.ttf");
+    text_write_raw_ttf(screen, x, y, message, color, 72, "data/indiana.ttf");
 }
 
 void text_write_raw(SDL_Surface *screen, int x, int y, char *message, SDL_Color color, int points) {

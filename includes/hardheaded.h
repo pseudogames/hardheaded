@@ -19,6 +19,18 @@ typedef enum {
   CREDITS_SOUND
 } Credits;
 
+typedef enum {
+  MENU_RESUME = 0,
+  MENU_NEW_GAME,
+  MENU_EXIT,
+  MENU_COUNT
+} MenuItem;
+
+typedef struct {
+  MenuItem selected;
+  SDL_Surface *indiana;
+} Menu;
+
 typedef struct {
   SDL_Rect pos;
   Action action;
@@ -46,10 +58,8 @@ typedef struct {
   SDL_Surface *screen;
   AppState state;
   Game game;
+  Menu menu;
+  SDL_Surface *logo;
 } App;
-
-typedef struct {
-
-} Menu;
 
 #endif

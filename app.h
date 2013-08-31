@@ -69,7 +69,6 @@ typedef struct {
   int ammo_total;
   int score;
   int chance;
-  int build;
   int should_explode;
 } ItemType;
 
@@ -81,8 +80,28 @@ typedef struct {
   int y;
 } Item;
 
+typedef struct { int x,y; } point;
+
+typedef struct {
+    point origin;
+    point frame_size;
+    int frame_count;
+    SDL_Surface *source;
+    point rotated_frame_size;
+    SDL_Surface *rotated;
+} Sprite;
+
+typedef enum { 
+    ACTION_MOVE=0, 
+    ACTION_ATTACK, 
+    ACTION_DEATH, 
+    ACTION_COUNT
+} Action;
+
 typedef struct {
   SDL_Rect pos;
+  Action action;
+  int frame;
   float life;
   int ammo;
   Item item;
@@ -94,18 +113,15 @@ typedef struct {
   Mix_Chunk *onHitSound;
   int last_ai; // enemy=last pathfind; player=last time was reached
   int exploded;
+  Sprite *sprite;
 } Body;
 
 typedef struct{
   Body body;
-  SDL_Surface *left;
-  SDL_Surface *right;
-  SDL_Surface *up;
-  SDL_Surface *down;
 } Player;
 
 typedef struct{
-  SDL_Surface *image;
+  Sprite sprite;
   ItemType *type;
   float max_life;
   float vel;
@@ -113,7 +129,6 @@ typedef struct{
 
 typedef struct{
   Body body;
-  SDL_Surface *image;
   int pathfinder;
   int pathfinder_other;
   Body *target;
@@ -125,10 +140,10 @@ typedef struct {
 } Spawn;
 
 typedef struct {
-	SDL_Rect rect;
-	SDL_Rect srect;
+	SDL_Rect src;
+	SDL_Rect dst;
 	SDL_Surface *image;
-} Sprite;
+} Blit;
 
 typedef struct {
 	int x, y;
@@ -142,6 +157,10 @@ typedef struct {
 } Wave;
 
 typedef struct{
+  Sprite indy;
+  Sprite alan;
+  Sprite zombie;
+  Sprite head;
   SDL_Surface *base_image;
   SDL_Surface *base_hit;
   SDL_Surface *image;
@@ -156,14 +175,13 @@ typedef struct{
   int hittable[mapWidth][mapHeight];
   int powerup[mapWidth][mapHeight];
   int safearea[mapWidth][mapHeight];
-  int built[mapWidth][mapHeight];
   int death1[mapWidth][mapHeight];
   int death2[mapWidth][mapHeight];
   int spawn_map[mapWidth][mapHeight];
   Spawn spawn[mapWidth*mapHeight];
   int spawn_count;
-  Sprite sprite[SPRITE_COUNT];
-  int sprite_count;
+  Blit blit[SPRITE_COUNT];
+  int blit_count;
   Item powerups[POWERUP_COUNT];
   int zombie_memory1;
   int zombie_memory2;
@@ -192,8 +210,6 @@ typedef struct {
   EnemyClass enemy_class[ENEMY_TYPE_COUNT];
   int hint_pivot;
   int hint_grab;
-  int hint_give;
-  int hint_build;
 } Game;
 
 typedef enum {
@@ -221,7 +237,6 @@ typedef enum {
 	DEBUG_SHOT,
 	DEBUG_ITEM,
 	DEBUG_SAFE,
-	DEBUG_BUILT,
 	DEBUG_DEATH1,
 	DEBUG_DEATH2,
 	DEBUG_COUNT

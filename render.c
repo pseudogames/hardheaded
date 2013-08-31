@@ -10,6 +10,105 @@ SDL_Color white = {0xFF, 0XFF, 0xFF};
 SDL_Color green = {0x00, 0XFF, 0x00};
 SDL_Color yellow = {0xFF, 0XFF, 0x00};
 
+//// sprite
+
+void sprite_origin_rect(Sprite *sprite, Action action, int frame, SDL_Rect *rect)
+{
+    frame = frame % sprite->frame_count;
+    rect->x = sprite->origin.x + frame *sprite->frame_size.x;
+    rect->y = sprite->origin.y + action*sprite->frame_size.y;
+    rect->w = sprite->frame_size.x;
+    rect->h = sprite->frame_size.y;
+}
+
+#define ANGLE_STEP 30
+#define ZOOM 1
+
+void sprite_rotated_rect(Sprite *sprite, Action action, int frame, int angle, SDL_Rect *rect)
+{
+    frame = frame % sprite->frame_count;
+    int angle_index = ((int)(360+angle+ANGLE_STEP/2) % 360) / ANGLE_STEP;
+    rect->x = frame *sprite->rotated_frame_size.x;
+    rect->y = action*sprite->rotated_frame_size.y+
+        + sprite->rotated_frame_size.y*ACTION_COUNT*angle_index;
+    rect->w = sprite->rotated_frame_size.x;
+    rect->h = sprite->rotated_frame_size.y;
+}
+
+void sprite_gen_rotation(Sprite *sprite)
+{
+    rotozoomSurfaceSize(
+            sprite->frame_size.x,
+            sprite->frame_size.y,
+            45, // to maximize size
+            ZOOM,  // no zoom
+            &sprite->rotated_frame_size.x,
+            &sprite->rotated_frame_size.y
+            );
+
+    if(sprite->rotated)
+        SDL_FreeSurface(sprite->rotated);
+
+    sprite->rotated = SDL_CreateRGBSurface(SDL_HWSURFACE, 
+            sprite->rotated_frame_size.x * sprite->frame_count,
+            sprite->rotated_frame_size.y * ACTION_COUNT * 360/ANGLE_STEP,
+            RGBA_FORMAT);
+    if(sprite->rotated == NULL) {
+        fprintf(stderr, "CreateRGBSurface failed: %s\n", SDL_GetError());
+        exit(1);
+    }
+    //printf("cache size %dx%d for %d angles\n", sprite->rotated->w, sprite->rotated->h, 360/ANGLE_STEP);
+
+    SDL_Surface *element = SDL_CreateRGBSurface(SDL_HWSURFACE, 
+            sprite->frame_size.x, 
+            sprite->frame_size.y,
+            RGBA_FORMAT);
+
+    SDL_SetAlpha(sprite->source,0,0xff);
+    SDL_SetAlpha(element,0,0xff);
+    SDL_SetAlpha(sprite->rotated,SDL_SRCALPHA,0xff);
+
+    int frame, action, angle;
+    for(action=0; action<ACTION_COUNT; action++) {
+        for(frame=0; frame<sprite->frame_count; frame++) {
+            SDL_Rect src;
+            sprite_origin_rect(sprite, action, frame, &src);
+            for(angle=0; angle<360; angle+=ANGLE_STEP) {
+                SDL_Rect dst;
+                sprite_rotated_rect(sprite, action, frame, angle, &dst);
+                SDL_FillRect(element, NULL, 0x00000000);
+                SDL_BlitSurface( sprite->source, &src, element, NULL );
+                SDL_Surface *rotozoom = rotozoomSurface(element, angle, ZOOM, SMOOTHING_ON);
+                SDL_SetAlpha(rotozoom,0,0);
+                SDL_SetColorKey(rotozoom,0,0);
+                dst.x += dst.w/2 - rotozoom->w/2;
+                dst.y += dst.h/2 - rotozoom->h/2; // center
+                SDL_BlitSurface(rotozoom, NULL, sprite->rotated, &dst );
+                SDL_FreeSurface(rotozoom);
+            }
+        }
+    }
+
+    SDL_FreeSurface(element);
+}
+
+void sprite_init(Sprite *sprite, int ox, int oy, int fx, int fy, int c, char *filename)
+{
+    memset(sprite,0,sizeof(Sprite));
+    sprite->origin.x = ox;
+    sprite->origin.y = oy;
+    sprite->frame_size.x = fx;
+    sprite->frame_size.y = fy;
+    sprite->frame_count = c;
+    sprite->source = IMG_Load( filename );
+    sprite->rotated = NULL;
+    sprite_gen_rotation(sprite);
+}
+
+
+//// end sprite
+
+
 void renderStats(App *app, SDL_Surface *screen, Player *player1, Player *player2){
  int t = SDL_GetTicks();
   if(player1->body.status != BODY_DEAD){
@@ -63,124 +162,54 @@ void renderStats(App *app, SDL_Surface *screen, Player *player1, Player *player2
 	}
 }
 
-void renderPlayer(Game *game, Player *player){
-	if(player->body.status != BODY_ALIVE) return;
-	int a = player->body.angle;
-	SDL_Surface *image;
-	if(a >= 315 || a < 45) image = player->right;
-	else if(a >= 45 && a < 135) image = player->up;
-	else if(a >= 135 && a < 225) image = player->left;
-	else if(a >= 225 && a < 315) image = player->down;
-	else return;
-	SDL_Rect rect = {
-		player->body.pos.x - image->w/2,
-		player->body.pos.y - image->h*3/4,
-		player->body.pos.w,
-		player->body.pos.h
-	};
-	int j = game->board.sprite_count++;
-	game->board.sprite[j].image = image;
-	game->board.sprite[j].rect = rect;
+void renderBody(Game *game, Body *body){
+	if(body->status != BODY_ALIVE) return;
 
-	rect.y++;
-	rect.x+=image->w/2;
-	j = game->board.sprite_count++;
-	game->board.sprite[j].image = player->body.item.type->image;
-	// printf("item %p\n", player->body.item.type);
-	game->board.sprite[j].rect = rect;
+	int j = game->board.blit_count++;
+	game->board.blit[j].image = body->sprite->image;
+	
+    sprite_rotated_rect(
+		body->sprite, 
+		body->action, 
+		body->frame,
+		body->angle,
+		&game->board.blit[j].src);
+
+	int w = game->board.blit[j].src.w;
+	int h = game->board.blit[j].src.h;
+
+	SDL_Rect dst = {
+		body->pos.x - w/2,
+		body->pos.y - h*3/4,
+		w, h
+	};
+
+	game->board.blit[j].dst = dst;
 }
 
 void renderEnemies(App *app)
 {
-  int i = 0;
-  for(; i < ENEMY_COUNT; i++)
-  {
-    if(app->game.enemies[i].body.status == BODY_ALIVE)
-    {
-      Enemy *enemy = &app->game.enemies[i];
-      SDL_Surface *image = enemy->image;
-      SDL_Rect rect = {
-        enemy->body.pos.x - image->w/2,
-        enemy->body.pos.y - image->h*3/4,
-        enemy->body.pos.w,
-        enemy->body.pos.h
-      };
-	  int j = app->game.board.sprite_count++;
-	  app->game.board.sprite[j].image = image;
-	  app->game.board.sprite[j].rect = rect;
-    }
+  int i;
+  for(i = 0; i < ENEMY_COUNT; i++) {
+    renderBody(game, &app->game.enemies[i].body);
   }
 }
 
-int sprite_zsort(const void *a, const void *b)
+int blit_zsort(const void *a, const void *b)
 {
-	Sprite *aa = (Sprite *)a;
-	Sprite *bb = (Sprite *)b;
+	Blit *aa = (Blit *)a;
+	Blit *bb = (Blit *)b;
 	return aa->rect.y - bb->rect.y;
 }
 
 void flushRender(App *app)
 {
 	int i;
-	qsort(app->game.board.sprite, app->game.board.sprite_count, sizeof(Sprite), sprite_zsort);
+	qsort(app->game.board.blit, app->game.board.blit_count, sizeof(Blit), blit_zsort);
 
-	for(i=0; i< app->game.board.sprite_count; i++) {
-		SDL_BlitSurface(app->game.board.sprite[i].image, NULL, app->screen, &app->game.board.sprite[i].rect);
+	for(i=0; i< app->game.board.blit_count; i++) {
+		SDL_BlitSurface(app->game.board.blit[i].image, &app->game.board.blit[i].src, app->screen, &app->game.board.blit[i].dst);
 	}
-}
-
-void renderPowerups(App *app)
-{
-  int i = 0;
-  int t = SDL_GetTicks();
-  for(; i < POWERUP_COUNT; i++)
-  {
-    if(app->game.board.powerups[i].should_show == 1)
-    {
-      SDL_Rect rect = {
-        app->game.board.powerups[i].x-app->game.board.powerups[i].type->image->w/2,
-        app->game.board.powerups[i].y-app->game.board.powerups[i].type->image->h/2,
-        app->game.board.powerups[i].type->image->w,
-        app->game.board.powerups[i].type->image->h
-      };
-      int j = app->game.board.sprite_count++;
-      app->game.board.sprite[j].image = app->game.board.powerups[i].type->image;
-      app->game.board.sprite[j].rect = rect;
-	  if(t < app->game.hint_grab) {
-		  text_write_raw(app->screen, rect.x-80, rect.y+30, "button2 to pickup!!", (t/300) % 2 ? yellow : red, 20);
-	  }
-    }
-  }
-
-}
-
-void renderBuilt(App *app)
-{
-	int x,y;
-	for (x=0; x < mapWidth;x++) {
-		for (y=0; y < mapHeight;y++) {
-			int f = app->game.board.built[x][y];
-			if(f)
-			{
-				int h = ceil(f * tileSize / (float)BUILD_LIMIT);
-				SDL_Rect srect = {
-					0,
-					tileSize-h,
-					tileSize,
-					h
-				};
-				SDL_Rect drect = {
-					x*tileSize,
-					y*tileSize-h+tileSize*1.5,
-					tileSize,
-					h
-				};
-				//printf("wall %d %d %d\n" , h, srect.y, srect.h);
-				SDL_BlitSurface(app->game.itemtype[ITEM_BUILD].hit_image, &srect, app->screen, &drect);
-			}
-		}
-	}
-
 }
 
 void renderDebug(App *app)
@@ -219,10 +248,6 @@ void renderDebug(App *app)
 		case DEBUG_SAFE: // cyan
 			color = SDL_MapRGBA(app->screen->format, 0x00,0xff,0xff,0xff );
 			map = (int *)app->game.board.safearea;
-			break;
-		case DEBUG_BUILT: // gray
-			color = SDL_MapRGBA(app->screen->format, 0x80,0x80,0x80,0xff );
-			map = (int *)app->game.board.built;
 			break;
 		case DEBUG_DEATH1: // dark red
 			color = SDL_MapRGBA(app->screen->format, 0x80,0x00,0x00,0xff );
@@ -275,7 +300,7 @@ void renderDebug(App *app)
 
 
 void renderStart(App *app){
-  app->game.board.sprite_count = 0;
+  app->game.board.blit_count = 0;
   Uint32 color = SDL_MapRGB(app->screen->format, 33, 33,33 );
 
   Game game = app->game;
@@ -292,7 +317,6 @@ void renderStart(App *app){
   SDL_BlitSurface(app->game.board.image, NULL, app->screen, NULL);
 
   renderDebug(app);
-  renderBuilt(app);
 
 }
 
@@ -300,21 +324,15 @@ void renderFinish(App *app){
   Game game = app->game;
   int t = SDL_GetTicks();
 
-  renderPlayer(&app->game, &game.player1);
+  renderBody(&app->game, &game.player1.body);
+
   if(t < app->game.hint_pivot) {
 		Player *player = app->game.player1.body.status==BODY_ALIVE ? &app->game.player1 : &app->game.player2;
 	  text_write_raw(app->screen, player->body.pos.x-60, player->body.pos.y+20, "button2 to aim!!", (t/300) % 2 ? yellow : red, 20);
   }
-  if(t < app->game.hint_give) {
-	  text_write_raw(app->screen, app->game.player1.body.pos.x-100, app->game.player1.body.pos.y-80, "button2 to give to soldier!!", (t/300) % 2 ? yellow : red, 20);
-  }
-  if(t < app->game.hint_build) {
-	  text_write_raw(app->screen, app->game.player2.body.pos.x-100, app->game.player2.body.pos.y-80, "button1 to build wall!!", (t/300) % 2 ? yellow : red, 20);
-  }
-  renderPlayer(&app->game, &game.player2);
+
+  renderBody(&app->game, &game.player2.body);
   renderEnemies(app);
-  renderPowerups(app);
-  //SDL_UpdateRect(app->screen, 0, 0, 0, 0);
 
   flushRender(app);
   renderStats(app, app->screen, &game.player1, &game.player2);
@@ -323,20 +341,39 @@ void renderFinish(App *app){
 }
 
 void renderInit(App *app){
+
+    sprite_init(&app.game.board.indy, 
+            0, 0, // origin
+            64, 64, 8, // frame size and count
+            "indy.png" // source
+		);
+
+    sprite_init(&app.game.board.alan, 
+            0, 0, // origin
+            64, 64, 8, // frame size and count
+            "alan.png" // source
+		);
+
+    sprite_init(&app.game.board.zombie, 
+            0, 0, // origin
+            64, 64, 8, // frame size and count
+            "zombie.png" // source
+		);
+
+    sprite_init(&app.game.board.head, 
+            0, 0, // origin
+            64, 64, 8, // frame size and count
+            "head.png" // source
+		);
+
+
+
   app->logo = IMG_Load("data/logo.png");
   app->menu.soldier = IMG_Load("data/soldado1_grande.png");
   app->menu.bigZombie = IMG_Load("data/zombie2_grande.png");
   app->menu.keyBinds = IMG_Load("data/keyboard-layout.png");
   app->menu.zombie = IMG_Load("data/zombie1.png");
   app->menu.engineer = IMG_Load("data/engenheiro1.png");
-  app->game.player1.up = IMG_Load("data/soldado1_costas.png");
-  app->game.player1.down = IMG_Load("data/soldado1.png");
-  app->game.player1.left = IMG_Load("data/soldado1.png");
-  app->game.player1.right = IMG_Load("data/soldado1_costas.png");
-  app->game.player2.up = IMG_Load("data/engenheiro1.png");
-  app->game.player2.down = IMG_Load("data/engenheiro1.png");
-  app->game.player2.left = IMG_Load("data/engenheiro1.png");
-  app->game.player2.right = IMG_Load("data/engenheiro1.png");
 
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE
 #if RELEASE
@@ -352,14 +389,6 @@ void renderTerminate(App *app){
 	SDL_FreeSurface(app->menu.keyBinds);
 	SDL_FreeSurface(app->menu.zombie);
 	SDL_FreeSurface(app->menu.engineer);
-	SDL_FreeSurface(app->game.player1.up);
-	SDL_FreeSurface(app->game.player1.down);
-	SDL_FreeSurface(app->game.player1.left);
-	SDL_FreeSurface(app->game.player1.right);
-	SDL_FreeSurface(app->game.player2.up);
-	SDL_FreeSurface(app->game.player2.down);
-	SDL_FreeSurface(app->game.player2.left);
-	SDL_FreeSurface(app->game.player2.right);
 
 }
 

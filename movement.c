@@ -62,7 +62,6 @@ void movePrepare(App *app)
 		memset(death2a, 0, sizeof(death2a));
 		app->game.board.zombie_memory2 = t;
 	}
-	int hit_built = rand()%2;
 	int death2_max = 0;
 	for (x=0; x < mapWidth;x++) {
 		for (y=0; y < mapHeight;y++) {
@@ -102,12 +101,9 @@ void movePrepare(App *app)
 			}
 			int d1 = app->game.board.death1[x][y];
 			float d2 = app->game.board.death2[x][y]/(float)death2_max;
-			float b = app->game.board.built[x][y]/(float)BUILD_LIMIT;
 			int bb = !!b;
 			if(app->game.board.crowd[x][y] < bb)
 				app->game.board.crowd[x][y] = bb;
-			if(hit_built && app->game.board.hittable[x][y] < bb)
-				app->game.board.hittable[x][y] = bb;
 			int cost = mapWidth*(2*b + d1/100. + 2*d2);
 			if(walkability[x][y] != 1 && cost > 0) {
 				walkability[x][y] = 1+cost;
@@ -183,11 +179,6 @@ inline int is_solid(Game *game, Body *body, int x, int y)
 		return 1;
 	if(body->pos.x/tileSize == x && body->pos.y/tileSize == y)
 		return 0;
-	if(game->board.built[x][y]>0) {
-		game->board.built[x][y]--;
-		if(game->board.built[x][y]<0) 
-			game->board.built[x][y]=0;
-	}
 	return game->board.crowd[x][y];
 }
 inline int is_empty(Game *game, Body *body, int x, int y)

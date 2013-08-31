@@ -1,8 +1,8 @@
 #include <SDL_ttf.h>
 
-#define DEFAULT_PTSIZE18
+#define DEFAULT_PTSIZE 18
 #define DEFAULT_TEXT "The quick brown fox jumped over the lazy dog"
-#define NUM_COLORS      256
+#define NUM_COLORS 256
 
 
 TTF_Font *ttf_adler_font;

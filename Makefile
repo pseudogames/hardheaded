@@ -25,6 +25,6 @@ depend: .depend
 
 include .depend
 
-$(OUTPUT): hardheaded.o render.o font.o movement.o aStarLibrary.o sound.o
+$(OUTPUT): hardheaded.o keyboard.o font.o
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 

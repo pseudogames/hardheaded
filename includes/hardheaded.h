@@ -4,6 +4,9 @@
 #include <SDL_mixer.h>
 #include "sprite.h"
 
+#define ENEMY_COUNT 1000
+#include "aStarLibrary.h" // must be after the defines above
+
 typedef enum {
   STATE_MENU,
   STATE_PAUSED,
@@ -57,19 +60,49 @@ typedef struct{
 }Hearts;
 
 typedef struct{
-  Player indy;
-  Player allan;
-  Player zombie;
-  Player head;
-  Hearts hearts;
+  Body body;
+  int pathfinder;
+  int pathfinder_other;
+  Body *target;
+  int alive;
+} Enemy;
+
+typedef struct{
+  SDL_Surface *image;
+  SDL_Surface *hit;
+
+  Enemy enemies[ENEMY_COUNT];
+
+  int wave_count;
+  int wave_index;
+  int wave_start;
+
+  int wall[mapWidth][mapHeight];
+  int air[mapWidth][mapHeight];
+  int crowd[mapWidth][mapHeight];
+  int hittable[mapWidth][mapHeight];
+
+  int spawn_map[mapWidth][mapHeight];
+  point spawn[mapWidth*mapHeight];
+  int spawn_count;
+
+  int death1[mapWidth][mapHeight];
+  int death2[mapWidth][mapHeight];
+  int zombie_memory1;
+  int zombie_memory2;
 } Board;
 
 typedef struct {
   Board board;
+  Player indy;
+  Player allan;
+  Player head;
 } Game;
 
 typedef struct {
   SDL_Surface *screen;
+  Sprite zombie;
+  Hearts hearts;
   AppState state;
   Game game;
   Menu menu;

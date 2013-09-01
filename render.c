@@ -54,54 +54,51 @@ void renderInit(App *app){
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
   app->logo = IMG_Load("data/logo.png");
 //  app->menu.indiana = IMG_Load("data/goldhead.jpg");
-  app->game.board.hearts.full = IMG_Load("data/fullheart_small.png");
-  app->game.board.hearts.onequarter= IMG_Load("data/14heart_small.png");
-  app->game.board.hearts.twoquarter= IMG_Load("data/24heart_small.png");
-  app->game.board.hearts.threequarter= IMG_Load("data/34heart_small.png");
-  app->game.board.hearts.empty = IMG_Load("data/emptyheart_small.png");
+  app->hearts.full = IMG_Load("data/fullheart_small.png");
+  app->hearts.onequarter= IMG_Load("data/14heart_small.png");
+  app->hearts.twoquarter= IMG_Load("data/24heart_small.png");
+  app->hearts.threequarter= IMG_Load("data/34heart_small.png");
+  app->hearts.empty = IMG_Load("data/emptyheart_small.png");
 
-  sprite_init(&app->game.board.indy.sprite, 
+  sprite_init(&app->game.indy.sprite, 
 	  0, 0, // origin
 	  32, 96, 4, // frame size and count
 	  "data/indy.png" // source
   );
-  app->game.board.indy.body.sprite = &app->game.board.indy.sprite;
-  app->game.board.indy.body.pos.x = 200;
-  app->game.board.indy.body.pos.y = 400;
+  app->game.indy.body.sprite = &app->game.indy.sprite;
+  app->game.indy.body.pos.x = 200;
+  app->game.indy.body.pos.y = 400;
 
-  sprite_init(&app->game.board.allan.sprite, 
+  sprite_init(&app->game.allan.sprite, 
 	  0, 0, // origin
 	  32, 96, 4, // frame size and count
 	  "data/allan.png" // source
   );
-  app->game.board.allan.body.sprite = &app->game.board.allan.sprite;
-  app->game.board.allan.body.pos.x = 400;
-  app->game.board.allan.body.pos.y = 400;
+  app->game.allan.body.sprite = &app->game.allan.sprite;
+  app->game.allan.body.pos.x = 400;
+  app->game.allan.body.pos.y = 400;
 
-
-  sprite_init(&app->game.board.zombie.sprite, 
+  sprite_init(&app->zombie, 
 	  0, 0, // origin
 	  32, 32, 3, // frame size and count
 	  "data/zombie.png" // source
   );
-  app->game.board.zombie.body.sprite = &app->game.board.zombie.sprite;
-  app->game.board.zombie.body.pos.x = 200;
-  app->game.board.zombie.body.pos.y = 600;
 
-  sprite_init(&app->game.board.head.sprite, 
+  sprite_init(&app->game.head.sprite, 
 	  0, 0, // origin
 	  32, 32, 3, // frame size and count
 	  "data/head.png" // source
   );
-  app->game.board.head.body.sprite = &app->game.board.head.sprite;
-  app->game.board.head.body.pos.x = 300;
-  app->game.board.head.body.pos.y = 600;
+  app->game.head.body.sprite = &app->game.head.sprite;
+  app->game.head.body.pos.x = 300;
+  app->game.head.body.pos.y = 600;
 }
 
 void renderTerminate(App *app){
+	  SDL_Flip(app->screen);
 }
 
-void renderPlayerLife(SDL_Surface *screen, Board *board, Player *player, int playerOffset){
+void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerOffset){
 	SDL_Color yellow = {0xFF, 0XFF, 0x00};
 	int i;
 	int ipart = (int) player->life; 
@@ -113,18 +110,18 @@ void renderPlayerLife(SDL_Surface *screen, Board *board, Player *player, int pla
 
 		if(i < player->life){
 			if(i < ipart ){
-				SDL_BlitSurface(board->hearts.full, NULL, screen, &heartpos);
+				SDL_BlitSurface(app->hearts.full, NULL, screen, &heartpos);
 			} else if(fpart <= 0.25){
-				SDL_BlitSurface(board->hearts.onequarter, NULL, screen, &heartpos);
+				SDL_BlitSurface(app->hearts.onequarter, NULL, screen, &heartpos);
 			} else if (fpart <= 0.5){
-				SDL_BlitSurface(board->hearts.twoquarter, NULL, screen, &heartpos);
+				SDL_BlitSurface(app->hearts.twoquarter, NULL, screen, &heartpos);
 			} else if(fpart <= 0.75){
-				SDL_BlitSurface(board->hearts.threequarter, NULL, screen, &heartpos);
+				SDL_BlitSurface(app->hearts.threequarter, NULL, screen, &heartpos);
 			} else {
-				SDL_BlitSurface(board->hearts.full, NULL, screen, &heartpos);
+				SDL_BlitSurface(app->hearts.full, NULL, screen, &heartpos);
 			}
 		} else {
-			SDL_BlitSurface(board->hearts.empty, NULL, screen, &heartpos);
+			SDL_BlitSurface(app->hearts.empty, NULL, screen, &heartpos);
 		}
 	}
 }

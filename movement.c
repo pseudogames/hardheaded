@@ -84,3 +84,159 @@ void player_move(App *app, Body *body, int up, int right, int down, int left, in
         body_move(&app->game, body, angle, !halt);
     }
 }
+
+
+/////
+
+void movePrepare(App *app)
+{
+	int i, x,y;
+	memcpy(walkability, app->game.board.wall, sizeof(app->game.board.wall)); // 1 = totaly unwalkable
+	memcpy(app->game.board.crowd, app->game.board.wall, sizeof(app->game.board.wall));
+	memcpy(app->game.board.hittable, app->game.board.air, sizeof(app->game.board.air));
+
+	for(i=0; i < app->game.board.spawn_count; i++)
+	{
+		int x = app->game.board.spawn[i].x;
+		int y = app->game.board.spawn[i].y;
+		walkability[x][y] = 0; // totally walkable
+	}
+
+	{
+		int x = app->game.indy.body.pos.x/tileSize;
+		int y = app->game.indy.body.pos.y/tileSize;
+		app->game.board.crowd[x][y] = 2;
+	}
+
+	{
+		int x = app->game.allan.body.pos.x/tileSize;
+		int y = app->game.allan.body.pos.y/tileSize;
+		app->game.board.crowd[x][y] = 3;
+	}
+
+	for(i=0; i < ENEMY_COUNT; i++)
+	{
+		if(app->game.board.enemies[i].alive)
+		{
+			int x = app->game.board.enemies[i].body.pos.x/tileSize;
+			int y = app->game.board.enemies[i].body.pos.y/tileSize;
+			app->game.board.crowd[x][y] = 4+i;
+			app->game.board.hittable[x][y] = 4+i;
+			walkability[x][y] = 2+mapWidth/4;
+		}
+	}
+
+	int t = SDL_GetTicks();
+	int flush1 = t > app->game.board.zombie_memory1 + ZOMBIE_MEMORY1_FLUSH;
+	int flush2 = t > app->game.board.zombie_memory2 + ZOMBIE_MEMORY2_FLUSH;
+	int death1a[mapWidth][mapHeight];
+	int death2a[mapWidth][mapHeight];
+	if(flush1) {
+		memset(death1a, 0, sizeof(death1a));
+		app->game.board.zombie_memory1 = t;
+	}
+	if(flush2) {
+		memset(death2a, 0, sizeof(death2a));
+		app->game.board.zombie_memory2 = t;
+	}
+	int death2_max = 0;
+	for (x=0; x < mapWidth;x++) {
+		for (y=0; y < mapHeight;y++) {
+			if(death2_max < app->game.board.death2[x][y])
+				death2_max = app->game.board.death2[x][y];
+		}
+	}
+	for (x=0; x < mapWidth;x++) {
+		for (y=0; y < mapHeight;y++) {
+			if(flush1||flush2) {
+				int xx, yy;
+				int xx0 = x-1 > 0 ? x-1 : 0;
+				int xx1 = x+1 < mapWidth ? x+1 : mapWidth-1;
+				int yy0 = y-1 > 0 ? y-1 : 0;
+				int yy1 = y+1 < mapHeight ? y+1 : mapHeight-1;
+
+				if(flush1) {
+					for (xx=xx0; xx<=xx1; xx++) {
+						for (yy=yy0; yy<=yy1; yy++) {
+							death1a[x][y] 
+								+= app->game.board.death1[xx][yy] * (x==xx&&y==yy ? 600 : 100);
+						}
+					}
+					death1a[x][y] /= 1410;
+				}
+
+				if(flush2) {
+					for (xx=xx0; xx<=xx1; xx++) {
+						for (yy=yy0; yy<=yy1; yy++) {
+							death2a[x][y] 
+								+= app->game.board.death2[xx][yy] * (x==xx&&y==yy ? 200 : 100);
+						}
+					}
+					death2a[x][y] /= 1000;
+				}
+
+			}
+			int d1 = app->game.board.death1[x][y];
+			float d2 = app->game.board.death2[x][y]/(float)death2_max;
+			int cost = mapWidth*(d1/100. + 2*d2);
+			if(walkability[x][y] != 1 && cost > 0) {
+				walkability[x][y] = 1+cost;
+			}
+		}
+	}
+	if(flush1) {
+		memcpy(app->game.board.death1, death1a, sizeof(death1a));
+	}
+	if(flush2) {
+		memcpy(app->game.board.death2, death2a, sizeof(death2a));
+	}
+}
+
+
+void moveInit(App *app)
+{
+	int x,y;
+	SDL_Surface *hit = app->game.board.hit;
+	memset(app->game.board.wall, 0, sizeof(app->game.board.wall));
+	memset(app->game.board.air, 0, sizeof(app->game.board.air));
+	memset(app->game.board.spawn_map, 0, sizeof(app->game.board.spawn_map));
+	app->game.board.spawn_count = 0;
+	for (x=0; x < mapWidth;x++) {
+		for (y=0; y < mapHeight;y++) {
+			Uint32 *p = (Uint32*)( ((Uint8*)hit->pixels) + (x*hit->format->BytesPerPixel+y*hit->pitch) );
+			Uint8 r,g,b;
+			SDL_GetRGB(*p, hit->format, &r, &g, &b);
+			int threshold = 0x40;
+			int walk = b+g>r+threshold;
+			int fly = r+g+b>threshold;
+			int safe = g>r+b+threshold;
+			int p1 = g<r+b-threshold;
+			int p2 = r>g+b-threshold;
+			int head = b<r+g-threshold;
+			app->game.board.wall[x][y] = !walk;
+			app->game.board.air[x][y] = !fly;
+			if(safe) {
+				app->game.board.spawn_map[x][y]=1;
+				app->game.board.spawn[app->game.board.spawn_count].x = x;
+				app->game.board.spawn[app->game.board.spawn_count].y = y;
+				app->game.board.spawn_count++;
+			}
+			if(p1) {
+				app->game.indy.body.pos.x = x;
+				app->game.indy.body.pos.y = y;
+			}
+			if(p2) {
+				app->game.allan.body.pos.x = x;
+				app->game.allan.body.pos.y = y;
+			}
+			if(head) {
+				app->game.head.body.pos.x = x;
+				app->game.head.body.pos.y = y;
+			}
+		}
+	}
+	movePrepare(app);
+}
+
+
+

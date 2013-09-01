@@ -5,7 +5,7 @@ void bindGameplayKeystate(App *app){
   Uint8 *keystate;
   keystate = SDL_GetKeyState(NULL);
 
-  player_move(app, &app->game.board.indy.body,
+  player_move(app, &app->game.indy.body,
 	  keystate[SDLK_w],
 	  keystate[SDLK_d],
 	  keystate[SDLK_s],
@@ -14,7 +14,7 @@ void bindGameplayKeystate(App *app){
   );
 
 
-  player_move(app, &app->game.board.allan.body,
+  player_move(app, &app->game.allan.body,
 	  keystate[SDLK_UP],
 	  keystate[SDLK_RIGHT],
 	  keystate[SDLK_DOWN],
@@ -61,16 +61,16 @@ void bindGameplayKeys(App *app, SDLKey *key){
 			app->state = STATE_PAUSED;
 			break;
 		case SDLK_SPACE:
-			playerAttack(app, &app->game.board.indy);
+			playerAttack(app, &app->game.indy);
 			break;
 		case SDLK_p:
-			playerDie(app, &app->game.board.indy);
+			playerDie(app, &app->game.indy);
 			break;
 		case SDLK_RCTRL:
-			playerAttack(app, &app->game.board.allan);
+			playerAttack(app, &app->game.allan);
 			break;
 		case SDLK_l:
-			playerDie(app, &app->game.board.allan);
+			playerDie(app, &app->game.allan);
 			break;
 	}
 }

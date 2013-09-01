@@ -126,21 +126,21 @@ void renderPlayer(App *app, Player *player){
 		|| player->special_attack > 7){
 
 		player->power_body.frame += player->special_attack / 100.;
-		player->power_body.vel = 5;
+		player->power_body.vel = 39;
 
 
 		if(player->power_body.action == ACTION_ATTACK && player->special_attack < 98){
 			float a = player->power_body.angle * M_PI / 180;
-			float dx = cos(a) * 39;
-			float dy = sin(a) * 39;
+			float dx = cos(a) * player->power_body.vel;
+			float dy = sin(a) * player->power_body.vel;
 			float tx = player->power_body.pos.x + dx;
 			float ty = player->power_body.pos.y - dy;
 
 			player->power_body.frame ++;
 
-			shoot(app, &player->power_body, 100);
-			shoot(app, &player->power_body, 100);
-			shoot(app, &player->power_body, 100);
+			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
+			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
+			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
 
 			player->body.life += player->power_body.life;
 			player->power_body.life = 0;

@@ -183,8 +183,7 @@ void movePrepare(App *app)
 	{
 		if(app->game.board.enemies[i].alive)
 		{
-			if(app->game.board.enemies[i].body.life <= 0) {
-				app->game.board.enemies[i].alive = 0;
+			if(app->game.board.enemies[i].body.action != ACTION_MOVE) {
 				continue;
 			}
 			int x = app->game.board.enemies[i].body.pos.x/tileSize;
@@ -322,16 +321,29 @@ void moveInit(App *app)
 
 void moveEnemies(App *app)
 {
-  if(app->game.winner) return;
-  int i;
-  int t = SDL_GetTicks();
-  for(i=0; i < ENEMY_COUNT; i++)
-  {
-    if(app->game.board.enemies[i].alive
-	&& app->game.board.enemies[i].body.life <= 0) {
-		app->game.board.enemies[i].alive = 0;
+	if(app->game.winner) return;
+	int i;
+	int t = SDL_GetTicks();
+	for(i=0; i < ENEMY_COUNT; i++)
+	{
+		if(app->game.board.enemies[i].alive) {
+			if(app->game.board.enemies[i].body.life <= 0) {
+				if(app->game.board.enemies[i].body.action != ACTION_DEATH) {
+					app->game.board.enemies[i].body.action = ACTION_DEATH;
+					app->game.board.enemies[i].body.frame = 
+						app->game.board.enemies[i].variation * app->enemy_frame_count;
+				} else {
+					if(app->game.board.enemies[i].body.frame <
+							(app->game.board.enemies[i].variation+1) * app->enemy_frame_count) 
+					{
+						app->game.board.enemies[i].body.frame += 0.3;
+					} else {
+						app->game.board.enemies[i].alive = 0;
+					}
+				}
+			}
+		}
 	}
-  }
 
   //printf("-------------\n");
   int n=AI_PER_FRAME;
@@ -414,7 +426,7 @@ void moveEnemies(App *app)
 
   for(i = 0; i < ENEMY_COUNT; i++)
   {
-    if(app->game.board.enemies[i].alive)
+    if(app->game.board.enemies[i].alive && app->game.board.enemies[i].body.action == ACTION_MOVE) 
     {
         Body *enemy_body = &app->game.board.enemies[i].body;
 		int crazy = app->game.board.enemies[i].pathfinder;
@@ -439,6 +451,11 @@ void moveEnemies(App *app)
 
 			  
 		  if(reach && (t > app->game.board.enemies[i].target->last_ai+HIT_FREQ)){
+			  if(app->game.board.enemies[i].body.action != ACTION_ATTACK) {
+				  app->game.board.enemies[i].body.action = ACTION_ATTACK;
+				  app->game.board.enemies[i].body.frame = 
+					  app->game.board.enemies[i].variation * app->enemy_frame_count;
+			  }
 			  app->game.board.enemies[i].target->last_ai = t;
 			  //printf("reach %d=%d %d,%d\n", i, crazy, dx, dy);
 			  pathStatus[app->game.board.enemies[i].pathfinder_other] = notStarted;

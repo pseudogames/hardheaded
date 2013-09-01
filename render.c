@@ -59,7 +59,7 @@ void renderInit(App *app){
   app->hearts.twoquarter= IMG_Load("data/24heart_small.png");
   app->hearts.threequarter= IMG_Load("data/34heart_small.png");
   app->hearts.empty = IMG_Load("data/emptyheart_small.png");
-  app->game.board.special_bar = IMG_Load("data/chargebar.png");
+  app->special_bar = IMG_Load("data/chargebar.png");
 
   sprite_init(&app->game.indy.sprite, 
 	  0, 0, // origin
@@ -127,13 +127,14 @@ void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerO
 	}
 }
 
-void renderPlayerSpecialBar(SDL_Surface *screen, Board *board, Player *player, int playerOffset){
+void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int playerOffset){
 	SDL_Rect pos= {35 + playerOffset, 70, screen->w, screen->h};
-	SDL_BlitSurface(board->special_bar, NULL, screen, &pos);
+	SDL_BlitSurface(app->special_bar, NULL, screen, &pos);
 
 	int width = player->special_attack * 3;
 	int max_width = 294;
 	if(width > max_width) width = max_width;
+	if(width < 7) width = 0;
 
 	Uint32 color = SDL_MapRGB(screen->format, 0, 99,0 );
 

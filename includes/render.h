@@ -13,6 +13,6 @@ void renderInit(App *app);
 void renderStart(App *app);
 void renderBody(App *app, Body *body, Player *player);
 void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerOffset);
-void renderPlayerSpecialBar(SDL_Surface *screen, Board *board, Player *player, int playerOffset);
+void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int playerOffset);
 void renderFinish(App *app);
 #endif

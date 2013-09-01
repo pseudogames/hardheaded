@@ -91,7 +91,6 @@ typedef struct{
   int death2[mapWidth][mapHeight];
   int zombie_memory1;
   int zombie_memory2;
-  SDL_Surface *special_bar;
 } Board;
 
 typedef struct {
@@ -109,6 +108,7 @@ typedef struct {
   Game game;
   Menu menu;
   SDL_Surface *logo;
+  SDL_Surface *special_bar;
 } App;
 
 #endif

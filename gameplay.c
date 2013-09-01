@@ -74,8 +74,8 @@ void renderGameplay(App *app){
 		app->game.winner->grabbing = 0;
 	}
 
-		renderGameOver(app);
 	if(app->game.head.body.life <= 0){
+		renderGameOver(app);
 	}
 
 	if(app->game.winner){

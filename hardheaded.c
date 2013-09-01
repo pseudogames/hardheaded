@@ -172,7 +172,7 @@ int main(int argc, char* args[]) {
 				  break;
 			  case STATE_PAUSED:
 			  case STATE_MENU:
-				  playMusic("indiana.wav", -1);
+				  playMusic("indiana-low.ogg", -1);
 				  renderMenu(&app);
 				  break;
 		  }

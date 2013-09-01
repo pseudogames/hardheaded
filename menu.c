@@ -34,6 +34,9 @@ void renderMenu(App *app){
 	SDL_Rect highlightChar = {-600, -450, screen->w, screen->h};
 	SDL_BlitSurface(menu->indiana, &highlightChar, screen, NULL);
 
+	SDL_Rect logoPos = {-450, -650, screen->w, screen->h};
+	SDL_BlitSurface(app->logo, &logoPos, screen, NULL);
+
 	int resumePadding = 0;
 
 	text_write_raw(screen, 200, 50, "HardHeaded", black, 96);

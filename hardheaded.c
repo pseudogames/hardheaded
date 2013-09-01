@@ -85,6 +85,8 @@ void gameInit(App *app){
   app->game.indy.name = "Mr. Indy J.";
   app->game.indy.body.life = PLAYER_HEALTH;
   app->game.indy.body.score = 0;
+  app->game.indy.body.action= ACTION_MOVE;
+  app->game.indy.body.frame= 0;
   app->game.indy.body.ang_vel = 0.25;
   app->game.indy.body.max_vel = 4;
   app->game.indy.special_attack = 0;
@@ -92,6 +94,8 @@ void gameInit(App *app){
 
   app->game.allan.name = "Mr. Allan Q.";
   app->game.allan.body.life = PLAYER_HEALTH;
+  app->game.indy.body.action= ACTION_MOVE;
+  app->game.indy.body.frame= 0;
   app->game.allan.body.score = 0;
   app->game.allan.body.ang_vel = 0.25;
   app->game.allan.body.max_vel = 4;

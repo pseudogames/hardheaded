@@ -4,7 +4,11 @@
 #include <SDL_mixer.h>
 #include "sprite.h"
 
-#define DAMAGE 0.25
+#define DAMAGE 0.75
+#define ZOMBIE_HEALTH DAMAGE
+#define HEAD_HEALTH (20*DAMAGE)
+#define PLAYER_HEALTH (12*DAMAGE)
+#define ZOMBIE_SCORE (DAMAGE/4)
 #define WAVE_COUNT 32
 #define ENEMY_COUNT 1000
 #include "aStarLibrary.h" // must be after the defines above

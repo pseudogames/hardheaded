@@ -15,6 +15,8 @@ void renderLifeBars(App *app){
 }
 
 void checkPlayerLife(Player *player, App *app){
+
+
 	if(app->game.winner){
 		if(player != app->game.winner){
 			player->body.action = ACTION_DEATH;
@@ -23,9 +25,13 @@ void checkPlayerLife(Player *player, App *app){
 				player->body.life -= 0.08;
 			}
 		}
-	} else if(player->body.life <= 10 && player->body.action == ACTION_DEATH){
-		player->body.life += 0.05;
-		if(player->body.life > 10) player->body.life = 10;
+	} else if(player->body.action == ACTION_DEATH){
+		if( player->body.life <= 10 ) {
+			player->body.life += 0.05;
+			if(player->body.life > 10) player->body.life = 10;
+		}
+	} else if(player->body.life <= 0) {
+		playerDie(app, player);
 	}
 }
 
@@ -44,7 +50,6 @@ void renderEnemies(App *app)
   }
 }
 
-
 void renderGameplay(App *app){
 	SDL_BlitSurface(app->game.board.image, NULL, app->screen, NULL);
 
@@ -61,9 +66,12 @@ void renderGameplay(App *app){
 	renderHead(app);
 	if(app->game.winner)
 		renderWinner(app);
+	if(app->game.head.body.life <= 0)
+		renderGameOver(app);
 
 	checkPlayerLife(&app->game.indy, app);
 	checkPlayerLife(&app->game.allan, app);
+
 }
 
 int near(Body *body1, Body *body2){
@@ -162,6 +170,9 @@ void spawnEnemy(App *app)
 {
 	Game *game = &app->game;
 	int x,y,i;
+
+	if(game->wave_index < 0) return;
+
 	Wave *wave = &game->wave[game->wave_index];
 	int t = SDL_GetTicks();
 
@@ -206,8 +217,8 @@ void spawnEnemy(App *app)
 		{
 			// printf("spawn %d\n", i);
 			Body *enemybody = &enemy->body;
-			enemybody->score = 1;
-			enemybody->life = DAMAGE;
+			enemybody->score = ZOMBIE_SCORE;
+			enemybody->life = ZOMBIE_HEALTH;
 			enemybody->ang_vel = 0.05;
 			enemybody->max_vel = 2;
 			enemybody->vel = 2;
@@ -277,7 +288,7 @@ int hit(App *app, Body *source, Body *target){
 				int i;
 				Wave *wave = &app->game.wave[app->game.wave_index];
 				if(enemy_killed) {
-					source->life += target->score * 0.05;
+					source->life += target->score;
 					app->game.board.on_screen_enemies --;
 					app->game.board.kill_count ++;
 					app->game.total_kill_count ++;

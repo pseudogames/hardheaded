@@ -17,5 +17,6 @@ void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerO
 void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int playerOffset);
 void renderHead(App *app);
 void renderWinner(App *app);
+void renderGameOver(App *app);
 void renderSpawnCountdown(App *app);
 #endif

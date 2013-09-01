@@ -97,18 +97,18 @@ void appInit(App *app){
   app->menu.selected = MENU_NEW_GAME;
 
   app->game.indy.name = "Mr. Indy J.";
-  app->game.indy.body.life = 10;
+  app->game.indy.body.life = PLAYER_HEALTH;
   app->game.indy.body.score = 0;
   app->game.indy.body.ang_vel = 0.25;
   app->game.indy.body.max_vel = 4;
 
   app->game.allan.name = "Mr. Allan Q.";
-  app->game.allan.body.life = 10;
+  app->game.allan.body.life = PLAYER_HEALTH;
   app->game.allan.body.score = 0;
   app->game.allan.body.ang_vel = 0.25;
   app->game.allan.body.max_vel = 4;
 
-  app->game.head.body.life = 100;
+  app->game.head.body.life = HEAD_HEALTH;
   app->game.head.body.score = 0;
   app->game.head.body.ang_vel = 0.25;
   app->game.head.body.max_vel= 4;
@@ -146,6 +146,7 @@ int main(int argc, char* args[]) {
 		  case STATE_PLAYING:
 			  if(startTime > app.game.next_wave)
 				  setWave(&app, app.game.wave_index+1);    
+
 			  spawnEnemy(&app);
 			  moveEnemies(&app);
 			  renderGameplay(&app);

@@ -122,13 +122,13 @@ void movePlayer(App *app, Player *player, int up, int right, int down, int left,
 			ty = body->pos.y - dy;
 		}
 #endif
-		if(!is_empty(&app->game, &app->game.head.body, tx,ty)) {
-			// player->grabbing = 0;
-		} else {
+		if(is_empty(&app->game, &app->game.head.body, tx,ty)) {
 			app->game.head.body.pos.x = tx;
 			app->game.head.body.pos.y = ty;
 			app->game.head.body.angle = body->angle;
 			body->vel = 1;
+		} else {
+			// player->grabbing = 0;
 		}
 	} 
 	if(!player->grabbing) {
@@ -309,8 +309,8 @@ void moveInit(App *app)
 				app->game.head.body.pos.y = y * tileSize + tileSize/2;
 				app->game.head.body.angle = 270;
 
-				app->game.head.body.pos.x = app->game.indy.body.pos.x + 40;
-				app->game.head.body.pos.y = app->game.indy.body.pos.y;
+				//app->game.head.body.pos.x = app->game.indy.body.pos.x + 40;
+				//app->game.head.body.pos.y = app->game.indy.body.pos.y;
 			}
 		}
 	}
@@ -423,7 +423,15 @@ void moveEnemies(App *app)
           int dy = yPath[crazy] - enemy_body->pos.y;
           //float angle = ATAN2(dx,dy);
           float angle = (int)(720 + ATAN2(dx,dy) + sin((t/5000.+crazy/(float)AI_PER_FRAME)*M_PI)*30 ) % 360;
-          moveBody(&app->game, enemy_body, angle, .25+.75*rand()/(float)RAND_MAX);
+		  float vel = .25+.75*rand()/(float)RAND_MAX;
+			if(app->game.indy.body.action == ACTION_DEATH
+			&& app->game.allan.body.action == ACTION_DEATH) {
+				float dx = enemy_body->pos.x - app->game.head.body.pos.x;
+				float dy = enemy_body->pos.y - app->game.head.body.pos.y;
+				float d = sqrt(dx*dx + dy*dy);
+				vel = 10 * d / app->screen->w;
+			}
+          moveBody(&app->game, enemy_body, angle, vel);
 		  //printf("enemy %d (%f, %f) angle %f -> %f\n", crazy, enemy_body->pos.x, enemy_body->pos.y, angle, enemy_body->angle);
 
 			  

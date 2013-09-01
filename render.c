@@ -2,6 +2,7 @@
 #include <math.h>
 #include "render.h"
 
+SDL_Color black = {0, 0, 0};
 SDL_Color red = {0xAA, 0X55, 0x00};
 SDL_Color trueRed = {0XFF, 0x00, 0x00};
 SDL_Color white = {0xFF, 0XFF, 0xFF};
@@ -305,6 +306,17 @@ void renderHead(App *app){
 	}
 
 	renderBody(app, body);
+
+	
+	if(body->life < HEAD_HEALTH) {
+		Uint32 color = SDL_MapRGBA(app->screen->format, 0x00,0x00,0x00,0xff );
+		SDL_Rect rect = { body->pos.x-tileSize/2, body->pos.y-tileSize/2, tileSize, 2 };
+		SDL_FillRect(app->screen, &rect , color);
+
+		color = SDL_MapRGBA(app->screen->format, 0xff,0x00,0x00,0xff );
+		rect.w = rect.w * ( body->life / HEAD_HEALTH);
+		SDL_FillRect(app->screen, &rect , color);
+	}
 }
 
 void renderWinner(App *app){
@@ -314,4 +326,8 @@ void renderWinner(App *app){
 	text_write_raw(app->screen, 20 , 330, msg, white, 60);
 }
 
+
+void renderGameOver(App *app){
+	text_write_raw(app->screen, 20 , 330, "Draw. Game Over.", white, 60);
+}
 

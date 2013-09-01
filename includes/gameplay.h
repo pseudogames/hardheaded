@@ -12,4 +12,6 @@ void renderGameplay(App *app);
 void playerAttack(App *app, Player *player);
 void playerChargeSpecialAttack(App *app, Player *player);
 void playerDie(App *app, Player *player);
+int hit(App *app, Body *source, Body *target);
+
 #endif

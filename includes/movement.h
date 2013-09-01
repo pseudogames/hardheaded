@@ -4,5 +4,6 @@
 #include "hardheaded.h"
 #include "gameplay.h"
 
-void player_move(App *app, Player *player, int up, int right, int down, int left, int halt);
+void movePlayer(App *app, Player *player, int up, int right, int down, int left, int halt);
+void moveEnemies(App *app);
 #endif

@@ -10,8 +10,7 @@ void EndPathfinder();
 #define mapWidth  32
 #define mapHeight 24
 #define tileSize  32
-#define enemyTileHeight  3 // FIXME chan change by enemy?
-#define numberPeople ENEMY_COUNT
+#define numberPeople ENEMY_COUNT*3
 #define maxPathLength ((mapWidth+mapHeight)*4)
 #define notfinished 0
 #define notStarted 0// path-related constants
@@ -25,3 +24,4 @@ extern int pathStatus[numberPeople+1];
 extern int xPath[numberPeople+1];
 extern int yPath[numberPeople+1];
 extern int pathLength[numberPeople+1];     //stores length of the found path for critter
+

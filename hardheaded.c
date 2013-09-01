@@ -25,6 +25,29 @@ void loadMap(App *app) {
   sprintf(hit_path, "data/%s_hit.png", map_name);
   app->game.board.image = IMG_Load(image_path);
   app->game.board.hit = IMG_Load(hit_path);
+
+  app->game.board.wave_count=4;
+
+  app->game.wave[0].enemy_spawn_interval=1000;
+  app->game.wave[0].enemy_count=20;
+  app->game.wave[0].enemy_count_on_screen=20;
+  app->game.wave[0].enemy_count_per_spawn=20;
+
+  app->game.wave[1].enemy_spawn_interval=5000;
+  app->game.wave[1].enemy_count=40;
+  app->game.wave[1].enemy_count_on_screen=20;
+  app->game.wave[1].enemy_count_per_spawn=10;
+
+  app->game.wave[2].enemy_spawn_interval=2000;
+  app->game.wave[2].enemy_count=120;
+  app->game.wave[2].enemy_count_on_screen=80;
+  app->game.wave[2].enemy_count_per_spawn=10;
+
+  app->game.wave[3].enemy_spawn_interval=250;
+  app->game.wave[3].enemy_count=120;
+  app->game.wave[3].enemy_count_on_screen=30;
+  app->game.wave[3].enemy_count_per_spawn=2;
+
 }
 
 void gameInit(App *app){
@@ -51,13 +74,14 @@ void setWave(App *app, int wave_index) {
 
 
 void appInit(App *app){
+  srand(time(NULL));
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
   app->game.indy.name = "Mr. Indy J.";
-  app->game.indy.life= 10;
+  app->game.indy.body.life= 10;
   app->game.allan.name = "Mr. Allan Q.";
-  app->game.allan.life= 10;
+  app->game.allan.body.life= 10;
 
   app->game.indy.body.ang_vel = 0.25;
   app->game.indy.body.max_vel= 4;
@@ -99,6 +123,8 @@ int main(int argc, char* args[]) {
 
 	  switch(app.state){
 		  case STATE_PLAYING:
+			  spawnEnemy(&app);
+			  moveEnemies(&app);
 			  renderGameplay(&app);
 			  break;
 		  case STATE_PAUSED:

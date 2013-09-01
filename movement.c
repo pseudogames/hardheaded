@@ -47,7 +47,7 @@ void angle_rotate(float *a0_base, float a1, float f)
 	*a0_base = a0;
 }
 
-void body_move(Game *game, Body *body, float angle, float moving)
+void moveBody(Game *game, Body *body, float angle, float moving)
 {
 	float v = body->vel * moving;
 
@@ -83,7 +83,7 @@ void body_move(Game *game, Body *body, float angle, float moving)
 	}
 }
 
-void player_move(App *app, Player *player, int up, int right, int down, int left, int halt)
+void movePlayer(App *app, Player *player, int up, int right, int down, int left, int halt)
 {
 	Body *body = &player->body;
 	int hit = 0;
@@ -121,7 +121,7 @@ void player_move(App *app, Player *player, int up, int right, int down, int left
 		}
 
         float angle = ATAN2(dx,dy);
-        body_move(&app->game, body, angle, !halt && !hit);
+        moveBody(&app->game, body, angle, !halt && !hit);
     }
 }
 
@@ -264,22 +264,160 @@ void moveInit(App *app)
 			if(p1) {
 				app->game.indy.body.pos.x = x * tileSize + tileSize/2;
 				app->game.indy.body.pos.y = y * tileSize + tileSize/2;
+				app->game.indy.body.angle = 90; // FIXME look to the idol head
 			}
 			if(p2) {
 				app->game.allan.body.pos.x = x * tileSize + tileSize/2;
 				app->game.allan.body.pos.y = y * tileSize + tileSize/2;
+				app->game.allan.body.angle = 270; // FIXME look to the idol head
 			}
 			if(head) {
 				app->game.head.body.pos.x = x * tileSize + tileSize/2;
 				app->game.head.body.pos.y = y * tileSize + tileSize/2;
+				app->game.head.body.angle = 270;
 
-				app->game.head.body.pos.x = app->game.indy.body.pos.x;
-				app->game.head.body.pos.y = app->game.indy.body.pos.y;
+				//app->game.head.body.pos.x = app->game.indy.body.pos.x;
+				//app->game.head.body.pos.y = app->game.indy.body.pos.y;
 			}
 		}
 	}
 	movePrepare(app);
 }
 
+void moveEnemies(App *app)
+{
+  int i;
+  int t = SDL_GetTicks();
+  for(i=0; i < ENEMY_COUNT; i++)
+  {
+    if(app->game.board.enemies[i].alive
+	&& app->game.board.enemies[i].body.life <= 0) {
+		app->game.board.enemies[i].alive = 0;
+	}
+  }
+
+  //printf("-------------\n");
+  int n=AI_PER_FRAME;
+  for(i=0; i < ENEMY_COUNT && n > 0; i++) 
+  {
+    int id = app->game.board.latest_enemy_updated = ( app->game.board.latest_enemy_updated + 1 ) % ENEMY_COUNT;
+    int crazy = id*3;
+    if(app->game.board.enemies[id].alive && t > app->game.board.enemies[id].last_ai+AI_FREQ)
+    {
+        Body *enemy_body = &app->game.board.enemies[id].body;
+		n--;
+		//printf("path %d %d %d\n", i, n, id);
+		app->game.board.enemies[id].last_ai = t;
+		pathLength[crazy] = 9999;
+		pathLength[crazy+1] = 9999;
+		pathLength[crazy+2] = 9999;
+
+		if(app->game.indy.body.action != ACTION_DEATH) {
+			//printf("find %d=%d\n", id, crazy);
+			pathStatus[crazy] = FindPath(crazy,
+				enemy_body->pos.x,
+				enemy_body->pos.y,
+				app->game.indy.body.pos.x,
+				app->game.indy.body.pos.y);
+		}
+
+		if(app->game.allan.body.action != ACTION_DEATH) {
+			//printf("find %d=%d\n", id, crazy+1);
+			pathStatus[crazy+1] = FindPath(crazy+1,
+				enemy_body->pos.x,
+				enemy_body->pos.y,
+				app->game.allan.body.pos.x,
+				app->game.allan.body.pos.y);
+		}
+
+		if(app->game.allan.body.action == ACTION_DEATH &&
+		   app->game.indy.body.action == ACTION_DEATH) {
+			//printf("find %d=%d\n", id, crazy+2);
+			pathStatus[crazy+2] = FindPath(crazy+2,
+				enemy_body->pos.x,
+				enemy_body->pos.y,
+				app->game.head.body.pos.x,
+				app->game.head.body.pos.y);
+		}
+
+
+        if(pathLength[crazy] < pathLength[crazy+1] && pathLength[crazy] < pathLength[crazy+2]){
+          app->game.board.enemies[id].pathfinder = crazy;
+          app->game.board.enemies[id].pathfinder_other = crazy+1;
+          app->game.board.enemies[id].pathfinder_another = crazy+2;
+          app->game.board.enemies[id].target = &app->game.indy;
+        } else if(pathLength[crazy+1] < pathLength[crazy+2]) {
+          app->game.board.enemies[id].pathfinder = crazy+1;
+          app->game.board.enemies[id].pathfinder_other = crazy;
+          app->game.board.enemies[id].pathfinder_another = crazy+2;
+          app->game.board.enemies[id].target = &app->game.allan;
+        }else{
+          app->game.board.enemies[id].pathfinder = crazy+2;
+          app->game.board.enemies[id].pathfinder_other = crazy;
+          app->game.board.enemies[id].pathfinder_another = crazy+1;
+          app->game.board.enemies[id].target = &app->game.head;
+        }
+
+
+#if 0
+		{
+			extern int* pathBank [numberPeople+1];
+			int k;
+			int j = app->game.enemies[id].pathfinder;
+			printf("%d (%d)", j, pathLength[j]);
+			for(k=0; k<pathLength[j]; k+=2) {
+				printf("%d,%d; ", pathBank[j][k], pathBank[j][k+1]);
+			}
+			printf("\n");
+		}
+#endif 
+
+    }
+  }
+
+  for(i = 0; i < ENEMY_COUNT; i++)
+  {
+    if(app->game.board.enemies[i].alive)
+    {
+        Body *enemy_body = &app->game.board.enemies[i].body;
+		int crazy = app->game.board.enemies[i].pathfinder;
+        if(pathStatus[crazy] == found)
+        {
+			//printf("read %d=%d\n", i, crazy);
+          int reach = ReadPath(crazy, enemy_body->pos.x, enemy_body->pos.y, tileSize);
+          int dx = xPath[crazy] - enemy_body->pos.x;
+          int dy = yPath[crazy] - enemy_body->pos.y;
+          //float angle = ATAN2(dx,dy);
+          float angle = (int)(720 + ATAN2(dx,dy) + sin((t/5000.+crazy/(float)AI_PER_FRAME)*M_PI)*30 ) % 360;
+          moveBody(&app->game, enemy_body, angle, .25+.75*rand()/(float)RAND_MAX);
+		  //printf("enemy %d (%f, %f) angle %f -> %f\n", crazy, enemy_body->pos.x, enemy_body->pos.y, angle, enemy_body->angle);
+
+			  
+		  if(reach && (t > app->game.board.enemies[i].target->last_ai+HIT_FREQ)){
+			  app->game.board.enemies[i].target->last_ai = t;
+			  //printf("reach %d=%d %d,%d\n", i, crazy, dx, dy);
+			  pathStatus[app->game.board.enemies[i].pathfinder_other] = notStarted;
+			  pathStatus[app->game.board.enemies[i].pathfinder_another] = notStarted;
+			  hit(app, enemy_body, &app->game.board.enemies[i].target->body);
+
+		  }
+		}
+	}
+  }
+}
+
+
+
+
+
+int enemy_spawn_pos(Game *game, int *x, int *y) {
+	if(!game->board.spawn_count) return 0;
+	int i = rand() % game->board.spawn_count;
+	// printf("%d %d\n", i, rand() % game->board.spawn_count);
+
+	*x = game->board.spawn[i].x*tileSize+tileSize*3/4;
+	*y = game->board.spawn[i].y*tileSize+tileSize*3/4;
+	return 1;
+}
 
 

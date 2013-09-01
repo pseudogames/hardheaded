@@ -13,7 +13,7 @@ void bindGameplayKeystate(App *app){
 	  playerChargeSpecialAttack(app, &app->game.allan);
   }
 
-  player_move(app, &app->game.indy,
+  movePlayer(app, &app->game.indy,
 	  keystate[SDLK_w],
 	  keystate[SDLK_d],
 	  keystate[SDLK_s],
@@ -22,7 +22,7 @@ void bindGameplayKeystate(App *app){
   );
 
 
-  player_move(app, &app->game.allan,
+  movePlayer(app, &app->game.allan,
 	  keystate[SDLK_UP],
 	  keystate[SDLK_RIGHT],
 	  keystate[SDLK_DOWN],

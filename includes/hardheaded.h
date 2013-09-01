@@ -4,6 +4,7 @@
 #include <SDL_mixer.h>
 #include "sprite.h"
 
+#define WAVE_COUNT 32
 #define ENEMY_COUNT 1000
 #include "aStarLibrary.h" // must be after the defines above
 
@@ -58,15 +59,16 @@ typedef struct {
   float max_vel;
   float vel;
   Sprite *sprite;
+  float life;
 } Body;
 
 typedef struct{
   Sprite sprite;
   Body body;
   int special_attack;
-  float life;
   char* name;
   int grabbing;
+  int last_ai;
 } Player;
 
 typedef struct{
@@ -81,9 +83,20 @@ typedef struct{
   Body body;
   int pathfinder;
   int pathfinder_other;
-  Body *target;
+  int pathfinder_another;
+  Player *target;
   int alive;
+  int variation;
+  int last_ai;
 } Enemy;
+
+typedef struct {
+	int required_kills;
+	int enemy_spawn_interval;
+	int enemy_count_per_spawn;
+	int enemy_count_on_screen;
+	int enemy_count;
+} Wave;
 
 typedef struct{
   SDL_Surface *image;
@@ -112,6 +125,7 @@ typedef struct{
 } Board;
 
 typedef struct {
+  Wave wave[WAVE_COUNT];
   Board board;
   Player indy;
   Player allan;
@@ -133,6 +147,8 @@ typedef struct {
   SDL_Surface *logo;
   SDL_Surface *special_bar;
   Debug debug;
+  int enemy_frame_count;
+  int enemy_variation_count;
 } App;
 
 #endif

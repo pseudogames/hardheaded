@@ -100,7 +100,7 @@ void renderPlayer(App *app, Player *player){
 			body->frame = 0;
 		}
 
-		if(player->life == 10){
+		if(player->body.life == 10){
 			body->action = ACTION_MOVE;
 		}
 	}
@@ -150,9 +150,11 @@ void renderInit(App *app){
   );
   app->game.allan.body.sprite = &app->game.allan.sprite;
 
+  app->enemy_frame_count = 3;
+  app->enemy_variation_count = 2;
   sprite_init(&app->zombie, 
 	  0, 0, // origin
-	  32, 32, 3, // frame size and count
+	  32, 32, app->enemy_frame_count * app->enemy_variation_count, // frame size and count
 	  "data/zombie.png" // source
   );
 
@@ -171,14 +173,14 @@ void renderTerminate(App *app){
 void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerOffset){
 	SDL_Color yellow = {0xFF, 0XFF, 0x00};
 	int i;
-	int ipart = (int) player->life; 
-	float fpart = player->life - ipart;
+	int ipart = (int) player->body.life; 
+	float fpart = player->body.life - ipart;
 
 	for(i = 0; i < 10; i++){
 		text_write_raw(screen, 35 + playerOffset, 10, player->name, yellow, 20);
 		SDL_Rect heartpos= {30 * (i+1) + playerOffset, 40, screen->w, screen->h};
 
-		if(i < player->life){
+		if(i < player->body.life){
 			if(i < ipart ){
 				SDL_BlitSurface(app->hearts.full, NULL, screen, &heartpos);
 			} else if(fpart <= 0.25){

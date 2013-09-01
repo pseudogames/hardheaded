@@ -73,7 +73,6 @@ typedef struct{
   char* name;
   int grabbing;
   int last_ai;
-  int win;
   point door;
 } Player;
 

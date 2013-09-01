@@ -303,14 +303,15 @@ void moveInit(App *app)
 				app->game.allan.door.x = x * tileSize + tileSize/2;
 				app->game.allan.door.y = y * tileSize + tileSize/2;
 				app->game.allan.body.angle = 270; // FIXME look to the idol head
+
+				app->game.head.body.pos.x = app->game.allan.body.pos.x + 40;
+				app->game.head.body.pos.y = app->game.allan.body.pos.y;
 			}
 			if(head) {
 				app->game.head.body.pos.x = x * tileSize + tileSize/2;
 				app->game.head.body.pos.y = y * tileSize + tileSize/2;
 				app->game.head.body.angle = 270;
 
-				app->game.head.body.pos.x = app->game.indy.body.pos.x + 40;
-				app->game.head.body.pos.y = app->game.indy.body.pos.y;
 			}
 		}
 	}

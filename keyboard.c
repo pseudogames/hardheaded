@@ -56,7 +56,9 @@ void bindMenuKeys(App *app, SDLKey *key){
 				menu->selected++;
 			}
 			break;
+		case SDLK_RSHIFT:
 		case SDLK_RETURN:
+		case SDLK_SPACE:
 			chooseMenu(app, menu);
 			break;
 	}
@@ -77,6 +79,13 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_0:
 			app->debug = (app->debug + 1) % DEBUG_COUNT;
 			break;
+		case SDLK_SPACE:
+		case SDLK_RSHIFT:
+			if(app->game.winner){
+				app->state = STATE_MENU;
+				return;
+			}
+			break;
 	}
 }
 
@@ -87,6 +96,10 @@ void bindGameplayKeyUp(App *app, SDLKey *key){
 			playerAttack(app, &app->game.indy);
 			break;
 		case SDLK_RSHIFT:
+			if(app->game.winner){
+				app->state = STATE_MENU;
+				return;
+			}
 			playerAttack(app, &app->game.allan);
 			break;
 	}

@@ -7,18 +7,21 @@ void resetApp(App *app)
 	app->game.board.zombie_memory1 = 0;
 	app->game.board.zombie_memory2 = 0;
 
-
 	app->game.indy.name = "Mr. Indy J.";
 	app->game.indy.body.life = 10;
 	app->game.indy.body.score = 0;
 	app->game.indy.body.ang_vel = 0.25;
 	app->game.indy.body.max_vel = 4;
+	app->game.indy.special_attack = 0;
+	app->game.indy.grabbing = 0;
 
 	app->game.allan.name = "Mr. Allan Q.";
 	app->game.allan.body.life = 10;
 	app->game.allan.body.score = 0;
 	app->game.allan.body.ang_vel = 0.25;
 	app->game.allan.body.max_vel = 4;
+	app->game.allan.special_attack = 0;
+	app->game.allan.grabbing = 0;
 
 	app->game.head.body.life = 100;
 	app->game.head.body.score = 0;

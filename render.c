@@ -332,6 +332,7 @@ void renderGameOver(App *app){
 	text_write_raw(app->screen, 150 , 330, "Draw. Game Over.", white, 61);
 }
 void renderHints(App *app){
+	if(app->game.head.body.life <= 0 || app->game.winner) return;
 	Body *head = &app->game.head.body;
 	Player *indy = &app->game.indy;
 	Player *allan = &app->game.allan;

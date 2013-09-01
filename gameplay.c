@@ -23,7 +23,7 @@ void checkPlayerLife(Player *player, App *app){
 				player->body.life -= 0.08;
 			}
 		}
-	} else if(player->body.action == ACTION_DEATH){
+	} else if(player->body.action == ACTION_DEATH && app->game.head.body.life > 0){
 		player->grabbing = 0;
 		player->special_attack = 0;
 
@@ -75,6 +75,8 @@ void renderGameplay(App *app){
 	}
 
 	if(app->game.head.body.life <= 0){
+		app->game.allan.body.action = ACTION_DEATH;
+		app->game.indy.body.action = ACTION_DEATH;
 		renderGameOver(app);
 	}
 
@@ -118,7 +120,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	Body *body = &player->body;
 	Body *head_body = &app->game.head.body;
 
-	if(!player->grabbing && near(body, head_body) && player->special_attack < 7 && !app->game.winner){
+	if(!player->grabbing && near(body, head_body) && player->special_attack < 7 && !app->game.winner && !app->game.head.body.life <= 0){
 		float a = body->angle * M_PI / 180;
 		float dx = cos(a) * HOLD_DISTANCE;
 		float dy = sin(a) * HOLD_DISTANCE;
@@ -148,7 +150,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 		}
 	}
 
-	if(!player->grabbing && player->special_attack < 100) {
+	if(!player->grabbing && player->special_attack < 100 && app->game.head.body.life > 0) {
 		player->special_attack += 1;
 		player->power_body.action = ACTION_MOVE;
 	}

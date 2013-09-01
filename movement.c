@@ -106,7 +106,7 @@ void movePlayer(App *app, Player *player, int up, int right, int down, int left,
 	Body *body = &player->body;
 	int hit = 0;
 
-	if(body->action == ACTION_DEATH) return;
+	if(body->action == ACTION_DEATH || app->game.head.body.life <= 0) return;
 
 	if(player->grabbing){
 		float a = player->body.angle * M_PI / 180;

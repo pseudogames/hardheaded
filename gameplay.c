@@ -71,7 +71,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	Body *body = &player->body;
 	Body *head_body = &app->game.head.body;
 
-	if(!player->grabbing && near(body, head_body)){
+	if(!player->grabbing && near(body, head_body) && player->special_attack < 7){
 		float a = body->angle * M_PI / 180;
 		float dx = cos(a) * HOLD_DISTANCE;
 		float dy = sin(a) * HOLD_DISTANCE;

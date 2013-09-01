@@ -12,7 +12,7 @@ else
   OUTPUT=hardheaded
 endif
 
-OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o
+OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o
 
 .PHONY: all clean depend
 

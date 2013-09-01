@@ -1,13 +1,14 @@
 #include "gameplay.h"
 
 void renderLifeBars(App *app){
-	Board *board = &app->game.board;
 	SDL_Surface *screen = app->screen;
-	renderPlayerLife(screen, board, &board->indy, 0);
-	renderPlayerLife(screen, board, &board->allan, 650);
+	Board *board = &app->game.board;
 
-	renderPlayerSpecialBar(screen, board, &board->indy, 0);
-	renderPlayerSpecialBar(screen, board, &board->allan, 650);
+	renderPlayerSpecialBar(screen, board, &app->game.indy, 0);
+	renderPlayerSpecialBar(screen, board, &app->game.allan, 650);
+
+	renderPlayerLife(app, screen, &app->game.indy, 0);
+	renderPlayerLife(app, screen, &app->game.allan, 650);
 }
 
 void checkPlayerLife(Player *player){
@@ -19,11 +20,11 @@ void checkPlayerLife(Player *player){
 
 void renderGameplay(App *app){
 	renderLifeBars(app);
-	renderBody(app, &app->game.board.indy.body, &app->game.board.indy);
-	renderBody(app, &app->game.board.allan.body, &app->game.board.allan);
+	renderBody(app, &app->game.indy.body, &app->game.indy);
+	renderBody(app, &app->game.allan.body, &app->game.allan);
 
-	checkPlayerLife(&app->game.board.indy);
-	checkPlayerLife(&app->game.board.allan);
+	checkPlayerLife(&app->game.indy);
+	checkPlayerLife(&app->game.allan);
 }
 
 void playerChargeSpecialAttack(App *app, Player *player){

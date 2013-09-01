@@ -20,16 +20,16 @@ void appInit(App *app){
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
-  app->game.board.indy.name = "Mr. Indy J.";
-  app->game.board.indy.life= 10;
-  app->game.board.allan.name = "Mr. Allan Q.";
-  app->game.board.allan.life= 10;
+  app->game.indy.name = "Mr. Indy J.";
+  app->game.indy.life= 10;
+  app->game.allan.name = "Mr. Allan Q.";
+  app->game.allan.life= 10;
 
-  app->game.board.indy.body.ang_vel = 0.25;
-  app->game.board.indy.body.max_vel= 4;
+  app->game.indy.body.ang_vel = 0.25;
+  app->game.indy.body.max_vel= 4;
 
-  app->game.board.allan.body.ang_vel = 0.25;
-  app->game.board.allan.body.max_vel= 4;
+  app->game.allan.body.ang_vel = 0.25;
+  app->game.allan.body.max_vel= 4;
 }
 
 void handleDelay(Uint32 start) {
@@ -66,8 +66,8 @@ int main(int argc, char* args[]) {
 			  break;
 	  }
 
+	  renderTerminate(&app);
 
-	  SDL_Flip(app.screen);
 	  handleDelay(startTime);
   }
 }

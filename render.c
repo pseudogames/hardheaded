@@ -126,7 +126,7 @@ void renderPlayer(App *app, Player *player){
 		|| player->special_attack > 7){
 
 		player->power_body.frame += player->special_attack / 100.;
-		player->power_body.vel = 39;
+		player->power_body.vel = tileSize*1.5;
 
 
 		if(player->power_body.action == ACTION_ATTACK && player->special_attack < 98){
@@ -154,8 +154,8 @@ void renderPlayer(App *app, Player *player){
 			player->power_body.pos.y = ty;
 		} else {
 			float a = player->body.angle * M_PI / 180;
-			float dx = cos(a) * tileSize/2;
-			float dy = sin(a) * tileSize/2;
+			float dx = cos(a) * player->power_body.vel;
+			float dy = sin(a) * player->power_body.vel;
 			float tx = body->pos.x + dx;
 			float ty = body->pos.y - dy;
 

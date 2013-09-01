@@ -171,11 +171,9 @@ void playerAttack(App *app, Player *player){
 	body->action = ACTION_ATTACK;
 	body->frame = 0;
 
-	for(i=0; i<10; i++) {
-		shoot(app, &player->body, 10, 0, tileSize*1.5);
-		shoot(app, &player->body, 50, 0, tileSize*1);
-		shoot(app, &player->body, 100, 180, tileSize*.5);
-	}
+	shoot(app, &player->body, 10, 0, tileSize*1.5);
+	shoot(app, &player->body, 50, 0, tileSize*1);
+	shoot(app, &player->body, 100, 180, tileSize*.5);
 
 	player->special_attack = 0;
 }

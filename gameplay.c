@@ -27,9 +27,10 @@ void checkPlayerLife(Player *player, App *app){
 		player->grabbing = 0;
 		player->special_attack = 0;
 
-		if( player->body.life <= 10 ) {
+		if( player->body.life <= PLAYER_HEALTH ) {
 			player->body.life += 0.05;
-			if(player->body.life > 10) player->body.life = 10;
+			if(player->body.life > PLAYER_HEALTH)
+				player->body.life = PLAYER_HEALTH;
 		}
 	} else if(player->body.life <= 0) {
 		playerDie(app, player);
@@ -133,15 +134,15 @@ void playerChargeSpecialAttack(App *app, Player *player){
 
 		if(is_empty(&app->game, body, (int)tx,(int)ty)) {
 			float dist = sqrt(
-				pow(tx - player->door.x,2)+
-				pow(ty - player->door.y,2)
+				pow(app->game.head.body.pos.x - player->door.x, 2)+
+				pow(app->game.head.body.pos.y - player->door.y, 2)
 			);
 
 
 			player->grabbing = 1;
 			head_body->action = ACTION_ATTACK;
 
-			if(dist < 30){
+			if(dist < tileSize*1.5){
 				app->game.winner = player;
 				player->grabbing = 0;
 			}
@@ -241,6 +242,7 @@ void spawnEnemy(App *app)
 			Body *enemybody = &enemy->body;
 			enemybody->score = ZOMBIE_SCORE;
 			enemybody->life = ZOMBIE_HEALTH;
+			enemybody->kills = 0;
 			enemybody->ang_vel = 0.05;
 			enemybody->max_vel = 2;
 			enemybody->vel = 2;
@@ -311,11 +313,12 @@ int hit(App *app, Body *source, Body *target){
 
 				int i;
 				Wave *wave = &app->game.wave[app->game.wave_index];
-				if(enemy_killed) {
+				if(enemy_killed && target->action != ACTION_DEATH) {
 					app->game.board.on_screen_enemies --;
 					app->game.board.kill_count ++;
 					app->game.total_kill_count ++;
-					int score = target->score;
+					source->kills++;
+					float score = target->score;
 					source->life += score;
 					for(i=0;i<21;i++) {
 						int x = x0+search[i][0];
@@ -327,7 +330,8 @@ int hit(App *app, Body *source, Body *target){
 						app->game.board.death2[x][y] += s;
 					}
 
-				} else { // player_killed
+				} 
+				if(!enemy_killed && target->action != ACTION_DEATH) {// player_killed
 					int x1 = source->pos.x/tileSize;
 					int y1 = source->pos.y/tileSize;
 					for(i=0;i<21;i++) {

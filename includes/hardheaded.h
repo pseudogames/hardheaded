@@ -67,6 +67,7 @@ typedef struct {
   Sprite *sprite;
   float life;
   float score;
+  int kills;
 } Body;
 
 typedef struct{

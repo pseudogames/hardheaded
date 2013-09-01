@@ -254,8 +254,13 @@ void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerO
 	int ipart = (int) player->body.life; 
 	float fpart = player->body.life - ipart;
 
-	for(i = 0; i < 10; i++){
-		text_write_raw(screen, 35 + playerOffset, 10, player->name, yellow, 20);
+	text_write_raw(screen, 35 + playerOffset, 10, player->name, yellow, 20);
+	{
+		char buf[256];
+		sprintf(buf,"kills %d", player->body.kills);
+		text_write_raw(screen, 220 + playerOffset, 10, buf, white, 12);
+	}
+	for(i = 0; i < PLAYER_HEALTH; i++){
 		SDL_Rect heartpos= {30 * (i+1) + playerOffset, 40, screen->w, screen->h};
 
 		if(i < player->body.life){

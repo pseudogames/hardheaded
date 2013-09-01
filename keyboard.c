@@ -9,7 +9,7 @@ void bindGameplayKeystate(App *app){
 	  playerChargeSpecialAttack(app, &app->game.indy);
   }
 
-  if(keystate[SDLK_RCTRL]){
+  if(keystate[SDLK_RSHIFT]){
 	  playerChargeSpecialAttack(app, &app->game.allan);
   }
 
@@ -18,7 +18,7 @@ void bindGameplayKeystate(App *app){
 	  keystate[SDLK_d],
 	  keystate[SDLK_s],
 	  keystate[SDLK_a],
-	  keystate[SDLK_LCTRL] || keystate[SDLK_LALT]
+	  0
   );
 
 
@@ -27,7 +27,7 @@ void bindGameplayKeystate(App *app){
 	  keystate[SDLK_RIGHT],
 	  keystate[SDLK_DOWN],
 	  keystate[SDLK_LEFT],
-	  keystate[SDLK_RCTRL] || keystate[SDLK_RALT] || keystate[SDLK_RETURN]
+	  0
   );
 }
 
@@ -83,7 +83,7 @@ void bindGameplayKeyUp(App *app, SDLKey *key){
 		case SDLK_SPACE:
 			playerAttack(app, &app->game.indy);
 			break;
-		case SDLK_RCTRL:
+		case SDLK_RSHIFT:
 			playerAttack(app, &app->game.allan);
 			break;
 	}

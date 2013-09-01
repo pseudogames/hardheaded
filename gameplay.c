@@ -4,8 +4,8 @@ void renderLifeBars(App *app){
 	SDL_Surface *screen = app->screen;
 	Board *board = &app->game.board;
 
-	renderPlayerSpecialBar(screen, board, &app->game.indy, 0);
-	renderPlayerSpecialBar(screen, board, &app->game.allan, 650);
+	renderPlayerSpecialBar(app, screen, &app->game.indy, 0);
+	renderPlayerSpecialBar(app, screen, &app->game.allan, 650);
 
 	renderPlayerLife(app, screen, &app->game.indy, 0);
 	renderPlayerLife(app, screen, &app->game.allan, 650);

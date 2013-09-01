@@ -5,7 +5,7 @@ void bindGameplayKeystate(App *app){
   Uint8 *keystate;
   keystate = SDL_GetKeyState(NULL);
 
-  if(keystate[SDLK_SPACE]){
+  if(keystate[SDLK_SPACE] || keystate[SDLK_LSHIFT]){
 	  playerChargeSpecialAttack(app, &app->game.indy);
   }
 
@@ -86,6 +86,7 @@ void bindGameplayKeyUp(App *app, SDLKey *key){
 	Menu *menu = &app->menu;
 	switch(*key){
 		case SDLK_SPACE:
+		case SDLK_LSHIFT:
 			playerAttack(app, &app->game.indy);
 			break;
 		case SDLK_RSHIFT:

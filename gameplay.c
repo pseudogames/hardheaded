@@ -25,8 +25,8 @@ void renderGameplay(App *app){
 	renderDebug(app);
 
 	renderLifeBars(app);
-	renderBody(app, &app->game.indy.body, &app->game.indy);
-	renderBody(app, &app->game.allan.body, &app->game.allan);
+	renderPlayer(app, &app->game.indy);
+	renderPlayer(app, &app->game.allan);
 	renderHead(app);
 
 	checkPlayerLife(&app->game.indy);
@@ -34,19 +34,22 @@ void renderGameplay(App *app){
 }
 
 int near(Body *body1, Body *body2){
-	int tileset = 32;
-	int x1 = body1->pos.x/tileset;
-	int y1 = body1->pos.y/tileset;
-	int x2 = body2->pos.x/tileset;
-	int y2 = body2->pos.y/tileset;
-    int dx = fabs(x1 - x2);
-    int dy = fabs(y1 - y2);
+	//float a = body1->angle * M_PI / 180;
+	//float dx = cos(a) * HOLD_DISTANCE;
+	//float dy = sin(a) * HOLD_DISTANCE;
 
-//	printf("Deltas, x: %i, y: %i", dx, dy);
+	int x1 = body1->pos.x; // + dx;
+	int y1 = body1->pos.y; // - dy;
+	int x2 = body2->pos.x;
+	int y2 = body2->pos.y;
+    float dx = x1 - x2;
+    float dy = y1 - y2;
 
-	if( dx < 3 && dy < 3){
-		return 1;
-	}
+	float d = sqrt(dx * dx + dy* dy);
+
+	printf("Deltas, f: %f\n", d);
+
+	if( d < PICK_DISTANCE ) return 1;
 	return 0;
 }
 
@@ -54,9 +57,24 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	Body *body = &player->body;
 	Body *head_body = &app->game.head.body;
 
-	if(near(body, head_body)){
-		player->grabbing = 1;
-		head_body->action = ACTION_ATTACK;
+	if(!player->grabbing && near(body, head_body)){
+		float a = body->angle * M_PI / 180;
+		float dx = cos(a) * HOLD_DISTANCE;
+		float dy = sin(a) * HOLD_DISTANCE;
+		float tx = head_body->pos.x - dx;
+		float ty = head_body->pos.y + dy;
+
+
+		if(is_empty(&app->game, body, (int)tx,(int)body->pos.y))
+			body->pos.x = tx;
+		if(is_empty(&app->game, body, (int)body->pos.x,(int)ty))
+			body->pos.y = ty;
+
+		if(is_empty(&app->game, body, (int)tx,(int)ty)) {
+			player->grabbing = 1;
+			head_body->action = ACTION_ATTACK;
+		}
+
 	}
 
 	if(!player->grabbing && player->special_attack < 100) {

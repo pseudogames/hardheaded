@@ -5,6 +5,9 @@
 #include "render.h"
 #include "movement.h"
 
+#define HOLD_DISTANCE 36
+#define PICK_DISTANCE 32
+
 void renderGameplay(App *app);
 void playerAttack(App *app, Player *player);
 void playerChargeSpecialAttack(App *app, Player *player);

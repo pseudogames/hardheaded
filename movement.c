@@ -11,14 +11,20 @@
 
 inline int is_solid(Game *game, Body *body, int x, int y)
 {
+	int hit;
 	x/=tileSize;
 	y/=tileSize;
 
 	if(x<0 || y<0 || x>=mapWidth || y>=mapHeight)
-		return 1;
-	if(body->pos.x/tileSize == x && body->pos.y/tileSize == y)
-		return 0;
-	return game->board.crowd[x][y];
+		hit = 1;
+	else if((int)body->pos.x/tileSize == x && (int)body->pos.y/tileSize == y)
+		hit = 0;
+	else 
+		hit = game->board.crowd[x][y];
+
+	//printf("solid:%d, %d %d %d %d\n",hit, (int)body->pos.x/tileSize , x , (int)body->pos.y/tileSize , y);
+
+	return hit;
 }
 
 inline int is_empty(Game *game, Body *body, int x, int y)
@@ -41,9 +47,9 @@ void angle_rotate(float *a0_base, float a1, float f)
 	*a0_base = a0;
 }
 
-void body_move(Game *game, Body *body, float angle, float vel)
+void body_move(Game *game, Body *body, float angle, float moving)
 {
-	float v = body->max_vel * vel;
+	float v = body->vel * moving;
 
 	angle_rotate(&body->angle, angle, body->ang_vel);
 #define ANGLE_STEP 15
@@ -52,14 +58,14 @@ void body_move(Game *game, Body *body, float angle, float vel)
 	float a = a0 * M_PI / 180.;
 	float dx = cos(a) * v;
 	float dy = sin(a) * v;
-	int x0 = body->pos.x;
-	int y0 = body->pos.y;
-	int x1 = x0 + dx;
-	int y1 = y0 - dy;
+	float x0 = body->pos.x;
+	float y0 = body->pos.y;
+	float x1 = x0 + dx;
+	float y1 = y0 - dy;
 
 
-	int mx = x0/TILESIZE- x1/TILESIZE;
-	int my = y0/TILESIZE- y1/TILESIZE;
+	int mx = (int)x0/TILESIZE - (int)x1/TILESIZE;
+	int my = (int)y0/TILESIZE - (int)y1/TILESIZE;
 	if(!mx) body->pos.x = x1;
 	if(!my) body->pos.y = y1;
 	if(mx || my) {
@@ -80,8 +86,29 @@ void body_move(Game *game, Body *body, float angle, float vel)
 void player_move(App *app, Player *player, int up, int right, int down, int left, int halt)
 {
 	Body *body = &player->body;
+	int hit = 0;
 
 	if(body->action == ACTION_DEATH) return;
+
+	if(player->grabbing){
+		float a = player->body.angle * M_PI / 180;
+		float dx = cos(a) * HOLD_DISTANCE;
+		float dy = sin(a) * HOLD_DISTANCE;
+		float tx = body->pos.x + dx;
+		float ty = body->pos.y - dy;
+		hit = is_solid(&app->game, &app->game.head.body, tx,ty);
+		if(hit) {
+			player->grabbing = 0;
+		} else {
+			app->game.head.body.pos.x = tx;
+			app->game.head.body.pos.y = ty;
+			app->game.head.body.angle = body->angle;
+			body->vel = 1;
+		}
+	} 
+	if(!player->grabbing) {
+		body->vel = body->max_vel;
+	}
 
     int dx=right-left;
     int dy=down-up;
@@ -94,7 +121,7 @@ void player_move(App *app, Player *player, int up, int right, int down, int left
 		}
 
         float angle = ATAN2(dx,dy);
-        body_move(&app->game, body, angle, !halt);
+        body_move(&app->game, body, angle, !halt && !hit);
     }
 }
 
@@ -245,6 +272,9 @@ void moveInit(App *app)
 			if(head) {
 				app->game.head.body.pos.x = x * tileSize + tileSize/2;
 				app->game.head.body.pos.y = y * tileSize + tileSize/2;
+
+				app->game.head.body.pos.x = app->game.indy.body.pos.x;
+				app->game.head.body.pos.y = app->game.indy.body.pos.y;
 			}
 		}
 	}

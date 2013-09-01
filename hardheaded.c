@@ -65,6 +65,9 @@ void appInit(App *app){
   app->game.allan.body.ang_vel = 0.25;
   app->game.allan.body.max_vel= 4;
 
+  app->game.head.body.ang_vel = 0.25;
+  app->game.head.body.max_vel= 4;
+
   loadMap(app);
 }
 

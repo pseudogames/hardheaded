@@ -47,13 +47,16 @@ typedef struct {
   SDL_Surface *indiana;
 } Menu;
 
+typedef struct { float x,y; } vec;
+
 typedef struct {
-  SDL_Rect pos;
+  vec pos;
   Action action;
   float angle; // degree
   float frame;
   float ang_vel;
   float max_vel;
+  float vel;
   Sprite *sprite;
 } Body;
 

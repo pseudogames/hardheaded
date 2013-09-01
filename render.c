@@ -85,8 +85,8 @@ void renderDebug(App *app)
 
 	}
 }
-
-void renderBody(App *app, Body *body, Player *player){
+void renderPlayer(App *app, Player *player){
+	Body *body = &player->body;
 	if(body->action == ACTION_ATTACK){
 		body->frame += 0.3;
 
@@ -103,9 +103,11 @@ void renderBody(App *app, Body *body, Player *player){
 		if(player->life == 10){
 			body->action = ACTION_MOVE;
 		}
-
 	}
+	renderBody(app, body);
+}
 
+void renderBody(App *app, Body *body){
 	SDL_Rect src;
 	sprite_rotated_rect(
 			body->sprite, 
@@ -217,15 +219,7 @@ void renderHead(App *app){
 		body->frame = 0;
 	}
 
-	SDL_Rect src;
-	sprite_rotated_rect(
-			body->sprite, 
-			body->action, 
-			(int)body->frame,
-			(int)body->angle,
-			&src);
-
-	SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &body->pos);
+	renderBody(app, body);
 }
 
 

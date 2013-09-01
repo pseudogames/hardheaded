@@ -401,8 +401,8 @@ int shoot(App *app, Body *body, int spread, int angle, float range)
 	dx = + cos(a * M_PI / 180.) * range;
 	dy = - sin(a * M_PI / 180.) * range;
 
-	x1 = x0;
-	y1 = y0;
+	x1 = x0 - dx * 0.2;
+	y1 = y0 - dy * 0.2;
 
 	x2 = x0 + dx;
 	y2 = y0 + dy;

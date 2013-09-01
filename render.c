@@ -135,6 +135,13 @@ void renderPlayer(App *app, Player *player){
 			float tx = player->power_body.pos.x + dx;
 			float ty = player->power_body.pos.y - dy;
 
+			shoot(app, &player->power_body, 100);
+			shoot(app, &player->power_body, 100);
+			shoot(app, &player->power_body, 100);
+
+			player->body.life += player->power_body.life;
+			player->power_body.life = 0;
+
 			if(!is_air(&app->game, &player->power_body, (int)tx, (int)ty)){
 				player->power_body.action = ACTION_DEATH;
 				player->power_body.frame = 0;
@@ -144,8 +151,8 @@ void renderPlayer(App *app, Player *player){
 			player->power_body.pos.y = ty;
 		} else {
 			float a = player->body.angle * M_PI / 180;
-			float dx = cos(a) * 39;
-			float dy = sin(a) * 39;
+			float dx = cos(a) * tileSize/2;
+			float dy = sin(a) * tileSize/2;
 			float tx = body->pos.x + dx;
 			float ty = body->pos.y - dy;
 
@@ -283,18 +290,9 @@ void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int p
 
 void renderSpawnCountdown(App *app){
 	SDL_Color yellow = {0xFF, 0XFF, 0xFF};
-	int ticks = SDL_GetTicks();
-	int t ;
-	if(ticks > app->game.board.spawnTime){
-		t = 0;
-	} else{
-		t = (app->game.board.spawnTime - ticks) /1000;
-	}
-
-//	printf("eita %i, spawn: %i, tickts: %i\n", t, app->game.spawnTime, SDL_GetTicks());
-
 	char msg[256];
-	sprintf(msg, "zombies in %is", t);
+	sprintf(msg, "more zombies in %d", (app->game.next_wave - SDL_GetTicks()) / 1000);
+
 	text_write_raw(app->screen, 400 , 10, msg, yellow, 20);
 }
 

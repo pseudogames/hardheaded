@@ -115,6 +115,8 @@ void playerAttack(App *app, Player *player){
 	body->action = ACTION_ATTACK;
 	body->frame = 0;
 
+	shoot(app, &player->body, 20);
+
 	player->special_attack = 0;
 }
 
@@ -129,8 +131,9 @@ void spawnEnemy(App *app)
 {
 	Game *game = &app->game;
 	int x,y,i;
-	Wave *wave = &game->wave[game->board.wave_index];
+	Wave *wave = &game->wave[game->wave_index];
 	int t = SDL_GetTicks();
+
 
 	// printf("spawn tick %d\n", t);
 	//if(game->on_screen_enemies>0 && t < app->game.spawnTime)
@@ -173,7 +176,7 @@ void spawnEnemy(App *app)
 			// printf("spawn %d\n", i);
 			Body *enemybody = &enemy->body;
 			enemybody->score = 1;
-			enemybody->life = 1;
+			enemybody->life = DAMAGE;
 			enemybody->ang_vel = 0.05;
 			enemybody->max_vel = 2;
 			enemybody->vel = 2;
@@ -201,8 +204,9 @@ int hit(App *app, Body *source, Body *target){
 		pow(target->pos.y - source->pos.y,2)
 	);
 
+	float damage = DAMAGE;
 	int alive = target->life > 0;
-	target->life -= 0.25;
+	target->life -= damage;
 
 	if(target->life > 0){
 		//playSound(target->onHitSound);
@@ -240,8 +244,9 @@ int hit(App *app, Body *source, Body *target){
 				};
 
 				int i;
-				Wave *wave = &app->game.wave[app->game.board.wave_index];
+				Wave *wave = &app->game.wave[app->game.wave_index];
 				if(enemy_killed) {
+					source->life += target->score * 0.05;
 					app->game.board.on_screen_enemies --;
 					app->game.board.kill_count ++;
 					app->game.total_kill_count ++;
@@ -274,11 +279,14 @@ int hit(App *app, Body *source, Body *target){
 						app->game.board.death1[x][y] /= 2;
 					}
 				}
+
+#if 0
 				int index = app->game.board.wave_index;
 				int count = app->game.wave[app->game.board.wave_index].enemy_count;
 				if(count == app->game.board.kill_count){
 					setWave(app, index+1);    
 				}
+#endif
 			}
 		}
 		return 1;
@@ -288,17 +296,20 @@ int hit(App *app, Body *source, Body *target){
 
 inline int draw(App *app, Body *body, int x, int y)
 {
-	int i;
 
-	int target = 0;
-	// printf("hit %d,%d-%d /%d\n", x,y,i *tileSize, enemyTileHeight);
-	int tg = is_air(&app->game, body, x, y+i*tileSize);
-	if(tg >=4 || tg && i==0) {
-		// printf("i %d tg %d\n", i, tg);
-		target = tg;
-	}
+#if 0
+	SDL_Rect rect = {
+		x - app->hearts.full->w/2,
+		y - app->hearts.full->h/2,
+		app->hearts.full->w,
+		app->hearts.full->h
+	};
+	SDL_BlitSurface(app->hearts.full, NULL, app->screen, &rect);
+#endif
 
-	
+	int target = is_hit(&app->game, body, x, y);
+	// printf("hit %d,%d: %d\n", x,y, target);
+
 	if(target>=4) {
 		int idx = target - 4;
 		hit(app, body, &app->game.board.enemies[idx].body);
@@ -307,23 +318,22 @@ inline int draw(App *app, Body *body, int x, int y)
 	return target;
 }
 
-int shoot(App *app, Body *body)
+int shoot(App *app, Body *body, int spread)
 {
 	int x1, y1, x2, y2;
 	int dx, dy, i, e;
 	int incx, incy, inc1, inc2;
 	int x,y;
-	int range;
-	if(body->life <= 0)
-		return;
 
-	range = tileSize;
+	if(body->action == ACTION_DEATH)
+		return 0;
+
 	//playSound(body->item.type->sound, -1);
 
 	x1 = body->pos.x;
 	y1 = body->pos.y;
 
-	int spread = 20;
+	int range = tileSize*1.5;
 	float a = (int)(body->angle + ((rand() % (spread+1)) - spread/2))%360;
 	x2 = x1 + cos(a * M_PI / 180.) * range;
 	y2 = y1 - sin(a * M_PI / 180.) * range;

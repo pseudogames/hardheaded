@@ -4,6 +4,7 @@
 #include <SDL_mixer.h>
 #include "sprite.h"
 
+#define DAMAGE 0.25
 #define WAVE_COUNT 32
 #define ENEMY_COUNT 1000
 #include "aStarLibrary.h" // must be after the defines above
@@ -94,11 +95,12 @@ typedef struct{
 } Enemy;
 
 typedef struct {
-	int required_kills;
+	int time;
 	int enemy_spawn_interval;
 	int enemy_count_per_spawn;
 	int enemy_count_on_screen;
 	int enemy_count;
+	int enemy_variation;
 } Wave;
 
 typedef struct{
@@ -108,8 +110,6 @@ typedef struct{
   Enemy enemies[ENEMY_COUNT];
   int latest_enemy_updated;
 
-  int wave_count;
-  int wave_index;
   int wave_start;
   Uint32 spawnTime;
   int kill_count;
@@ -139,6 +139,9 @@ typedef struct {
   Player head;
   Uint32 start;
   int total_kill_count;
+  int next_wave;
+  int wave_count;
+  int wave_index;
 } Game;
 
 typedef struct {

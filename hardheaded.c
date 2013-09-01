@@ -26,33 +26,47 @@ void loadMap(App *app) {
   app->game.board.image = IMG_Load(image_path);
   app->game.board.hit = IMG_Load(hit_path);
 
-  app->game.board.wave_count=4;
-
-  app->game.wave[0].enemy_spawn_interval=1000;
-  app->game.wave[0].enemy_count=20;
-  app->game.wave[0].enemy_count_on_screen=20;
-  app->game.wave[0].enemy_count_per_spawn=20;
-
-  app->game.wave[1].enemy_spawn_interval=5000;
-  app->game.wave[1].enemy_count=40;
-  app->game.wave[1].enemy_count_on_screen=20;
-  app->game.wave[1].enemy_count_per_spawn=10;
-
-  app->game.wave[2].enemy_spawn_interval=2000;
-  app->game.wave[2].enemy_count=120;
-  app->game.wave[2].enemy_count_on_screen=80;
-  app->game.wave[2].enemy_count_per_spawn=10;
-
-  app->game.wave[3].enemy_spawn_interval=250;
-  app->game.wave[3].enemy_count=120;
-  app->game.wave[3].enemy_count_on_screen=30;
-  app->game.wave[3].enemy_count_per_spawn=2;
-
+  moveInit(app);
 }
 
 void gameInit(App *app){
-	app->game.start = SDL_GetTicks();
-	app->game.board.spawnTime = app->game.start+5000;
+  app->game.start = SDL_GetTicks();
+  app->game.next_wave = app->game.start+5000;
+  app->game.wave_index = -1;
+  app->game.wave_count = 4;
+
+  app->game.wave[0].time=30000;
+  app->game.wave[0].enemy_spawn_interval=3000;
+  app->game.wave[0].enemy_count=20;
+  app->game.wave[0].enemy_count_on_screen=10;
+  app->game.wave[0].enemy_count_per_spawn=5;
+  app->game.wave[0].enemy_variation=1;
+
+  app->game.wave[1].time=20000;
+  app->game.wave[1].enemy_spawn_interval=2000;
+  app->game.wave[1].enemy_count=60;
+  app->game.wave[1].enemy_count_on_screen=20;
+  app->game.wave[1].enemy_count_per_spawn=10;
+  app->game.wave[1].enemy_variation=2;
+
+  app->game.wave[2].time=10000;
+  app->game.wave[2].enemy_spawn_interval=1000;
+  app->game.wave[2].enemy_count=120;
+  app->game.wave[2].enemy_count_on_screen=30;
+  app->game.wave[2].enemy_count_per_spawn=20;
+  app->game.wave[2].enemy_variation=4;
+
+  app->game.wave[3].time=5000;
+  app->game.wave[3].enemy_spawn_interval=250;
+  app->game.wave[3].enemy_count=100;
+  app->game.wave[3].enemy_count_on_screen=50;
+  app->game.wave[3].enemy_count_per_spawn=30;
+  app->game.wave[3].enemy_variation=6;
+}
+
+
+void boardInit(App *app){
+	app->game.board.spawnTime = app->game.start;
 	app->game.board.kill_count= 0;
 	memset(app->game.board.death1, 0, sizeof(app->game.board.death1));
 	memset(app->game.board.death2, 0, sizeof(app->game.board.death2));
@@ -63,15 +77,16 @@ void gameInit(App *app){
 }
 
 void setWave(App *app, int wave_index) {
-	app->game.board.wave_index = wave_index;
-	if(app->game.board.wave_index > app->game.board.wave_count-1)
-		app->game.board.wave_index = app->game.board.wave_count-1;
+	app->game.wave_index = wave_index;
+	if(app->game.wave_index > app->game.wave_count-1)
+		app->game.wave_index = app->game.wave_count-1;
 	app->game.board.wave_start = SDL_GetTicks();
 	app->game.board.total_enemies = 0;
 	app->game.board.on_screen_enemies = 0;
+	app->game.next_wave = SDL_GetTicks() +
+		app->game.wave[ app->game.wave_index ].time;
 
-	moveInit(app);
-	gameInit(app);
+	boardInit(app);
 }
 
 
@@ -80,7 +95,6 @@ void appInit(App *app){
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
-
 
   app->game.indy.name = "Mr. Indy J.";
   app->game.indy.body.life = 10;
@@ -115,7 +129,7 @@ int main(int argc, char* args[]) {
   App app;
   appInit(&app);
   renderInit(&app);
-  setWave(&app, 0); // calls moveInit / gameInit
+  gameInit(&app);
 
   init_font();
 
@@ -130,6 +144,8 @@ int main(int argc, char* args[]) {
 
 	  switch(app.state){
 		  case STATE_PLAYING:
+			  if(startTime > app.game.next_wave)
+				  setWave(&app, app.game.wave_index+1);    
 			  spawnEnemy(&app);
 			  moveEnemies(&app);
 			  renderGameplay(&app);
@@ -140,10 +156,10 @@ int main(int argc, char* args[]) {
 			  break;
 	  }
 
-	  renderTerminate(&app);
-
 	  SDL_Flip(app.screen);
 	  handleDelay(startTime);
   }
+
+  renderTerminate(&app);
 }
 

@@ -47,7 +47,8 @@ int near(Body *body1, Body *body2){
 
 	float d = sqrt(dx * dx + dy* dy);
 
-	printf("Deltas, f: %f\n", d);
+	//printf("Deltas, f: %f\n", d);
+
 
 	if( d < PICK_DISTANCE ) return 1;
 	return 0;

@@ -343,6 +343,20 @@ void moveEnemies(App *app)
 						app->game.board.enemies[i].body.frame += 0.3;
 					} else {
 						app->game.board.enemies[i].alive = 0;
+						{ // blood splat
+							SDL_Rect src = {
+								(rand() % 3) * tileSize,
+								(rand() % 3) * tileSize,
+								tileSize, tileSize
+							};
+							SDL_Rect dst = {
+								app->game.board.enemies[i].body.pos.x - tileSize/2,
+								app->game.board.enemies[i].body.pos.y - tileSize/2,
+								tileSize, tileSize
+							};
+							SDL_BlitSurface(app->blood, &src, app->game.board.image, &dst);
+							
+						}
 					}
 				}
 			}

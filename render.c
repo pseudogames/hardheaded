@@ -188,6 +188,7 @@ void renderBody(App *app, Body *body){
 
 void renderInit(App *app){
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
+  app->blood = IMG_Load("data/blood.png");
   app->logo = IMG_Load("data/logo.png");
   app->menu.indiana = IMG_Load("data/indy-idol.png");
   app->hearts.full = IMG_Load("data/fullheart_small.png");

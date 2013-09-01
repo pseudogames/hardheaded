@@ -156,7 +156,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	}
 
 	if(!player->grabbing && player->special_attack < 100 && app->game.head.body.life > 0) {
-		player->special_attack += 2;
+		player->special_attack += 5;
 		player->power_body.action = ACTION_MOVE;
 	}
 

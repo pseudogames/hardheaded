@@ -326,8 +326,32 @@ void renderWinner(App *app){
 	text_write_raw(app->screen, 20 , 330, msg, white, 60);
 }
 
-
 void renderGameOver(App *app){
 	text_write_raw(app->screen, 20 , 330, "Draw. Game Over.", white, 60);
+}
+void renderHints(App *app){
+	Body *head = &app->game.head.body;
+	Player *indy = &app->game.indy;
+	Player *allan = &app->game.allan;
+
+	if((SDL_GetTicks()/500) % 2 == 0){
+
+		if(indy->grabbing == 0 && allan->grabbing == 0){
+			char *msg = "GRAB";
+			if(indy->body.action == ACTION_DEATH || indy->body.action == ACTION_DEATH) msg = "GUARD";
+			text_write_raw_ttf(app->screen, head->pos.x , head->pos.y - tileSize/2 - 60, "I", trueRed, 60, "data/arrows.ttf");
+			text_write_raw_ttf(app->screen, head->pos.x + 80 , head->pos.y - tileSize/2 - 60, msg, trueRed, 20, "data/indiana.ttf");
+		} else {
+			if(indy->grabbing){
+				text_write_raw_ttf(app->screen, indy->door.x , indy->door.y - tileSize/2 - 20, "I", trueRed, 60, "data/arrows.ttf");
+				text_write_raw_ttf(app->screen, indy->door.x + 60, indy->door.y - tileSize/2 -40, "DROP", trueRed, 20, "data/indiana.ttf");
+			} else {
+				text_write_raw_ttf(app->screen, allan->door.x -tileSize/2 - 60 , allan->door.y - tileSize/2 - 20, "F", trueRed, 60, "data/arrows.ttf");
+				text_write_raw_ttf(app->screen, allan->door.x - tileSize * 4 - 20, allan->door.y - tileSize/2 + 40, "DROP", trueRed, 20, "data/indiana.ttf");
+			}
+		
+		}
+	}
+
 }
 

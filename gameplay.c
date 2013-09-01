@@ -64,6 +64,7 @@ void renderGameplay(App *app){
 	renderPlayer(app, &app->game.indy);
 	renderPlayer(app, &app->game.allan);
 	renderHead(app);
+	renderHints(app);
 	if(app->game.winner)
 		renderWinner(app);
 	if(app->game.head.body.life <= 0)

@@ -9,6 +9,23 @@
 #define ATAN2(dx,dy) ((int)(720+atan2(-(dy),(dx))*180/M_PI)%360) // FIXME wrap angle properly
 #define TILESIZE 32
 
+inline int is_solid(Game *game, Body *body, int x, int y)
+{
+	x/=tileSize;
+	y/=tileSize;
+
+	if(x<0 || y<0 || x>=mapWidth || y>=mapHeight)
+		return 1;
+	if(body->pos.x/tileSize == x && body->pos.y/tileSize == y)
+		return 0;
+	return game->board.crowd[x][y];
+}
+
+inline int is_empty(Game *game, Body *body, int x, int y)
+{
+	return !is_solid(game, body,x,y);
+}
+
 void angle_rotate(float *a0_base, float a1, float f)
 {
 	float a0 = *a0_base;
@@ -58,11 +75,6 @@ void body_move(Game *game, Body *body, float angle, float vel)
 			}
 		}
 	}
-}
-
-int is_empty(Game *game, Body *body, int x, int y)
-{
-	return 1;
 }
 
 void player_move(App *app, Body *body, int up, int right, int down, int left, int halt)

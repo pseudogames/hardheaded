@@ -73,6 +73,7 @@ typedef struct{
   SDL_Surface *hit;
 
   Enemy enemies[ENEMY_COUNT];
+  int latest_enemy_updated;
 
   int wave_count;
   int wave_index;
@@ -99,6 +100,11 @@ typedef struct {
   Player indy;
   Player allan;
   Player head;
+  Uint32 start;
+  Uint32 spawnTime;
+  int kill_count;
+  int total_enemies;
+  int on_screen_enemies;
 } Game;
 
 typedef struct {

@@ -7,12 +7,12 @@ int FindPath (int pathfinderID,int startingX, int startingY,
 int ReadPath(int pathfinderID,int currentX,int currentY, int pixelsPerFrame);
 void EndPathfinder();
 
-#define mapWidth  51
-#define mapHeight 38
-#define tileSize  20
+#define mapWidth  32
+#define mapHeight 24
+#define tileSize  32
 #define enemyTileHeight  3 // FIXME chan change by enemy?
 #define numberPeople ENEMY_COUNT
-#define maxPathLength ((mapWidth+mapHeight)*2)
+#define maxPathLength ((mapWidth+mapHeight)*4)
 #define notfinished 0
 #define notStarted 0// path-related constants
 #define found 1

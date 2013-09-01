@@ -16,6 +16,40 @@
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 
+void loadMap(App *app) {
+  char image_path[256];
+  char hit_path[256];
+  char wave_path[256];
+  char *map_name = "map01";
+  sprintf(image_path, "data/%s.png", map_name);
+  sprintf(hit_path, "data/%s_hit.png", map_name);
+  app->game.board.image = IMG_Load(image_path);
+  app->game.board.hit = IMG_Load(hit_path);
+}
+
+void gameInit(App *app){
+	app->game.start = SDL_GetTicks();
+	app->game.spawnTime = app->game.start+5000;
+	app->game.kill_count= 0;
+	memset(app->game.board.death1, 0, sizeof(app->game.board.death1));
+	memset(app->game.board.death2, 0, sizeof(app->game.board.death2));
+
+	app->game.board.latest_enemy_updated = 0;
+
+	movePrepare(app);
+}
+
+void setWave(App *app, int wave_index) {
+	app->game.board.wave_index = wave_index;
+	app->game.board.wave_start = SDL_GetTicks();
+	app->game.total_enemies = 0;
+	app->game.on_screen_enemies = 0;
+
+	moveInit(app);
+	gameInit(app);
+}
+
+
 void appInit(App *app){
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
@@ -30,6 +64,8 @@ void appInit(App *app){
 
   app->game.allan.body.ang_vel = 0.25;
   app->game.allan.body.max_vel= 4;
+
+  loadMap(app);
 }
 
 void handleDelay(Uint32 start) {
@@ -45,6 +81,7 @@ int main(int argc, char* args[]) {
   App app;
   appInit(&app);
   renderInit(&app);
+  setWave(&app, 0); // calls moveInit / gameInit
 
   init_font();
 

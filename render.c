@@ -8,13 +8,37 @@ SDL_Color white = {0xFF, 0XFF, 0xFF};
 SDL_Color green = {0x00, 0XFF, 0x00};
 SDL_Color yellow = {0xFF, 0XFF, 0x00};
 
-void renderBody(App *app, Body *body){
-	if(body->action != ACTION_MOVE){
+void renderBody(App *app, Body *body, Player *player){
+	if(body->action == ACTION_ATTACK){
 		body->frame += 0.3;
 
 		if(body->frame >= body->sprite->frame_count){
 			body->action = ACTION_MOVE;
 		}
+	} 
+	
+	if(body->action == ACTION_DEATH){
+		body->frame += 0.3;
+
+		SDL_Rect src;
+		sprite_rotated_rect(
+				body->sprite, 
+				body->action, 
+				(int)body->frame,
+				(int)body->angle,
+				&src);
+
+		if(body->frame >= body->sprite->frame_count){
+			body->frame = 0;
+		}
+
+		if(player->life == 10){
+			body->action = ACTION_MOVE;
+		}
+
+		SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &body->pos);
+	
+		return;
 	}
 
 	SDL_Rect src;
@@ -83,14 +107,14 @@ void renderPlayerLife(SDL_Surface *screen, Board *board, Player *player, int pla
 		if(i < player->life){
 			if(i < ipart ){
 				SDL_BlitSurface(board->hearts.full, NULL, screen, &heartpos);
-			} else if(fpart == 0.25){
+			} else if(fpart <= 0.25){
 				SDL_BlitSurface(board->hearts.onequarter, NULL, screen, &heartpos);
-			} else if (fpart == 0.5){
+			} else if (fpart <= 0.5){
 				SDL_BlitSurface(board->hearts.twoquarter, NULL, screen, &heartpos);
-			} else if(fpart == 0.75){
+			} else if(fpart <= 0.75){
 				SDL_BlitSurface(board->hearts.threequarter, NULL, screen, &heartpos);
 			} else {
-				SDL_BlitSurface(board->hearts.empty, NULL, screen, &heartpos);
+				SDL_BlitSurface(board->hearts.full, NULL, screen, &heartpos);
 			}
 		} else {
 			SDL_BlitSurface(board->hearts.empty, NULL, screen, &heartpos);

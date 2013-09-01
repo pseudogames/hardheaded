@@ -11,6 +11,6 @@ extern SDL_Color yellow;
 
 void renderInit(App *app);
 void renderStart(App *app);
-void renderBody(App *app, Body *body);
+void renderBody(App *app, Body *body, Player *player);
 void renderFinish(App *app);
 #endif

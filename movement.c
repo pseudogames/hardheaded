@@ -68,6 +68,8 @@ int is_empty(Game *game, Body *body, int x, int y)
 void player_move(App *app, Body *body, int up, int right, int down, int left, int halt)
 {
 
+	if(body->action == ACTION_DEATH) return;
+
 	if((int)body->frame > body->sprite->frame_count) {
 		body->frame = 0;
 	}

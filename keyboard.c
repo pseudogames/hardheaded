@@ -54,6 +54,9 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_SPACE:
 			playerAttack(app, &app->game.board.indy);
 			break;
+		case SDLK_p:
+			playerDie(app, &app->game.board.indy);
+			break;
 	}
 }
 

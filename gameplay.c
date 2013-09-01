@@ -7,13 +7,31 @@ void renderLifeBars(App *app){
 	renderPlayerLife(screen, board, &board->allan, 650);
 }
 
+void checkPlayerLife(Player *player){
+	if(player->life <= 10 && player->body.action == ACTION_DEATH){
+		player->life += 0.05;
+		if(player->life > 10) player->life = 10;
+	}
+}
+
 void renderGameplay(App *app){
 	renderLifeBars(app);
-	renderBody(app, &app->game.board.indy.body);
+	renderBody(app, &app->game.board.indy.body, &app->game.board.indy);
+	checkPlayerLife(&app->game.board.indy);
 }
 
 void playerAttack(App *app, Player *player){
 	Body *body = &player->body;
+
+	if(body->action == ACTION_DEATH) return;
+	
 	body->action = ACTION_ATTACK;
+	body->frame = 0;
+}
+
+void playerDie(App *app, Player *player){
+	player->life = 0;
+	Body *body = &player->body;
+	body->action = ACTION_DEATH;
 	body->frame = 0;
 }

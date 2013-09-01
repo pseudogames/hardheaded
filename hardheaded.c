@@ -11,6 +11,7 @@
 #include "gameplay.h"
 #include "sprite.h"
 #include "render.h"
+#include "sound.h"
 
 #define FPS 30
 
@@ -127,6 +128,7 @@ void setWave(App *app, int wave_index) {
 void appInit(App *app){
   srand(time(NULL));
   memset(app, 0, sizeof(App));
+  soundInit();
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
 }
@@ -170,6 +172,7 @@ int main(int argc, char* args[]) {
 				  break;
 			  case STATE_PAUSED:
 			  case STATE_MENU:
+				  playMusic("indiana-low.ogg", -1);
 				  renderMenu(&app);
 				  break;
 		  }

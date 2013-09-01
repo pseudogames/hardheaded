@@ -325,11 +325,11 @@ void renderWinner(App *app){
 	Player *winner = app->game.winner;
 	char msg[256];
 	sprintf(msg, "The winner is: %s", winner->name);
-	text_write_raw(app->screen, 20 , 330, msg, white, 60);
+	text_write_raw(app->screen, 20 , 330, msg, white, 61);
 }
 
 void renderGameOver(App *app){
-	text_write_raw(app->screen, 20 , 330, "Draw. Game Over.", white, 60);
+	text_write_raw(app->screen, 150 , 330, "Draw. Game Over.", white, 61);
 }
 void renderHints(App *app){
 	Body *head = &app->game.head.body;
@@ -366,14 +366,18 @@ void renderCredits(App *app)
 	SDL_Rect charPos = {-670, -50, screen->w, screen->h};
 //	SDL_BlitSurface(app->menu.engineer, &charPos, screen, NULL );
 
-	text_write_raw(screen, 300, 50, "Credits", black, 96);
+	text_write_raw(screen, 300, 25, "Credits", black, 96);
 
 	text_write_raw(screen, 100, 150, "team", red, 36);
 	text_write_raw(screen, 100, 200, "Programmer: Carlo \"zED\" Caputo", black, 20);
 
 	text_write_raw(screen, 100, 250, "Programmer: Pedro Mariano", black, 20);
 
-	text_write_raw(screen, 100, 300, "chars", red, 36);
+	text_write_raw(screen, 600, 150, "music", red, 36);
+	text_write_raw(screen, 600, 200, "http://www.newgrounds.com/audio/listen/148265", black, 14);
+	
+
+	text_write_raw(screen, 100, 300, "chars/tiles", red, 36);
 	text_write_raw(screen, 100, 350, "http://i872.photobucket.com/albums/ab289/Mollombo/ZombieSheet.png", black, 20);
 	text_write_raw(screen, 100, 400, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
 	text_write_raw(screen, 100, 450, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
@@ -383,6 +387,7 @@ void renderCredits(App *app)
 	text_write_raw(screen, 100, 600, "fonts", red, 36);
 	text_write_raw(screen, 100, 650, "http://www.dafont.com/indiana.font", black, 20);
 	text_write_raw(screen, 100, 700, "http://www.dafont.com/drawing-blood.font", black, 20);
+	text_write_raw(screen, 100, 750, "http://www.dafont.com/drawing-blood.font", black, 20);
 }
 
 

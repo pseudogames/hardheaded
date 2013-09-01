@@ -2,12 +2,12 @@
 #include <math.h>
 #include "render.h"
 
-SDL_Color black = {0, 0, 0};
 SDL_Color red = {0xAA, 0X55, 0x00};
 SDL_Color trueRed = {0XFF, 0x00, 0x00};
 SDL_Color white = {0xFF, 0XFF, 0xFF};
 SDL_Color green = {0x00, 0XFF, 0x00};
 SDL_Color yellow = {0xFF, 0XFF, 0x00};
+SDL_Color black = {0x00, 0X00, 0x00};
 
 void renderDebug(App *app)
 {
@@ -189,7 +189,7 @@ void renderBody(App *app, Body *body){
 void renderInit(App *app){
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
   app->logo = IMG_Load("data/logo.png");
-//  app->menu.indiana = IMG_Load("data/goldhead.jpg");
+  app->menu.indiana = IMG_Load("data/indy-idol.png");
   app->hearts.full = IMG_Load("data/fullheart_small.png");
   app->hearts.onequarter= IMG_Load("data/14heart_small.png");
   app->hearts.twoquarter= IMG_Load("data/24heart_small.png");
@@ -359,26 +359,30 @@ void renderHints(App *app){
 
 void renderCredits(App *app)
 {
-	Uint32 color = SDL_MapRGB(app->screen->format, 33, 33,33 );
+	Uint32 color = SDL_MapRGB(app->screen->format, 0xc1, 0xcd,0xc1);
 	SDL_Surface *screen = app->screen;
 	SDL_FillRect(screen, NULL , color);
 
 	SDL_Rect charPos = {-670, -50, screen->w, screen->h};
 //	SDL_BlitSurface(app->menu.engineer, &charPos, screen, NULL );
 
-	text_write_raw(screen, 300, 50, "Credits", trueRed, 96);
+	text_write_raw(screen, 300, 50, "Credits", black, 96);
 
 	text_write_raw(screen, 100, 150, "team", red, 36);
-	text_write_raw(screen, 100, 200, "Carlo \"zED\" Caputo", white, 26);
-	text_write_raw(screen, 100, 250, "Pedro Mariano", white, 26);
+	text_write_raw(screen, 100, 200, "Programmer: Carlo \"zED\" Caputo", black, 20);
 
-	text_write_raw(screen, 100, 400, "chars", red, 36);
-	text_write_raw(screen, 100, 450, "based on http://pixelblock.tumblr.com", white, 26);
+	text_write_raw(screen, 100, 250, "Programmer: Pedro Mariano", black, 20);
 
-	text_write_raw(screen, 100, 600, "tileset", red, 36);
-	text_write_raw(screen, 100, 650, "zelda minish cap", white, 26);
-	text_write_raw(screen, 400, 600, "font", red, 36);
-	text_write_raw(screen, 400, 650, "Pixelsix, 2005 by Cal Henderson", white, 26);
+	text_write_raw(screen, 100, 300, "chars", red, 36);
+	text_write_raw(screen, 100, 350, "http://i872.photobucket.com/albums/ab289/Mollombo/ZombieSheet.png", black, 20);
+	text_write_raw(screen, 100, 400, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
+	text_write_raw(screen, 100, 450, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
+
+	text_write_raw(screen, 100, 500, "tileset", red, 36);
+	text_write_raw(screen, 100, 550, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
+	text_write_raw(screen, 100, 600, "fonts", red, 36);
+	text_write_raw(screen, 100, 650, "http://www.dafont.com/indiana.font", black, 20);
+	text_write_raw(screen, 100, 700, "http://www.dafont.com/drawing-blood.font", black, 20);
 }
 
 

@@ -60,6 +60,7 @@ typedef struct {
   float vel;
   Sprite *sprite;
   float life;
+  float score;
 } Body;
 
 typedef struct{
@@ -108,6 +109,10 @@ typedef struct{
   int wave_count;
   int wave_index;
   int wave_start;
+  Uint32 spawnTime;
+  int kill_count;
+  int total_enemies;
+  int on_screen_enemies;
 
   int wall[mapWidth][mapHeight];
   int air[mapWidth][mapHeight];
@@ -131,10 +136,7 @@ typedef struct {
   Player allan;
   Player head;
   Uint32 start;
-  Uint32 spawnTime;
-  int kill_count;
-  int total_enemies;
-  int on_screen_enemies;
+  int total_kill_count;
 } Game;
 
 typedef struct {

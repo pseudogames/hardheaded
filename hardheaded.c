@@ -52,8 +52,8 @@ void loadMap(App *app) {
 
 void gameInit(App *app){
 	app->game.start = SDL_GetTicks();
-	app->game.spawnTime = app->game.start+5000;
-	app->game.kill_count= 0;
+	app->game.board.spawnTime = app->game.start+5000;
+	app->game.board.kill_count= 0;
 	memset(app->game.board.death1, 0, sizeof(app->game.board.death1));
 	memset(app->game.board.death2, 0, sizeof(app->game.board.death2));
 
@@ -64,9 +64,11 @@ void gameInit(App *app){
 
 void setWave(App *app, int wave_index) {
 	app->game.board.wave_index = wave_index;
+	if(app->game.board.wave_index > app->game.board.wave_count-1)
+		app->game.board.wave_index = app->game.board.wave_count-1;
 	app->game.board.wave_start = SDL_GetTicks();
-	app->game.total_enemies = 0;
-	app->game.on_screen_enemies = 0;
+	app->game.board.total_enemies = 0;
+	app->game.board.on_screen_enemies = 0;
 
 	moveInit(app);
 	gameInit(app);
@@ -78,17 +80,22 @@ void appInit(App *app){
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
+
+
   app->game.indy.name = "Mr. Indy J.";
-  app->game.indy.body.life= 10;
-  app->game.allan.name = "Mr. Allan Q.";
-  app->game.allan.body.life= 10;
-
+  app->game.indy.body.life = 10;
+  app->game.indy.body.score = 0;
   app->game.indy.body.ang_vel = 0.25;
-  app->game.indy.body.max_vel= 4;
+  app->game.indy.body.max_vel = 4;
 
+  app->game.allan.name = "Mr. Allan Q.";
+  app->game.allan.body.life = 10;
+  app->game.allan.body.score = 0;
   app->game.allan.body.ang_vel = 0.25;
-  app->game.allan.body.max_vel= 4;
+  app->game.allan.body.max_vel = 4;
 
+  app->game.head.body.life = 100;
+  app->game.head.body.score = 0;
   app->game.head.body.ang_vel = 0.25;
   app->game.head.body.max_vel= 4;
 

@@ -32,6 +32,16 @@ inline int is_empty(Game *game, Body *body, int x, int y)
 	return !is_solid(game, body,x,y);
 }
 
+inline int is_air(Game *game, Body *body, int x, int y)
+{
+	x/=tileSize;
+	y/=tileSize;
+	if(x<0 || y<0 || x>=mapWidth || y>=mapHeight)
+		return 1;
+	return game->board.hittable[x][y];
+}
+
+
 void angle_rotate(float *a0_base, float a1, float f)
 {
 	float a0 = *a0_base;
@@ -158,6 +168,10 @@ void movePrepare(App *app)
 	{
 		if(app->game.board.enemies[i].alive)
 		{
+			if(app->game.board.enemies[i].body.life <= 0) {
+				app->game.board.enemies[i].alive = 0;
+				continue;
+			}
 			int x = app->game.board.enemies[i].body.pos.x/tileSize;
 			int y = app->game.board.enemies[i].body.pos.y/tileSize;
 			app->game.board.crowd[x][y] = 4+i;

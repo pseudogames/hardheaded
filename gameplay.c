@@ -130,7 +130,7 @@ void spawnEnemy(App *app)
 
 	// printf("spawn tick %d\n", t);
 	//if(game->on_screen_enemies>0 && t < app->game.spawnTime)
-	if(t < app->game.spawnTime)
+	if(t < app->game.board.spawnTime)
 		return;
 	// printf("spawn started %d\n", t);
 
@@ -139,14 +139,14 @@ void spawnEnemy(App *app)
 	int spawn = (int)ceil(wave->enemy_count_per_spawn/2.) 
 		+ (rand() % (int)ceil(wave->enemy_count_per_spawn/2.));
 
-	if(spawn + game->on_screen_enemies > wave->enemy_count_on_screen) {
+	if(spawn + game->board.on_screen_enemies > wave->enemy_count_on_screen) {
 		// printf("spawn %d on_screen\n", game->on_screen_enemies);
-		spawn = wave->enemy_count_on_screen - game->on_screen_enemies;
+		spawn = wave->enemy_count_on_screen - game->board.on_screen_enemies;
 	}
 	
-	if(spawn + game->total_enemies > wave->enemy_count) {
+	if(spawn + game->board.total_enemies > wave->enemy_count) {
 		// printf("spawn %d wave\n", game->total_enemies);
-		spawn = wave->enemy_count - game->total_enemies;
+		spawn = wave->enemy_count - game->board.total_enemies;
 	}
 
 	// printf("spawn %d enemies\n", spawn);
@@ -156,8 +156,8 @@ void spawnEnemy(App *app)
 		{
 			if(!game->board.enemies[i].alive)
 			{
-				game->total_enemies ++;
-				game->on_screen_enemies ++;
+				game->board.total_enemies ++;
+				game->board.on_screen_enemies ++;
 				spawn --;
 				enemy = &game->board.enemies[i];
 				break;
@@ -168,6 +168,7 @@ void spawnEnemy(App *app)
 		{
 			// printf("spawn %d\n", i);
 			Body *enemybody = &enemy->body;
+			enemybody->score = 1;
 			enemybody->life = 1;
 			enemybody->ang_vel = 0.05;
 			enemybody->max_vel = 2;
@@ -183,11 +184,10 @@ void spawnEnemy(App *app)
 			break; // did not finished group spawn, persist
 		}
 	}
-	app->game.spawnTime = t + spawnDelay;
+	app->game.board.spawnTime = t + spawnDelay;
 }
 
 int hit(App *app, Body *source, Body *target){
-#if 0
 	if(target == NULL || source == NULL) {
 		return 0;
 	}
@@ -197,16 +197,17 @@ int hit(App *app, Body *source, Body *target){
 		pow(target->pos.y - source->pos.y,2)
 	);
 
-	target->life -= 1;
+	int alive = target->life > 0;
+	target->life -= 0.25;
 
 	if(target->life > 0){
-		playSound(target->onHitSound);
+		//playSound(target->onHitSound);
 	}
 
 	if(target->life <= 0){
 		target->life = 0;
-		if(target->status == BODY_ALIVE){
-			int enemy_killed = 
+		if(alive){
+			int enemy_killed = !!target->score;
 			if(!app->debug || enemy_killed) { // player immortal on debug
 				int x0 = target->pos.x/tileSize;
 				int y0 = target->pos.y/tileSize;
@@ -235,24 +236,20 @@ int hit(App *app, Body *source, Body *target){
 				};
 
 				int i;
-				Wave *wave = &app->game.board.wave[app->game.board.wave_index];
+				Wave *wave = &app->game.wave[app->game.board.wave_index];
 				if(enemy_killed) {
-					app->game.on_screen_enemies --;
-					if(target->exploded) {
-						app->game.total_enemies --;
-					} else {
-						app->game.kill_count ++;
-						app->game.total_kill_count ++;
-						int score = target->item.type->score;
-						for(i=0;i<21;i++) {
-							int x = x0+search[i][0];
-							int y = y0+search[i][1];
-							if( x < 1 || y < 1 || x >= wave->w-1 || y >= wave->h-1 || walkability[x][y]==1) 
-								continue; // dont outside or on the enemy spawn borders
-							int s = score * ceil( (21-i) / 4.);
-							app->game.board.death1[x][y] += s;
-							app->game.board.death2[x][y] += s;
-						}
+					app->game.board.on_screen_enemies --;
+					app->game.board.kill_count ++;
+					app->game.total_kill_count ++;
+					int score = target->score;
+					for(i=0;i<21;i++) {
+						int x = x0+search[i][0];
+						int y = y0+search[i][1];
+						if( x < 0 || y < 0 || x >= mapWidth || y >= mapHeight || walkability[x][y]==1) 
+							continue; // dont outside or on the enemy spawn borders
+						int s = score * ceil( (21-i) / 4.);
+						app->game.board.death1[x][y] += s;
+						app->game.board.death2[x][y] += s;
 					}
 
 				} else { // player_killed
@@ -261,22 +258,21 @@ int hit(App *app, Body *source, Body *target){
 					for(i=0;i<21;i++) {
 						int x = x1+search[i][0];
 						int y = y1+search[i][1];
-						if( x < 1 || y < 1 || x >= wave->w-1 || y >= wave->h-1 || walkability[x][y]==1) 
+						if( x < 0 || y < 0 || x >= mapWidth || y >= mapHeight || walkability[x][y]==1) 
 							continue; // dont outside or on the enemy spawn borders
 						app->game.board.death1[x][y] /= 2;
 					}
 					for(i=0;i<21;i++) {
 						int x = x0+search[i][0];
 						int y = y0+search[i][1];
-						if( x < 1 || y < 1 || x >= wave->w-1 || y >= wave->h-1 || walkability[x][y]==1) 
+						if( x < 0 || y < 0 || x >= mapWidth || y >= mapHeight || walkability[x][y]==1) 
 							continue; // dont outside or on the enemy spawn borders
 						app->game.board.death1[x][y] /= 2;
 					}
 				}
-				target->status = BODY_DEAD;
 				int index = app->game.board.wave_index;
-				int count = app->game.board.wave[app->game.board.wave_index].enemy_count;
-				if(count == app->game.kill_count){
+				int count = app->game.wave[app->game.board.wave_index].enemy_count;
+				if(count == app->game.board.kill_count){
 					setWave(app, index+1);    
 				}
 			}
@@ -284,6 +280,98 @@ int hit(App *app, Body *source, Body *target){
 		return 1;
 	}
 	return 0;
-#endif
+}
+
+inline int draw(App *app, Body *body, int x, int y)
+{
+	int i;
+
+	int target = 0;
+	// printf("hit %d,%d-%d /%d\n", x,y,i *tileSize, enemyTileHeight);
+	int tg = is_air(&app->game, body, x, y+i*tileSize);
+	if(tg >=4 || tg && i==0) {
+		// printf("i %d tg %d\n", i, tg);
+		target = tg;
+	}
+
+	
+	if(target>=4) {
+		int idx = target - 4;
+		hit(app, body, &app->game.board.enemies[idx].body);
+	}
+
+	return target;
+}
+
+int shoot(App *app, Body *body)
+{
+	int x1, y1, x2, y2;
+	int dx, dy, i, e;
+	int incx, incy, inc1, inc2;
+	int x,y;
+	int range;
+	if(body->life <= 0)
+		return;
+
+	range = tileSize;
+	//playSound(body->item.type->sound, -1);
+
+	x1 = body->pos.x;
+	y1 = body->pos.y;
+
+	int spread = 20;
+	float a = (int)(body->angle + ((rand() % (spread+1)) - spread/2))%360;
+	x2 = x1 + cos(a * M_PI / 180.) * range;
+	y2 = y1 - sin(a * M_PI / 180.) * range;
+
+	dx = x2 - x1;
+	dy = y2 - y1;
+
+	if(dx < 0) dx = -dx;
+	if(dy < 0) dy = -dy;
+	incx = 1;
+	if(x2 < x1) incx = -1;
+	incy = 1;
+	if(y2 < y1) incy = -1;
+	x=x1;
+	y=y1;
+
+	if(dx > dy)
+	{
+	  if(draw(app,body,x,y)) return 1;
+      e = 2*dy - dx;
+      inc1 = 2*( dy -dx);
+      inc2 = 2*dy;
+      for(i = 0; i < dx; i++)
+      {
+        if(e >= 0)
+        {
+          y += incy;
+          e += inc1;
+        } else e += inc2;
+        x += incx;
+        if(draw(app,body,x,y)) return 1;
+      }
+  }
+  else
+  {
+    if(draw(app,body,x,y)) return 1;
+      e = 2*dx - dy;
+      inc1 = 2*( dx - dy);
+      inc2 = 2*dx;
+      for(i = 0; i < dy; i++)
+      {
+        if(e >= 0)
+        {
+          x += incx;
+          e += inc1;
+        }
+        else e += inc2;
+        y += incy;
+        if(draw(app,body,x,y)) return 1;
+      }
+  }
+
+  return 0;
 }
 

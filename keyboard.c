@@ -41,9 +41,6 @@ void bindMenuKeys(App *app, SDLKey *key){
 	}
 
 	switch(*key){
-		case SDLK_ESCAPE:
-			app->state = STATE_EXIT;
-			break;
 		case SDLK_UP:
 		case SDLK_w:
 			if(menu->selected > firstMenu){
@@ -72,18 +69,15 @@ void bindGameplayKeys(App *app, SDLKey *key){
 	Menu *menu = &app->menu;
 	switch(*key){
 		case SDLK_ESCAPE:
-			app->state = STATE_PAUSED;
-			app->menu.selected = MENU_RESUME;
+			if(app->game.winner || app->game.head.body.life <= 0){
+				app->state = STATE_MENU;
+			} else {
+				app->state = STATE_PAUSED;
+				app->menu.selected = MENU_RESUME;
+			}
 			break;
 		case SDLK_0:
 			app->debug = (app->debug + 1) % DEBUG_COUNT;
-			break;
-		case SDLK_SPACE:
-		case SDLK_RSHIFT:
-			if(app->game.winner){
-				app->state = STATE_MENU;
-				return;
-			}
 			break;
 	}
 }
@@ -95,10 +89,6 @@ void bindGameplayKeyUp(App *app, SDLKey *key){
 			playerAttack(app, &app->game.indy);
 			break;
 		case SDLK_RSHIFT:
-			if(app->game.winner){
-				app->state = STATE_MENU;
-				return;
-			}
 			playerAttack(app, &app->game.allan);
 			break;
 	}

@@ -44,6 +44,7 @@ typedef enum {
 typedef enum {
   MENU_RESUME = 0,
   MENU_NEW_GAME,
+  MENU_CREDITS,
   MENU_EXIT,
   MENU_COUNT
 } MenuItem;
@@ -156,6 +157,7 @@ typedef struct {
   Hearts hearts;
   AppState state;
   Game game;
+  int credits;
   Menu menu;
   SDL_Surface *logo;
   SDL_Surface *special_bar;

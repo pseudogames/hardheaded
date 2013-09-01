@@ -357,3 +357,29 @@ void renderHints(App *app){
 
 }
 
+void renderCredits(App *app)
+{
+	Uint32 color = SDL_MapRGB(app->screen->format, 33, 33,33 );
+	SDL_Surface *screen = app->screen;
+	SDL_FillRect(screen, NULL , color);
+
+	SDL_Rect charPos = {-670, -50, screen->w, screen->h};
+//	SDL_BlitSurface(app->menu.engineer, &charPos, screen, NULL );
+
+	text_write_raw(screen, 300, 50, "Credits", red, 96);
+
+	text_write_raw(screen, 100, 150, "team", green, 36);
+	text_write_raw(screen, 100, 200, "Carlo \"zED\" Caputo", white, 26);
+	text_write_raw(screen, 100, 250, "Pedro Mariano", white, 26);
+
+	text_write_raw(screen, 100, 400, "chars", green, 36);
+	text_write_raw(screen, 100, 450, "based on http://pixelblock.tumblr.com", white, 26);
+	text_write_raw(screen, 100, 500, "modified by Pedro Jatoba", white, 26);
+
+	text_write_raw(screen, 100, 600, "tileset", green, 36);
+	text_write_raw(screen, 100, 650, "lost garden", white, 26);
+	text_write_raw(screen, 400, 600, "font", green, 36);
+	text_write_raw(screen, 400, 650, "Pixelsix, 2005 by Cal Henderson", white, 26);
+}
+
+

@@ -59,7 +59,11 @@ void bindMenuKeys(App *app, SDLKey *key){
 		case SDLK_RSHIFT:
 		case SDLK_RETURN:
 		case SDLK_SPACE:
-			chooseMenu(app, menu);
+			if(app->credits){
+				app->credits = 0;
+			} else {
+				chooseMenu(app, menu);
+			}
 			break;
 	}
 }
@@ -110,7 +114,7 @@ void bindKeyboard(App *app){
 	while(SDL_PollEvent(&event)){
 		switch(event.type) {
 			case SDL_KEYDOWN:
-				if(app->state == STATE_MENU || app->state == STATE_PAUSED){
+				if(app->state == STATE_MENU || app->state == STATE_PAUSED || app->credits){
 					bindMenuKeys(app, &event.key.keysym.sym);
 				} else if(app->state == STATE_PLAYING){
 					bindGameplayKeys(app, &event.key.keysym.sym);

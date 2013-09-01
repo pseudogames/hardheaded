@@ -129,7 +129,6 @@ void appInit(App *app){
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
-
 }
 
 void handleDelay(Uint32 start) {
@@ -158,20 +157,24 @@ int main(int argc, char* args[]) {
 	  movePrepare(&app);
 	  bindKeyboard(&app);
 
-	  switch(app.state){
-		  case STATE_PLAYING:
-			  if(startTime > app.game.next_wave)
-				  setWave(&app, app.game.wave_index+1);    
-
-			  spawnEnemy(&app);
-			  moveEnemies(&app);
-			  renderGameplay(&app);
-			  break;
-		  case STATE_PAUSED:
-		  case STATE_MENU:
-			  renderMenu(&app);
-			  break;
+	  if(app.credits){
+		  renderCredits(&app);
+	  } else {
+		  switch(app.state){
+			  case STATE_PLAYING:
+				  if(startTime > app.game.next_wave)
+					  setWave(&app, app.game.wave_index+1);    
+				  spawnEnemy(&app);
+				  moveEnemies(&app);
+				  renderGameplay(&app);
+				  break;
+			  case STATE_PAUSED:
+			  case STATE_MENU:
+				  renderMenu(&app);
+				  break;
+		  }
 	  }
+	  
 
 	  SDL_Flip(app.screen);
 	  handleDelay(startTime);

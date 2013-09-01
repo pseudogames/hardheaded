@@ -125,7 +125,7 @@ void renderPlayer(App *app, Player *player){
 		&& player->power_body.action == ACTION_ATTACK 
 		|| player->special_attack > 7){
 
-		player->power_body.frame += 0.3;
+		player->power_body.frame += player->special_attack / 100.;
 		player->power_body.vel = 5;
 
 
@@ -135,6 +135,8 @@ void renderPlayer(App *app, Player *player){
 			float dy = sin(a) * 39;
 			float tx = player->power_body.pos.x + dx;
 			float ty = player->power_body.pos.y - dy;
+
+			player->power_body.frame ++;
 
 			shoot(app, &player->power_body, 100);
 			shoot(app, &player->power_body, 100);

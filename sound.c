@@ -13,7 +13,7 @@ void sound_terminate()
 void playMusic(const char* path, int qtd){
   char name[300];
 
-  sprintf(name, "sounds/%s", path);
+  sprintf(name, "data/%s", path);
   if(lastMusic == name){
 	return;
   }
@@ -23,6 +23,7 @@ void playMusic(const char* path, int qtd){
   }
 
   lastMusic = name;
+  printf("Name: %s\n", name);
   music = Mix_LoadMUS(name);
 
   if(Mix_PlayMusic(music, qtd) == -1) {

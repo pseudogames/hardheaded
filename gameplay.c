@@ -74,16 +74,19 @@ void renderGameplay(App *app){
 		app->game.winner->grabbing = 0;
 	}
 
+		renderGameOver(app);
+	if(app->game.head.body.life <= 0){
+	}
+
+	if(app->game.winner){
+		renderWinner(app);
+	}
 	renderLifeBars(app);
 	renderEnemies(app);
 	renderPlayer(app, &app->game.indy);
 	renderPlayer(app, &app->game.allan);
 	renderHead(app);
 	renderHints(app);
-	if(app->game.winner)
-		renderWinner(app);
-	if(app->game.head.body.life <= 0)
-		renderGameOver(app);
 
 	checkPlayerLife(&app->game.indy, app);
 	checkPlayerLife(&app->game.allan, app);

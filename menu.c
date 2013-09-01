@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "sound.h"
 
 void resetApp(App *app)
 {

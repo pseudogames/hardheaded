@@ -9,6 +9,7 @@ extern SDL_Color trueRed;
 extern SDL_Color white;
 extern SDL_Color green;
 extern SDL_Color yellow;
+extern SDL_Color black;
 
 void renderInit(App *app);
 void renderBody(App *app, Body *body);

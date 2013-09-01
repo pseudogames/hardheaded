@@ -38,7 +38,7 @@ TTF_Font *setup_ttf(int points, char* font){
 void text_write(SDL_Surface *screen, int x, int y, char *message, int selected){
     SDL_Color color;
 
-    color = (selected) ? white : red;
+    color = (selected) ? black: red;
 
     text_write_raw_ttf(screen, x, y, message, color, 72, "data/indiana.ttf");
 }

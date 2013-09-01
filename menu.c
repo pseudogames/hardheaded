@@ -24,19 +24,18 @@ void chooseMenu(App *app, Menu *menu){
 	}
 }
 
-
 void renderMenu(App *app){
-	Uint32 color = SDL_MapRGB(app->screen->format, 33, 33,33 );
+	Uint32 color = SDL_MapRGB(app->screen->format, 0xc1, 0xcd,0xc1);
 	SDL_FillRect(app->screen, NULL , color);
 	Menu *menu = &app->menu;
 	SDL_Surface *screen = app->screen;
 
-	SDL_Rect highlightChar = {-700, -450, screen->w, screen->h};
+	SDL_Rect highlightChar = {-600, -450, screen->w, screen->h};
 	SDL_BlitSurface(menu->indiana, &highlightChar, screen, NULL);
 
 	int resumePadding = 0;
 
-	text_write_raw(screen, 200, 50, "HardHeaded", trueRed, 96);
+	text_write_raw(screen, 200, 50, "HardHeaded", black, 96);
 
 	if(app->state == STATE_PAUSED){
 		text_write(screen, 100, 200 + resumePadding, "resume", menu->selected == MENU_RESUME);

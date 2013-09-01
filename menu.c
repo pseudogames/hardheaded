@@ -36,7 +36,7 @@ void renderMenu(App *app){
 
 	int resumePadding = 0;
 
-	text_write_raw(screen, 200, 50, "HardHeaded", red, 96);
+	text_write_raw(screen, 200, 50, "HardHeaded", trueRed, 96);
 
 	if(app->state == STATE_PAUSED){
 		text_write(screen, 100, 200 + resumePadding, "resume", menu->selected == MENU_RESUME);

@@ -73,6 +73,7 @@ void bindGameplayKeys(App *app, SDLKey *key){
 	switch(*key){
 		case SDLK_ESCAPE:
 			app->state = STATE_PAUSED;
+			app->menu.selected = MENU_RESUME;
 			break;
 		case SDLK_p:
 			playerDie(app, &app->game.indy);

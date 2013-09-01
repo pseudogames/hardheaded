@@ -64,7 +64,9 @@ typedef struct {
 
 typedef struct{
   Sprite sprite;
+  Sprite power;
   Body body;
+  Body power_body;
   int special_attack;
   char* name;
   int grabbing;

@@ -10,6 +10,8 @@ void renderLifeBars(App *app){
 
 	renderPlayerLife(app, screen, &app->game.indy, 0);
 	renderPlayerLife(app, screen, &app->game.allan, 650);
+
+	renderSpawnCountdown(app);
 }
 
 void checkPlayerLife(Player *player){
@@ -86,11 +88,11 @@ void playerChargeSpecialAttack(App *app, Player *player){
 			player->grabbing = 1;
 			head_body->action = ACTION_ATTACK;
 		}
-
 	}
 
 	if(!player->grabbing && player->special_attack < 100) {
 		player->special_attack += 1;
+		player->power_body.action = ACTION_MOVE;
 	}
 
 }
@@ -102,14 +104,16 @@ void playerAttack(App *app, Player *player){
 	if(body->action == ACTION_DEATH) return;
 	if(player->grabbing){
 		head_body->action = ACTION_MOVE;
-		player->grabbing = 0
-		;return;
+		player->grabbing = 0;
+		return;
 	}
 
-	if(player->special_attack < 100) {
-		body->action = ACTION_ATTACK;
-		body->frame = 0;
+	if(player->special_attack >= 100) {
+		player->power_body.action = ACTION_ATTACK;
 	}
+
+	body->action = ACTION_ATTACK;
+	body->frame = 0;
 
 	player->special_attack = 0;
 }

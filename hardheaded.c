@@ -85,6 +85,8 @@ void gameInit(App *app){
   app->game.indy.name = "Mr. Indy J.";
   app->game.indy.body.life = PLAYER_HEALTH;
   app->game.indy.body.score = 0;
+  app->game.indy.body.action= ACTION_MOVE;
+  app->game.indy.body.frame= 0;
   app->game.indy.body.ang_vel = 0.25;
   app->game.indy.body.max_vel = 4;
   app->game.indy.special_attack = 0;
@@ -92,6 +94,8 @@ void gameInit(App *app){
 
   app->game.allan.name = "Mr. Allan Q.";
   app->game.allan.body.life = PLAYER_HEALTH;
+  app->game.indy.body.action= ACTION_MOVE;
+  app->game.indy.body.frame= 0;
   app->game.allan.body.score = 0;
   app->game.allan.body.ang_vel = 0.25;
   app->game.allan.body.max_vel = 4;
@@ -125,7 +129,6 @@ void appInit(App *app){
   memset(app, 0, sizeof(App));
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
-
 }
 
 void handleDelay(Uint32 start) {
@@ -154,20 +157,24 @@ int main(int argc, char* args[]) {
 	  movePrepare(&app);
 	  bindKeyboard(&app);
 
-	  switch(app.state){
-		  case STATE_PLAYING:
-			  if(startTime > app.game.next_wave)
-				  setWave(&app, app.game.wave_index+1);    
-
-			  spawnEnemy(&app);
-			  moveEnemies(&app);
-			  renderGameplay(&app);
-			  break;
-		  case STATE_PAUSED:
-		  case STATE_MENU:
-			  renderMenu(&app);
-			  break;
+	  if(app.credits){
+		  renderCredits(&app);
+	  } else {
+		  switch(app.state){
+			  case STATE_PLAYING:
+				  if(startTime > app.game.next_wave)
+					  setWave(&app, app.game.wave_index+1);    
+				  spawnEnemy(&app);
+				  moveEnemies(&app);
+				  renderGameplay(&app);
+				  break;
+			  case STATE_PAUSED:
+			  case STATE_MENU:
+				  renderMenu(&app);
+				  break;
+		  }
 	  }
+	  
 
 	  SDL_Flip(app.screen);
 	  handleDelay(startTime);

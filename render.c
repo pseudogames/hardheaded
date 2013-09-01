@@ -328,8 +328,58 @@ void renderWinner(App *app){
 	text_write_raw(app->screen, 20 , 330, msg, white, 60);
 }
 
-
 void renderGameOver(App *app){
 	text_write_raw(app->screen, 20 , 330, "Draw. Game Over.", white, 60);
 }
+void renderHints(App *app){
+	Body *head = &app->game.head.body;
+	Player *indy = &app->game.indy;
+	Player *allan = &app->game.allan;
+
+	if((SDL_GetTicks()/500) % 2 == 0){
+
+		if(indy->grabbing == 0 && allan->grabbing == 0){
+			char *msg = "GRAB";
+			if(indy->body.action == ACTION_DEATH || indy->body.action == ACTION_DEATH) msg = "GUARD";
+			text_write_raw_ttf(app->screen, head->pos.x , head->pos.y - tileSize/2 - 60, "I", trueRed, 60, "data/arrows.ttf");
+			text_write_raw_ttf(app->screen, head->pos.x + 80 , head->pos.y - tileSize/2 - 60, msg, trueRed, 20, "data/indiana.ttf");
+		} else {
+			if(indy->grabbing){
+				text_write_raw_ttf(app->screen, indy->door.x , indy->door.y - tileSize/2 - 20, "I", trueRed, 60, "data/arrows.ttf");
+				text_write_raw_ttf(app->screen, indy->door.x + 60, indy->door.y - tileSize/2 -40, "DROP", trueRed, 20, "data/indiana.ttf");
+			} else {
+				text_write_raw_ttf(app->screen, allan->door.x -tileSize/2 - 60 , allan->door.y - tileSize/2 - 20, "F", trueRed, 60, "data/arrows.ttf");
+				text_write_raw_ttf(app->screen, allan->door.x - tileSize * 4 - 20, allan->door.y - tileSize/2 + 40, "DROP", trueRed, 20, "data/indiana.ttf");
+			}
+		
+		}
+	}
+
+}
+
+void renderCredits(App *app)
+{
+	Uint32 color = SDL_MapRGB(app->screen->format, 33, 33,33 );
+	SDL_Surface *screen = app->screen;
+	SDL_FillRect(screen, NULL , color);
+
+	SDL_Rect charPos = {-670, -50, screen->w, screen->h};
+//	SDL_BlitSurface(app->menu.engineer, &charPos, screen, NULL );
+
+	text_write_raw(screen, 300, 50, "Credits", red, 96);
+
+	text_write_raw(screen, 100, 150, "team", green, 36);
+	text_write_raw(screen, 100, 200, "Carlo \"zED\" Caputo", white, 26);
+	text_write_raw(screen, 100, 250, "Pedro Mariano", white, 26);
+
+	text_write_raw(screen, 100, 400, "chars", green, 36);
+	text_write_raw(screen, 100, 450, "based on http://pixelblock.tumblr.com", white, 26);
+	text_write_raw(screen, 100, 500, "modified by Pedro Jatoba", white, 26);
+
+	text_write_raw(screen, 100, 600, "tileset", green, 36);
+	text_write_raw(screen, 100, 650, "lost garden", white, 26);
+	text_write_raw(screen, 400, 600, "font", green, 36);
+	text_write_raw(screen, 400, 650, "Pixelsix, 2005 by Cal Henderson", white, 26);
+}
+
 

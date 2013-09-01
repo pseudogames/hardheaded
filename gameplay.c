@@ -15,6 +15,8 @@ void renderLifeBars(App *app){
 }
 
 void checkPlayerLife(Player *player, App *app){
+	if(player->body.life > PLAYER_HEALTH)
+		player->body.life = PLAYER_HEALTH;
 	if(app->game.winner){
 		if(player != app->game.winner){
 			player->body.action = ACTION_DEATH;
@@ -29,8 +31,10 @@ void checkPlayerLife(Player *player, App *app){
 
 		if( player->body.life <= PLAYER_HEALTH ) {
 			player->body.life += 0.05;
-			if(player->body.life > PLAYER_HEALTH)
+			if(player->body.life > PLAYER_HEALTH) {
 				player->body.life = PLAYER_HEALTH;
+				player->body.action = ACTION_MOVE;
+			}
 		}
 	} else if(player->body.life <= 0) {
 		playerDie(app, player);

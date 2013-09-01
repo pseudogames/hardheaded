@@ -29,6 +29,20 @@ void loadMap(App *app) {
   moveInit(app);
 }
 
+void boardInit(App *app){
+	app->game.board.spawnTime = app->game.start;
+	app->game.board.kill_count= 0;
+	memset(app->game.board.death1, 0, sizeof(app->game.board.death1));
+	memset(app->game.board.death2, 0, sizeof(app->game.board.death2));
+
+	app->game.board.latest_enemy_updated = 0;
+
+	memset(&app->game.board.enemies, 0, sizeof(app->game.board.enemies));
+
+	movePrepare(app);
+}
+
+
 void gameInit(App *app){
   app->game.start = SDL_GetTicks();
   app->game.next_wave = app->game.start+5000;
@@ -62,18 +76,35 @@ void gameInit(App *app){
   app->game.wave[3].enemy_count_on_screen=50;
   app->game.wave[3].enemy_count_per_spawn=30;
   app->game.wave[3].enemy_variation=6;
-}
 
+  app->game.total_kill_count= 0;
+  app->game.winner = NULL;
+  app->game.board.zombie_memory1 = 0;
+  app->game.board.zombie_memory2 = 0;
 
-void boardInit(App *app){
-	app->game.board.spawnTime = app->game.start;
-	app->game.board.kill_count= 0;
-	memset(app->game.board.death1, 0, sizeof(app->game.board.death1));
-	memset(app->game.board.death2, 0, sizeof(app->game.board.death2));
+  app->game.indy.name = "Mr. Indy J.";
+  app->game.indy.body.life = PLAYER_HEALTH;
+  app->game.indy.body.score = 0;
+  app->game.indy.body.ang_vel = 0.25;
+  app->game.indy.body.max_vel = 4;
+  app->game.indy.special_attack = 0;
+  app->game.indy.grabbing = 0;
 
-	app->game.board.latest_enemy_updated = 0;
+  app->game.allan.name = "Mr. Allan Q.";
+  app->game.allan.body.life = PLAYER_HEALTH;
+  app->game.allan.body.score = 0;
+  app->game.allan.body.ang_vel = 0.25;
+  app->game.allan.body.max_vel = 4;
+  app->game.allan.special_attack = 0;
+  app->game.allan.grabbing = 0;
 
-	movePrepare(app);
+  app->game.head.body.life = HEAD_HEALTH;
+  app->game.head.body.score = 0;
+  app->game.head.body.ang_vel = 0.25;
+  app->game.head.body.max_vel= 4;
+
+  loadMap(app);
+  boardInit(app);
 }
 
 void setWave(App *app, int wave_index) {
@@ -86,7 +117,6 @@ void setWave(App *app, int wave_index) {
 	app->game.next_wave = SDL_GetTicks() +
 		app->game.wave[ app->game.wave_index ].time;
 
-	boardInit(app);
 }
 
 
@@ -96,7 +126,6 @@ void appInit(App *app){
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
 
-  loadMap(app);
 }
 
 void handleDelay(Uint32 start) {

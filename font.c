@@ -1,4 +1,5 @@
 #include "font.h"
+#include "render.h"
 
 #define TTF_POINT_LIMIT 99
 TTF_Font *ttf_point_cache[TTF_POINT_LIMIT];
@@ -36,11 +37,8 @@ TTF_Font *setup_ttf(int points, char* font){
 
 void text_write(SDL_Surface *screen, int x, int y, char *message, int selected){
     SDL_Color color;
-    SDL_Color red = {0xFF, 0X00, 0x00};
-    SDL_Color white = {0xFF, 0XFF, 0xFF};
-	SDL_Color gold = {0xff, 0xd7, 0x00};
 
-    color = (selected) ? gold : red;
+    color = (selected) ? white : red;
 
     text_write_raw_ttf(screen, x, y, message, color, 72, "data/indiana.ttf");
 }

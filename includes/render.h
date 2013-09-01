@@ -2,6 +2,7 @@
 #define _RENDER_H
 #include "hardheaded.h"
 #include "font.h"
+#include "movement.h"
 
 extern SDL_Color red;
 extern SDL_Color trueRed;

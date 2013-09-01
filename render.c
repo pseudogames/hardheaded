@@ -107,13 +107,35 @@ void renderPlayer(App *app, Player *player){
 
 	renderBody(app, body);
 
-	if(player->power_body.action == ACTION_ATTACK || player->special_attack > 7){
-		player->power_body.frame += 0.3;
+	if(player->grabbing == 0 
+		&& player->power_body.action == ACTION_ATTACK 
+		|| player->special_attack > 7){
 
-		player->power_body.angle = body->angle;
+		player->power_body.frame += 0.3;
 		player->power_body.vel = 10;
-		player->power_body.pos.x = body->pos.x + 30;
-		player->power_body.pos.y = body->pos.y + 30;
+
+
+		if(player->power_body.action == ACTION_ATTACK && player->special_attack < 98){
+			float a = player->power_body.angle * M_PI / 180;
+			float dx = cos(a) * 39;
+			float dy = sin(a) * 39;
+			float tx = player->power_body.pos.x + dx;
+			float ty = player->power_body.pos.y - dy;
+
+			player->power_body.pos.x = tx;
+			player->power_body.pos.y = ty;
+		} else {
+			player->power_body.angle = body->angle;
+			float a = player->body.angle * M_PI / 180;
+			float dx = cos(a) * 39;
+			float dy = sin(a) * 39;
+			float tx = body->pos.x + dx;
+			float ty = body->pos.y - dy;
+
+			player->power_body.pos.x = tx;
+			player->power_body.pos.y = ty;
+		}
+
 		renderBody(app, &player->power_body);
 	}
 }

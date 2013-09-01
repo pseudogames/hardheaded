@@ -47,6 +47,8 @@ inline int is_hit(Game *game, Body *body, int x, int y)
 	y/=tileSize;
 	if(x<0 || y<0 || x>=mapWidth || y>=mapHeight)
 		return 1;
+	else if((int)body->pos.x/tileSize == x && (int)body->pos.y/tileSize == y)
+		return 0;
 	return game->board.hittable[x][y];
 }
 
@@ -171,12 +173,14 @@ void movePrepare(App *app)
 		int x = app->game.indy.body.pos.x/tileSize;
 		int y = app->game.indy.body.pos.y/tileSize;
 		app->game.board.crowd[x][y] = 2;
+		app->game.board.hittable[x][y] = 2;
 	}
 
 	{
 		int x = app->game.allan.body.pos.x/tileSize;
 		int y = app->game.allan.body.pos.y/tileSize;
 		app->game.board.crowd[x][y] = 3;
+		app->game.board.hittable[x][y] = 3;
 	}
 
 	for(i=0; i < ENEMY_COUNT; i++)

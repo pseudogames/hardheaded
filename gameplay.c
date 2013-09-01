@@ -372,6 +372,12 @@ inline int draw(App *app, Body *body, int x, int y)
 	int target = is_hit(&app->game, body, x, y);
 	// printf("hit %d,%d: %d\n", x,y, target);
 
+	if(target==2 && app->game.indy.body.action != ACTION_DEATH) {
+		hit(app, body, &app->game.indy.body);
+	}
+	if(target==3 && app->game.allan.body.action != ACTION_DEATH) {
+		hit(app, body, &app->game.allan.body);
+	}
 	if(target>=4) {
 		int idx = target - 4;
 		hit(app, body, &app->game.board.enemies[idx].body);

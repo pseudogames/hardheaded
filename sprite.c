@@ -70,7 +70,7 @@ void sprite_gen_rotation(Sprite *sprite)
                 sprite_rotated_rect(sprite, action, frame, angle, &dst);
                 SDL_FillRect(element, NULL, 0x00000000);
                 SDL_BlitSurface( sprite->source, &src, element, NULL );
-                SDL_Surface *rotozoom = rotozoomSurface(element, angle, ZOOM, SMOOTHING_ON);
+                SDL_Surface *rotozoom = rotozoomSurface(element, angle+90, ZOOM, SMOOTHING_ON); // XXX 90 offset, because the sprite images are looking downwards
                 SDL_SetAlpha(rotozoom,0,0);
                 SDL_SetColorKey(rotozoom,0,0);
                 dst.x += dst.w/2 - rotozoom->w/2;

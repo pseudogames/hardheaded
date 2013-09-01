@@ -36,6 +36,8 @@ typedef struct {
   Action action;
   float angle; // degree
   float frame;
+  float ang_vel;
+  float max_vel;
   Sprite *sprite;
 } Body;
 

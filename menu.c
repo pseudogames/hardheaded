@@ -1,11 +1,5 @@
 #include "menu.h"
 
-SDL_Color red = {0xAA, 0X55, 0x00};
-SDL_Color trueRed = {0XFF, 0x00, 0x00};
-SDL_Color white = {0xFF, 0XFF, 0xFF};
-SDL_Color green = {0x00, 0XFF, 0x00};
-SDL_Color yellow = {0xFF, 0XFF, 0x00};
-
 void chooseMenu(App *app, Menu *menu){
 	switch(menu->selected){
 		case MENU_NEW_GAME:

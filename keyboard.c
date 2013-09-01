@@ -1,6 +1,19 @@
 #include "keyboard.h"
 #include "menu.h"
 
+void bindGameplayKeystate(App *app){
+  Uint8 *keystate;
+  keystate = SDL_GetKeyState(NULL);
+
+  player_move(app, &app->game.board.indy.body,
+	  keystate[SDLK_w],
+	  keystate[SDLK_d],
+	  keystate[SDLK_s],
+	  keystate[SDLK_a],
+	  keystate[SDLK_LCTRL] || keystate[SDLK_LALT]
+  );
+}
+
 void bindMenuKeys(App *app, SDLKey *key){
 	Menu *menu = &app->menu;
 
@@ -38,18 +51,6 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_ESCAPE:
 			app->state = STATE_PAUSED;
 			break;
-		case SDLK_i:
-			app->game.board.indy.life += 0.25;
-			break;
-		case SDLK_o:
-			app->game.board.indy.life -= 0.25;
-			break;
-		case SDLK_a:
-			app->game.board.allan.life += 0.25;
-			break;
-		case SDLK_s:
-			app->game.board.allan.life -= 0.25;
-			break;
 	}
 }
 
@@ -65,4 +66,9 @@ void bindKeyboard(App *app){
 				}
 		}
 	}
+
+	if(app->state == STATE_PLAYING){
+		bindGameplayKeystate(app);
+	}
 }
+

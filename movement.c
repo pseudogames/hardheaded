@@ -82,15 +82,14 @@ void player_move(App *app, Body *body, int up, int right, int down, int left, in
 
 	if(body->action == ACTION_DEATH) return;
 
-	if((int)body->frame > body->sprite->frame_count) {
-		body->frame = 0;
-	}
-
     int dx=right-left;
     int dy=down-up;
     if(dx||dy) {
 		if(body->action == ACTION_MOVE){
 			body->frame += 1;
+			if((int)body->frame > body->sprite->frame_count) {
+				body->frame = 0;
+			}
 		}
         float angle = ATAN2(dx,dy);
         body_move(&app->game, body, angle, !halt);
@@ -219,12 +218,12 @@ void moveInit(App *app)
 			Uint8 r,g,b;
 			SDL_GetRGB(*p, hit->format, &r, &g, &b);
 			int threshold = 0x40;
-			int walk = b+g>r+threshold;
-			int fly = r+g+b>threshold;
+			int p1 = g<r-threshold && g<b-threshold;
+			int p2 = r<g-threshold && r<b-threshold;
+			int head = b<r-threshold && b<g-threshold;
+			int walk = b+g>r+threshold || p1 || p2 || head;
+			int fly = r+g+b>threshold || p1 || p2 || head;
 			int safe = g>r+b+threshold;
-			int p1 = g<r+b-threshold;
-			int p2 = r>g+b-threshold;
-			int head = b<r+g-threshold;
 			app->game.board.wall[x][y] = !walk;
 			app->game.board.air[x][y] = !fly;
 			if(safe) {
@@ -234,16 +233,16 @@ void moveInit(App *app)
 				app->game.board.spawn_count++;
 			}
 			if(p1) {
-				app->game.indy.body.pos.x = x;
-				app->game.indy.body.pos.y = y;
+				app->game.indy.body.pos.x = x * tileSize + tileSize/2;
+				app->game.indy.body.pos.y = y * tileSize + tileSize/2;
 			}
 			if(p2) {
-				app->game.allan.body.pos.x = x;
-				app->game.allan.body.pos.y = y;
+				app->game.allan.body.pos.x = x * tileSize + tileSize/2;
+				app->game.allan.body.pos.y = y * tileSize + tileSize/2;
 			}
 			if(head) {
-				app->game.head.body.pos.x = x;
-				app->game.head.body.pos.y = y;
+				app->game.head.body.pos.x = x * tileSize + tileSize/2;
+				app->game.head.body.pos.y = y * tileSize + tileSize/2;
 			}
 		}
 	}

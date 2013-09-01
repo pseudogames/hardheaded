@@ -91,6 +91,7 @@ int main(int argc, char* args[]) {
 	  Uint32 startTime = SDL_GetTicks();
 	  Uint32 color = SDL_MapRGB(app.screen->format, 0x40, 0x40, 0x40 );
 	  SDL_FillRect(app.screen, NULL , color);
+	  movePrepare(&app);
 	  bindKeyboard(&app);
 
 	  switch(app.state){
@@ -105,6 +106,7 @@ int main(int argc, char* args[]) {
 
 	  renderTerminate(&app);
 
+	  SDL_Flip(app.screen);
 	  handleDelay(startTime);
   }
 }

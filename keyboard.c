@@ -74,6 +74,9 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_l:
 			playerDie(app, &app->game.allan);
 			break;
+		case SDLK_0:
+			app->debug = (app->debug + 1) % DEBUG_COUNT;
+			break;
 	}
 }
 

@@ -8,6 +8,84 @@ SDL_Color white = {0xFF, 0XFF, 0xFF};
 SDL_Color green = {0x00, 0XFF, 0x00};
 SDL_Color yellow = {0xFF, 0XFF, 0x00};
 
+void renderDebug(App *app)
+{
+	int color;
+	int *map = NULL;
+	switch(app->debug) {
+		case DEBUG_WALL: // black
+			color = SDL_MapRGBA(app->screen->format, 0x00,0x00,0x00,0xff );
+			map = (int *)app->game.board.wall;
+			break;
+		case DEBUG_AIR: // green
+			color = SDL_MapRGBA(app->screen->format, 0x00,0xff,0x00,0xff );
+			map = (int *)app->game.board.air;
+			break;
+		case DEBUG_AI: // white
+			color = SDL_MapRGBA(app->screen->format, 0xff,0xff,0xff,0xff );
+			map = (int *)walkability;
+			break;
+		case DEBUG_ENEMY: // red
+			color = SDL_MapRGBA(app->screen->format, 0xff,0x00,0x00,0xff );
+			map = (int *)app->game.board.spawn_map;
+			break;
+		case DEBUG_MOVE: // blue
+			color = SDL_MapRGBA(app->screen->format, 0x00,0x00,0xff,0xff );
+			map = (int *)app->game.board.crowd;
+			break;
+		case DEBUG_SHOT: // yellow
+			color = SDL_MapRGBA(app->screen->format, 0xff,0xff,0x00,0xff );
+			map = (int *)app->game.board.hittable;
+			break;
+		case DEBUG_DEATH1: // dark red
+			color = SDL_MapRGBA(app->screen->format, 0x80,0x00,0x00,0xff );
+			map = (int *)app->game.board.death1;
+			break;
+		case DEBUG_DEATH2: // dark purple
+			color = SDL_MapRGBA(app->screen->format, 0x80,0x00,0x80,0xff );
+			map = (int *)app->game.board.death2;
+			break;
+	}
+
+	if(map){
+		int x,y;
+		for (x=0; x < mapWidth;x++) {
+			for (y=0; y < mapHeight;y++) {
+				if(map[x*mapHeight+y]) {
+					SDL_Rect rect = { x*tileSize, y*tileSize, tileSize, tileSize };
+					SDL_FillRect(app->screen, &rect , color);
+				}
+			}
+		}
+
+		color = SDL_MapRGBA(app->screen->format, 0xff,0x00,0x00,0xff );
+		int i;
+		for(i=0; i < ENEMY_COUNT; i++) 
+		{
+			if(app->game.board.enemies[i].alive)
+			{
+				extern int pathBank [numberPeople+1][maxPathLength*2];
+				int p = app->game.board.enemies[i].pathfinder;
+				int s = 2;
+				int n = tileSize/s;
+				int x1 = i % n;
+				int y1 = (i / n) % n;
+				int j;
+				for(j=0; j<pathLength[p]; j++) {
+					int x = pathBank[p][j*2+0];
+					int y = pathBank[p][j*2+1];
+					SDL_Rect rect = { x*tileSize+x1*s, y*tileSize+y1*s, s, s };
+					SDL_FillRect(app->screen, &rect , color);
+				}
+			}
+		}
+
+		SDL_Rect rect = { 250, 20, 0, 0 };
+		SDL_BlitSurface(app->game.board.hit, NULL, app->screen, &rect);
+
+	}
+}
+
 void renderBody(App *app, Body *body, Player *player){
 	if(body->action == ACTION_ATTACK){
 		body->frame += 0.3;
@@ -18,14 +96,6 @@ void renderBody(App *app, Body *body, Player *player){
 	} else if(body->action == ACTION_DEATH){
 		body->frame += 0.2;
 
-		SDL_Rect src;
-		sprite_rotated_rect(
-				body->sprite, 
-				body->action, 
-				(int)body->frame,
-				(int)body->angle,
-				&src);
-
 		if(body->frame >= body->sprite->frame_count){
 			body->frame = 0;
 		}
@@ -34,9 +104,6 @@ void renderBody(App *app, Body *body, Player *player){
 			body->action = ACTION_MOVE;
 		}
 
-		SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &body->pos);
-	
-		return;
 	}
 
 	SDL_Rect src;
@@ -47,7 +114,13 @@ void renderBody(App *app, Body *body, Player *player){
 			(int)body->angle,
 			&src);
 
-	SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &body->pos);
+	SDL_Rect dest = {
+		body->pos.x - body->sprite->rotated_frame_size.x/2,
+		body->pos.y - body->sprite->rotated_frame_size.y/2,
+		0, 0
+	};
+
+	SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &dest);
 }
 
 void renderInit(App *app){
@@ -67,8 +140,6 @@ void renderInit(App *app){
 	  "data/indy.png" // source
   );
   app->game.indy.body.sprite = &app->game.indy.sprite;
-  app->game.indy.body.pos.x = 200;
-  app->game.indy.body.pos.y = 400;
 
   sprite_init(&app->game.allan.sprite, 
 	  0, 0, // origin
@@ -76,8 +147,6 @@ void renderInit(App *app){
 	  "data/allan.png" // source
   );
   app->game.allan.body.sprite = &app->game.allan.sprite;
-  app->game.allan.body.pos.x = 400;
-  app->game.allan.body.pos.y = 400;
 
   sprite_init(&app->zombie, 
 	  0, 0, // origin
@@ -91,12 +160,9 @@ void renderInit(App *app){
 	  "data/head.png" // source
   );
   app->game.head.body.sprite = &app->game.head.sprite;
-  app->game.head.body.pos.x = 300;
-  app->game.head.body.pos.y = 600;
 }
 
 void renderTerminate(App *app){
-	  SDL_Flip(app->screen);
 }
 
 void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerOffset){

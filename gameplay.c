@@ -19,6 +19,10 @@ void checkPlayerLife(Player *player){
 }
 
 void renderGameplay(App *app){
+	SDL_BlitSurface(app->game.board.image, NULL, app->screen, NULL);
+
+	renderDebug(app);
+
 	renderLifeBars(app);
 	renderBody(app, &app->game.indy.body, &app->game.indy);
 	renderBody(app, &app->game.allan.body, &app->game.allan);

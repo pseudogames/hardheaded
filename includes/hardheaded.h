@@ -8,6 +8,19 @@
 #include "aStarLibrary.h" // must be after the defines above
 
 typedef enum {
+	DEBUG_NONE,
+	DEBUG_WALL,
+	DEBUG_AIR,
+	DEBUG_AI,
+	DEBUG_ENEMY,
+	DEBUG_MOVE,
+	DEBUG_SHOT,
+	DEBUG_DEATH1,
+	DEBUG_DEATH2,
+	DEBUG_COUNT
+} Debug;
+
+typedef enum {
   STATE_MENU,
   STATE_PAUSED,
   STATE_PLAYING,
@@ -115,6 +128,7 @@ typedef struct {
   Menu menu;
   SDL_Surface *logo;
   SDL_Surface *special_bar;
+  Debug debug;
 } App;
 
 #endif

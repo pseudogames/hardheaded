@@ -12,5 +12,7 @@ extern SDL_Color yellow;
 void renderInit(App *app);
 void renderStart(App *app);
 void renderBody(App *app, Body *body, Player *player);
+void renderPlayerLife(SDL_Surface *screen, Board *board, Player *player, int playerOffset);
+void renderPlayerSpecialBar(SDL_Surface *screen, Board *board, Player *player, int playerOffset);
 void renderFinish(App *app);
 #endif

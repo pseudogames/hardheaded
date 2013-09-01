@@ -44,6 +44,7 @@ typedef struct {
 typedef struct{
   Sprite sprite;
   Body body;
+  int special_attack;
   float life;
   char* name;
 } Player;
@@ -62,6 +63,7 @@ typedef struct{
   Player zombie;
   Player head;
   Hearts hearts;
+  SDL_Surface *special_bar;
 } Board;
 
 typedef struct {

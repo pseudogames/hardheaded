@@ -5,6 +5,9 @@ void renderLifeBars(App *app){
 	SDL_Surface *screen = app->screen;
 	renderPlayerLife(screen, board, &board->indy, 0);
 	renderPlayerLife(screen, board, &board->allan, 650);
+
+	renderPlayerSpecialBar(screen, board, &board->indy, 0);
+	renderPlayerSpecialBar(screen, board, &board->allan, 650);
 }
 
 void checkPlayerLife(Player *player){
@@ -23,13 +26,23 @@ void renderGameplay(App *app){
 	checkPlayerLife(&app->game.board.allan);
 }
 
+void playerChargeSpecialAttack(App *app, Player *player){
+	if(player->special_attack < 100) {
+		player->special_attack += 1;
+	}
+}
+
 void playerAttack(App *app, Player *player){
 	Body *body = &player->body;
 
 	if(body->action == ACTION_DEATH) return;
-	
-	body->action = ACTION_ATTACK;
-	body->frame = 0;
+
+	if(player->special_attack < 100) {
+		body->action = ACTION_ATTACK;
+		body->frame = 0;
+	}
+
+	player->special_attack = 0;
 }
 
 void playerDie(App *app, Player *player){

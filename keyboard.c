@@ -5,6 +5,14 @@ void bindGameplayKeystate(App *app){
   Uint8 *keystate;
   keystate = SDL_GetKeyState(NULL);
 
+  if(keystate[SDLK_SPACE]){
+	  playerChargeSpecialAttack(app, &app->game.board.indy);
+  }
+
+  if(keystate[SDLK_RCTRL]){
+	  playerChargeSpecialAttack(app, &app->game.board.allan);
+  }
+
   player_move(app, &app->game.board.indy.body,
 	  keystate[SDLK_w],
 	  keystate[SDLK_d],
@@ -60,17 +68,23 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_ESCAPE:
 			app->state = STATE_PAUSED;
 			break;
-		case SDLK_SPACE:
-			playerAttack(app, &app->game.board.indy);
-			break;
 		case SDLK_p:
 			playerDie(app, &app->game.board.indy);
 			break;
-		case SDLK_RCTRL:
-			playerAttack(app, &app->game.board.allan);
-			break;
 		case SDLK_l:
 			playerDie(app, &app->game.board.allan);
+			break;
+	}
+}
+
+void bindGameplayKeyUp(App *app, SDLKey *key){
+	Menu *menu = &app->menu;
+	switch(*key){
+		case SDLK_SPACE:
+			playerAttack(app, &app->game.board.indy);
+			break;
+		case SDLK_RCTRL:
+			playerAttack(app, &app->game.board.allan);
 			break;
 	}
 }
@@ -85,6 +99,10 @@ void bindKeyboard(App *app){
 				} else if(app->state == STATE_PLAYING){
 					bindGameplayKeys(app, &event.key.keysym.sym);
 				}
+				break;
+			case SDL_KEYUP:
+				bindGameplayKeyUp(app, &event.key.keysym.sym);
+				break;
 		}
 	}
 
@@ -92,4 +110,3 @@ void bindKeyboard(App *app){
 		bindGameplayKeystate(app);
 	}
 }
-

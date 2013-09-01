@@ -15,7 +15,7 @@ void renderBody(App *app, Body *body, Player *player){
 		if(body->frame >= body->sprite->frame_count){
 			body->action = ACTION_MOVE;
 		}
-	} else	if(body->action == ACTION_DEATH){
+	} else if(body->action == ACTION_DEATH){
 		body->frame += 0.2;
 
 		SDL_Rect src;
@@ -59,6 +59,7 @@ void renderInit(App *app){
   app->game.board.hearts.twoquarter= IMG_Load("data/24heart_small.png");
   app->game.board.hearts.threequarter= IMG_Load("data/34heart_small.png");
   app->game.board.hearts.empty = IMG_Load("data/emptyheart_small.png");
+  app->game.board.special_bar = IMG_Load("data/chargebar.png");
 
   sprite_init(&app->game.board.indy.sprite, 
 	  0, 0, // origin
@@ -127,5 +128,19 @@ void renderPlayerLife(SDL_Surface *screen, Board *board, Player *player, int pla
 			SDL_BlitSurface(board->hearts.empty, NULL, screen, &heartpos);
 		}
 	}
+}
+
+void renderPlayerSpecialBar(SDL_Surface *screen, Board *board, Player *player, int playerOffset){
+	SDL_Rect pos= {35 + playerOffset, 70, screen->w, screen->h};
+	SDL_BlitSurface(board->special_bar, NULL, screen, &pos);
+
+	int width = player->special_attack * 3;
+	int max_width = 294;
+	if(width > max_width) width = max_width;
+
+	Uint32 color = SDL_MapRGB(screen->format, 0, 99,0 );
+
+	SDL_Rect rect = { 35 + playerOffset + 3, 73, width, 10};
+	SDL_FillRect(screen, &rect, color);
 }
 

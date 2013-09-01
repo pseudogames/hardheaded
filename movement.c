@@ -114,14 +114,21 @@ void movePlayer(App *app, Player *player, int up, int right, int down, int left,
 		float dy = sin(a) * HOLD_DISTANCE;
 		float tx = body->pos.x + dx;
 		float ty = body->pos.y - dy;
-		hit = is_solid(&app->game, &app->game.head.body, tx,ty);
-		if(hit) {
-			player->grabbing = 0;
+#if 0
+		if(!is_empty(&app->game, &app->game.head.body, tx,ty)) {
+			dx = cos(a) * HOLD_DISTANCE/2;
+			dy = sin(a) * HOLD_DISTANCE/2;
+			tx = body->pos.x + dx;
+			ty = body->pos.y - dy;
+		}
+#endif
+		if(!is_empty(&app->game, &app->game.head.body, tx,ty)) {
+			// player->grabbing = 0;
 		} else {
 			app->game.head.body.pos.x = tx;
 			app->game.head.body.pos.y = ty;
 			app->game.head.body.angle = body->angle;
-			body->vel = 8;
+			body->vel = 1;
 		}
 	} 
 	if(!player->grabbing) {

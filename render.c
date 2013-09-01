@@ -307,4 +307,11 @@ void renderHead(App *app){
 	renderBody(app, body);
 }
 
+void renderWinner(App *app){
+	Player *winner = app->game.winner;
+	char msg[256];
+	sprintf(msg, "The winner is: %s", winner->name);
+	text_write_raw(app->screen, 20 , 330, msg, white, 60);
+}
+
 

@@ -14,8 +14,16 @@ void renderLifeBars(App *app){
 	renderSpawnCountdown(app);
 }
 
-void checkPlayerLife(Player *player){
-	if(player->body.life <= 10 && player->body.action == ACTION_DEATH){
+void checkPlayerLife(Player *player, App *app){
+	if(app->game.winner){
+		if(player != app->game.winner){
+			player->body.action = ACTION_DEATH;
+		
+			if(player->body.life > 0){
+				player->body.life -= 0.08;
+			}
+		}
+	} else if(player->body.life <= 10 && player->body.action == ACTION_DEATH){
 		player->body.life += 0.05;
 		if(player->body.life > 10) player->body.life = 10;
 	}
@@ -25,8 +33,14 @@ void renderEnemies(App *app)
 {
   int i = 0;
   for(; i < ENEMY_COUNT; i++) {
-    if(app->game.board.enemies[i].alive)
-	  renderBody(app, &app->game.board.enemies[i].body);
+    if(app->game.board.enemies[i].alive){
+		if(app->game.winner){
+			app->game.board.enemies[i].body.action = ACTION_DEATH;
+			app->game.board.enemies[i].body.frame += 0.3;
+		}
+
+		renderBody(app, &app->game.board.enemies[i].body);
+	}
   }
 }
 
@@ -36,14 +50,20 @@ void renderGameplay(App *app){
 
 	renderDebug(app);
 
+	if(app->game.winner){
+		app->game.winner->grabbing = 0;
+	}
+
 	renderLifeBars(app);
 	renderEnemies(app);
 	renderPlayer(app, &app->game.indy);
 	renderPlayer(app, &app->game.allan);
 	renderHead(app);
+	if(app->game.winner)
+		renderWinner(app);
 
-	checkPlayerLife(&app->game.indy);
-	checkPlayerLife(&app->game.allan);
+	checkPlayerLife(&app->game.indy, app);
+	checkPlayerLife(&app->game.allan, app);
 }
 
 int near(Body *body1, Body *body2){
@@ -71,7 +91,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	Body *body = &player->body;
 	Body *head_body = &app->game.head.body;
 
-	if(!player->grabbing && near(body, head_body) && player->special_attack < 7){
+	if(!player->grabbing && near(body, head_body) && player->special_attack < 7 && !app->game.winner){
 		float a = body->angle * M_PI / 180;
 		float dx = cos(a) * HOLD_DISTANCE;
 		float dy = sin(a) * HOLD_DISTANCE;
@@ -85,8 +105,19 @@ void playerChargeSpecialAttack(App *app, Player *player){
 			body->pos.y = ty;
 
 		if(is_empty(&app->game, body, (int)tx,(int)ty)) {
+			float dist = sqrt(
+				pow(tx - player->door.x,2)+
+				pow(ty - player->door.y,2)
+			);
+
+
 			player->grabbing = 1;
 			head_body->action = ACTION_ATTACK;
+
+			if(dist < 30){
+				app->game.winner = player;
+				player->grabbing = 0;
+			}
 		}
 	}
 

@@ -1,8 +1,40 @@
 #include "menu.h"
 
+void resetApp(App *app)
+{
+	app->game.total_kill_count= 0;
+	app->game.winner = NULL;
+	app->game.board.zombie_memory1 = 0;
+	app->game.board.zombie_memory2 = 0;
+
+
+	app->game.indy.name = "Mr. Indy J.";
+	app->game.indy.body.life = 10;
+	app->game.indy.body.score = 0;
+	app->game.indy.body.ang_vel = 0.25;
+	app->game.indy.body.max_vel = 4;
+
+	app->game.allan.name = "Mr. Allan Q.";
+	app->game.allan.body.life = 10;
+	app->game.allan.body.score = 0;
+	app->game.allan.body.ang_vel = 0.25;
+	app->game.allan.body.max_vel = 4;
+
+	app->game.head.body.life = 100;
+	app->game.head.body.score = 0;
+	app->game.head.body.ang_vel = 0.25;
+	app->game.head.body.max_vel= 4;
+
+	memset(&app->game.board.enemies, 0 , sizeof(app->game.board.enemies));
+	gameInit(app);
+	moveInit(app);
+	setWave(app, 0);
+}
+
 void chooseMenu(App *app, Menu *menu){
 	switch(menu->selected){
 		case MENU_NEW_GAME:
+			resetApp(app);
 			app->state = STATE_PLAYING;
 			break;
 		case MENU_RESUME:
@@ -13,6 +45,7 @@ void chooseMenu(App *app, Menu *menu){
 			break;
 	}
 }
+
 
 void renderMenu(App *app){
 	Uint32 color = SDL_MapRGB(app->screen->format, 33, 33,33 );

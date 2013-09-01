@@ -239,7 +239,7 @@ void renderTerminate(App *app){
 }
 
 void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerOffset){
-	SDL_Color yellow = {0xFF, 0XFF, 0x00};
+	SDL_Color yellow = {0xff, 0Xe5, 0xd5};
 	int i;
 	int ipart = (int) player->body.life; 
 	float fpart = player->body.life - ipart;
@@ -275,7 +275,7 @@ void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int p
 	if(width > max_width) width = max_width;
 	if(width < 7) width = 0;
 
-	Uint32 color = SDL_MapRGB(screen->format, 0, 99,0 );
+	Uint32 color = SDL_MapRGB(screen->format, 0xFF, 0xFF,0x00 );
 
 	SDL_Rect rect = { 35 + playerOffset + 3, 73, width, 10};
 	SDL_FillRect(screen, &rect, color);

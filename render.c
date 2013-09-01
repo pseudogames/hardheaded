@@ -107,12 +107,25 @@ void renderPlayer(App *app, Player *player){
 
 	renderBody(app, body);
 
+	if(player->power_body.action == ACTION_DEATH){
+		player->power_body.frame += 0.1;
+
+		renderBody(app, &player->power_body);
+
+		if(body->frame >= body->sprite->frame_count){
+			player->power_body.action = ACTION_MOVE;
+			body->frame = 0;
+		}
+
+		return;
+	}
+
 	if(player->grabbing == 0 
 		&& player->power_body.action == ACTION_ATTACK 
 		|| player->special_attack > 7){
 
 		player->power_body.frame += 0.3;
-		player->power_body.vel = 10;
+		player->power_body.vel = 5;
 
 
 		if(player->power_body.action == ACTION_ATTACK && player->special_attack < 98){
@@ -122,16 +135,21 @@ void renderPlayer(App *app, Player *player){
 			float tx = player->power_body.pos.x + dx;
 			float ty = player->power_body.pos.y - dy;
 
+			if(!is_air(&app->game, &player->power_body, (int)tx, (int)ty)){
+				player->power_body.action = ACTION_DEATH;
+				player->power_body.frame = 0;
+			}
+
 			player->power_body.pos.x = tx;
 			player->power_body.pos.y = ty;
 		} else {
-			player->power_body.angle = body->angle;
 			float a = player->body.angle * M_PI / 180;
 			float dx = cos(a) * 39;
 			float dy = sin(a) * 39;
 			float tx = body->pos.x + dx;
 			float ty = body->pos.y - dy;
 
+			player->power_body.angle = body->angle;
 			player->power_body.pos.x = tx;
 			player->power_body.pos.y = ty;
 		}
@@ -267,10 +285,10 @@ void renderSpawnCountdown(App *app){
 	SDL_Color yellow = {0xFF, 0XFF, 0xFF};
 	int ticks = SDL_GetTicks();
 	int t ;
-	if(ticks > app->game.spawnTime){
+	if(ticks > app->game.board.spawnTime){
 		t = 0;
 	} else{
-		t = (app->game.spawnTime - ticks) /1000;
+		t = (app->game.board.spawnTime - ticks) /1000;
 	}
 
 //	printf("eita %i, spawn: %i, tickts: %i\n", t, app->game.spawnTime, SDL_GetTicks());

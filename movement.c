@@ -38,9 +38,8 @@ inline int is_air(Game *game, Body *body, int x, int y)
 	y/=tileSize;
 	if(x<0 || y<0 || x>=mapWidth || y>=mapHeight)
 		return 1;
-	return game->board.hittable[x][y];
+	return !game->board.air[x][y];
 }
-
 
 void angle_rotate(float *a0_base, float a1, float f)
 {

@@ -6,4 +6,7 @@
 
 void movePlayer(App *app, Player *player, int up, int right, int down, int left, int halt);
 void moveEnemies(App *app);
+inline int is_solid(Game *game, Body *body, int x, int y);
+inline int is_air(Game *game, Body *body, int x, int y);
+
 #endif

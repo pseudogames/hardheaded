@@ -17,7 +17,10 @@ void checkPlayerLife(Player *player){
 void renderGameplay(App *app){
 	renderLifeBars(app);
 	renderBody(app, &app->game.board.indy.body, &app->game.board.indy);
+	renderBody(app, &app->game.board.allan.body, &app->game.board.allan);
+
 	checkPlayerLife(&app->game.board.indy);
+	checkPlayerLife(&app->game.board.allan);
 }
 
 void playerAttack(App *app, Player *player){

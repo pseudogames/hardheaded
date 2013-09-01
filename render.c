@@ -15,10 +15,8 @@ void renderBody(App *app, Body *body, Player *player){
 		if(body->frame >= body->sprite->frame_count){
 			body->action = ACTION_MOVE;
 		}
-	} 
-	
-	if(body->action == ACTION_DEATH){
-		body->frame += 0.3;
+	} else	if(body->action == ACTION_DEATH){
+		body->frame += 0.2;
 
 		SDL_Rect src;
 		sprite_rotated_rect(
@@ -55,7 +53,7 @@ void renderBody(App *app, Body *body, Player *player){
 void renderInit(App *app){
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
   app->logo = IMG_Load("data/logo.png");
-  app->menu.indiana = IMG_Load("data/goldhead.jpg");
+//  app->menu.indiana = IMG_Load("data/goldhead.jpg");
   app->game.board.hearts.full = IMG_Load("data/fullheart_small.png");
   app->game.board.hearts.onequarter= IMG_Load("data/14heart_small.png");
   app->game.board.hearts.twoquarter= IMG_Load("data/24heart_small.png");
@@ -68,8 +66,18 @@ void renderInit(App *app){
 	  "data/indy.png" // source
   );
   app->game.board.indy.body.sprite = &app->game.board.indy.sprite;
-  app->game.board.indy.body.pos.x = 100;
-  app->game.board.indy.body.pos.y = 600;
+  app->game.board.indy.body.pos.x = 200;
+  app->game.board.indy.body.pos.y = 400;
+
+  sprite_init(&app->game.board.allan.sprite, 
+	  0, 0, // origin
+	  32, 96, 4, // frame size and count
+	  "data/allan.png" // source
+  );
+  app->game.board.allan.body.sprite = &app->game.board.allan.sprite;
+  app->game.board.allan.body.pos.x = 400;
+  app->game.board.allan.body.pos.y = 400;
+
 
   sprite_init(&app->game.board.zombie.sprite, 
 	  0, 0, // origin
@@ -88,7 +96,6 @@ void renderInit(App *app){
   app->game.board.head.body.sprite = &app->game.board.head.sprite;
   app->game.board.head.body.pos.x = 300;
   app->game.board.head.body.pos.y = 600;
-
 }
 
 void renderTerminate(App *app){

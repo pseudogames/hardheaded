@@ -12,6 +12,15 @@ void bindGameplayKeystate(App *app){
 	  keystate[SDLK_a],
 	  keystate[SDLK_LCTRL] || keystate[SDLK_LALT]
   );
+
+
+  player_move(app, &app->game.board.allan.body,
+	  keystate[SDLK_UP],
+	  keystate[SDLK_RIGHT],
+	  keystate[SDLK_DOWN],
+	  keystate[SDLK_LEFT],
+	  keystate[SDLK_RCTRL] || keystate[SDLK_RALT] || keystate[SDLK_RETURN]
+  );
 }
 
 void bindMenuKeys(App *app, SDLKey *key){
@@ -56,6 +65,12 @@ void bindGameplayKeys(App *app, SDLKey *key){
 			break;
 		case SDLK_p:
 			playerDie(app, &app->game.board.indy);
+			break;
+		case SDLK_RCTRL:
+			playerAttack(app, &app->game.board.allan);
+			break;
+		case SDLK_l:
+			playerDie(app, &app->game.board.allan);
 			break;
 	}
 }

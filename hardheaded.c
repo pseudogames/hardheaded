@@ -21,12 +21,15 @@ void appInit(App *app){
   app->state = STATE_MENU;
   app->menu.selected = MENU_NEW_GAME;
   app->game.board.indy.name = "Mr. Indy J.";
-  app->game.board.indy.life= 0.25;
+  app->game.board.indy.life= 10;
   app->game.board.allan.name = "Mr. Allan Q.";
-  app->game.board.allan.life= 9.25;
+  app->game.board.allan.life= 10;
 
   app->game.board.indy.body.ang_vel = 0.25;
   app->game.board.indy.body.max_vel= 4;
+
+  app->game.board.allan.body.ang_vel = 0.25;
+  app->game.board.allan.body.max_vel= 4;
 }
 
 void handleDelay(Uint32 start) {

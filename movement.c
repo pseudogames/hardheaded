@@ -112,7 +112,7 @@ void movePlayer(App *app, Player *player, int up, int right, int down, int left,
 			app->game.head.body.pos.x = tx;
 			app->game.head.body.pos.y = ty;
 			app->game.head.body.angle = body->angle;
-			body->vel = 1;
+			body->vel = 8;
 		}
 	} 
 	if(!player->grabbing) {
@@ -277,11 +277,15 @@ void moveInit(App *app)
 			if(p1) {
 				app->game.indy.body.pos.x = x * tileSize + tileSize/2;
 				app->game.indy.body.pos.y = y * tileSize + tileSize/2;
+				app->game.indy.door.x = x * tileSize + tileSize/2;
+				app->game.indy.door.y = y * tileSize + tileSize/2;
 				app->game.indy.body.angle = 90; // FIXME look to the idol head
 			}
 			if(p2) {
 				app->game.allan.body.pos.x = x * tileSize + tileSize/2;
 				app->game.allan.body.pos.y = y * tileSize + tileSize/2;
+				app->game.allan.door.x = x * tileSize + tileSize/2;
+				app->game.allan.door.y = y * tileSize + tileSize/2;
 				app->game.allan.body.angle = 270; // FIXME look to the idol head
 			}
 			if(head) {
@@ -289,8 +293,8 @@ void moveInit(App *app)
 				app->game.head.body.pos.y = y * tileSize + tileSize/2;
 				app->game.head.body.angle = 270;
 
-				//app->game.head.body.pos.x = app->game.indy.body.pos.x;
-				//app->game.head.body.pos.y = app->game.indy.body.pos.y;
+				app->game.head.body.pos.x = app->game.indy.body.pos.x + 40;
+				app->game.head.body.pos.y = app->game.indy.body.pos.y;
 			}
 		}
 	}
@@ -299,6 +303,7 @@ void moveInit(App *app)
 
 void moveEnemies(App *app)
 {
+  if(app->game.winner) return;
   int i;
   int t = SDL_GetTicks();
   for(i=0; i < ENEMY_COUNT; i++)

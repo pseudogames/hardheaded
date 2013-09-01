@@ -72,6 +72,8 @@ typedef struct{
   char* name;
   int grabbing;
   int last_ai;
+  int win;
+  point door;
 } Player;
 
 typedef struct{
@@ -139,6 +141,7 @@ typedef struct {
   Player head;
   Uint32 start;
   int total_kill_count;
+  Player *winner;
 } Game;
 
 typedef struct {

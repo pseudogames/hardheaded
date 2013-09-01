@@ -67,7 +67,6 @@ int is_empty(Game *game, Body *body, int x, int y)
 
 void player_move(App *app, Body *body, int up, int right, int down, int left, int halt)
 {
-	body->action = ACTION_MOVE;
 
 	if((int)body->frame > body->sprite->frame_count) {
 		body->frame = 0;
@@ -76,7 +75,9 @@ void player_move(App *app, Body *body, int up, int right, int down, int left, in
     int dx=right-left;
     int dy=down-up;
     if(dx||dy) {
-		body->frame += 1;
+		if(body->action == ACTION_MOVE){
+			body->frame += 1;
+		}
         float angle = ATAN2(dx,dy);
         body_move(&app->game, body, angle, !halt);
     }

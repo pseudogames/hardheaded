@@ -51,6 +51,9 @@ void bindGameplayKeys(App *app, SDLKey *key){
 		case SDLK_ESCAPE:
 			app->state = STATE_PAUSED;
 			break;
+		case SDLK_SPACE:
+			playerAttack(app, &app->game.board.indy);
+			break;
 	}
 }
 

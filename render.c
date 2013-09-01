@@ -9,6 +9,14 @@ SDL_Color green = {0x00, 0XFF, 0x00};
 SDL_Color yellow = {0xFF, 0XFF, 0x00};
 
 void renderBody(App *app, Body *body){
+	if(body->action != ACTION_MOVE){
+		body->frame += 0.3;
+
+		if(body->frame >= body->sprite->frame_count){
+			body->action = ACTION_MOVE;
+		}
+	}
+
 	SDL_Rect src;
 	sprite_rotated_rect(
 			body->sprite, 
@@ -21,7 +29,7 @@ void renderBody(App *app, Body *body){
 }
 
 void renderInit(App *app){
-  app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE);
+  app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
   app->logo = IMG_Load("data/logo.png");
   app->menu.indiana = IMG_Load("data/goldhead.jpg");
   app->game.board.hearts.full = IMG_Load("data/fullheart_small.png");

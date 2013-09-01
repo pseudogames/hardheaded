@@ -4,3 +4,4 @@
 #include "movement.h"
 
 void renderGameplay(App *app);
+void playerAttack(App *app, Player *player);

@@ -46,6 +46,20 @@ void renderEnemies(App *app)
 			app->game.board.enemies[i].body.frame += 0.3;
 		}
 
+		if(app->game.board.enemies[i].body.action != ACTION_DEATH) {
+			float frame = app->game.board.enemies[i].body.frame;
+			
+			frame += 0.1;
+
+			if(frame < app->enemy_frame_count * app->game.board.enemies[i].variation
+			|| frame >= app->enemy_frame_count * (app->game.board.enemies[i].variation+1) ) {
+				app->game.board.enemies[i].body.action = ACTION_MOVE;
+				frame = app->enemy_frame_count * app->game.board.enemies[i].variation;
+			}
+
+			app->game.board.enemies[i].body.frame = frame;
+		}
+
 		renderBody(app, &app->game.board.enemies[i].body);
 	}
   }
@@ -139,6 +153,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 }
 
 void playerAttack(App *app, Player *player){
+	int i;
 	Body *body = &player->body;
 	Body *head_body = &app->game.head.body;
 
@@ -156,7 +171,11 @@ void playerAttack(App *app, Player *player){
 	body->action = ACTION_ATTACK;
 	body->frame = 0;
 
-	shoot(app, &player->body, 20);
+	for(i=0; i<10; i++) {
+		shoot(app, &player->body, 10, 0, tileSize*1.5);
+		shoot(app, &player->body, 50, 0, tileSize*1);
+		shoot(app, &player->body, 100, 180, tileSize*.5);
+	}
 
 	player->special_attack = 0;
 }
@@ -228,7 +247,9 @@ void spawnEnemy(App *app)
 			enemybody->pos.x = x;
 			enemybody->pos.y = y;
 			enemybody->sprite = &app->zombie;
+			enemybody->action = ACTION_MOVE;
 			enemy->variation = rand() % app->enemy_variation_count;
+			enemybody->frame = enemy->variation * app->enemy_frame_count;
 			enemy->alive = 1;
 		} else {
 			spawnDelay = 500;
@@ -290,11 +311,11 @@ int hit(App *app, Body *source, Body *target){
 				int i;
 				Wave *wave = &app->game.wave[app->game.wave_index];
 				if(enemy_killed) {
-					source->life += target->score;
 					app->game.board.on_screen_enemies --;
 					app->game.board.kill_count ++;
 					app->game.total_kill_count ++;
 					int score = target->score;
+					source->life += score;
 					for(i=0;i<21;i++) {
 						int x = x0+search[i][0];
 						int y = y0+search[i][1];
@@ -341,14 +362,11 @@ int hit(App *app, Body *source, Body *target){
 inline int draw(App *app, Body *body, int x, int y)
 {
 
-#if 0
-	SDL_Rect rect = {
-		x - app->hearts.full->w/2,
-		y - app->hearts.full->h/2,
-		app->hearts.full->w,
-		app->hearts.full->h
-	};
-	SDL_BlitSurface(app->hearts.full, NULL, app->screen, &rect);
+#if 1
+	SDL_Rect rect = { x-1, y-1, 3, 3 };
+	Uint32 color = SDL_MapRGB(app->screen->format, 0xFF, 0xFF,0x00 );
+	SDL_FillRect(app->screen, &rect, color);
+	//if(rand()%500 == 0) SDL_Flip(app->screen);
 #endif
 
 	int target = is_hit(&app->game, body, x, y);
@@ -362,8 +380,9 @@ inline int draw(App *app, Body *body, int x, int y)
 	return target;
 }
 
-int shoot(App *app, Body *body, int spread)
+int shoot(App *app, Body *body, int spread, int angle, float range)
 {
+	int x0, y0;
 	int x1, y1, x2, y2;
 	int dx, dy, i, e;
 	int incx, incy, inc1, inc2;
@@ -374,13 +393,19 @@ int shoot(App *app, Body *body, int spread)
 
 	//playSound(body->item.type->sound, -1);
 
-	x1 = body->pos.x;
-	y1 = body->pos.y;
+	x0 = body->pos.x;
+	y0 = body->pos.y;
 
-	int range = tileSize*1.5;
-	float a = (int)(body->angle + ((rand() % (spread+1)) - spread/2))%360;
-	x2 = x1 + cos(a * M_PI / 180.) * range;
-	y2 = y1 - sin(a * M_PI / 180.) * range;
+	float a = (int)(body->angle + angle + ((rand() % (spread+1)) - spread/2))%360;
+
+	dx = + cos(a * M_PI / 180.) * range;
+	dy = - sin(a * M_PI / 180.) * range;
+
+	x1 = x0 - dx * 0.2;
+	y1 = y0 - dy * 0.2;
+
+	x2 = x0 + dx;
+	y2 = y0 + dy;
 
 	dx = x2 - x1;
 	dy = y2 - y1;

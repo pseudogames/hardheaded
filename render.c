@@ -104,7 +104,18 @@ void renderPlayer(App *app, Player *player){
 			body->action = ACTION_MOVE;
 		}
 	}
+
 	renderBody(app, body);
+
+	if(player->power_body.action == ACTION_ATTACK || player->special_attack > 7){
+		player->power_body.frame += 0.3;
+
+		player->power_body.angle = body->angle;
+		player->power_body.vel = 10;
+		player->power_body.pos.x = body->pos.x + 30;
+		player->power_body.pos.y = body->pos.y + 30;
+		renderBody(app, &player->power_body);
+	}
 }
 
 void renderBody(App *app, Body *body){
@@ -134,7 +145,7 @@ void renderInit(App *app){
   app->hearts.twoquarter= IMG_Load("data/24heart_small.png");
   app->hearts.threequarter= IMG_Load("data/34heart_small.png");
   app->hearts.empty = IMG_Load("data/emptyheart_small.png");
-  app->special_bar = IMG_Load("data/chargebar.png");
+  app->special_bar = IMG_Load("data/chargebarr.png");
 
   sprite_init(&app->game.indy.sprite, 
 	  0, 0, // origin
@@ -165,6 +176,23 @@ void renderInit(App *app){
   );
 
   app->game.head.body.sprite = &app->game.head.sprite;
+
+  sprite_init(&app->game.allan.power, 
+	  0, 0, // origin
+	  32, 32, 3, // frame size and count
+	  "data/power.png" // source
+  );
+
+  app->game.allan.power_body.sprite = &app->game.allan.power;
+
+
+  sprite_init(&app->game.indy.power, 
+	  0, 0, // origin
+	  32, 32, 3, // frame size and count
+	  "data/power.png" // source
+  );
+
+  app->game.indy.power_body.sprite = &app->game.indy.power;
 }
 
 void renderTerminate(App *app){
@@ -211,6 +239,23 @@ void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int p
 
 	SDL_Rect rect = { 35 + playerOffset + 3, 73, width, 10};
 	SDL_FillRect(screen, &rect, color);
+}
+
+void renderSpawnCountdown(App *app){
+	SDL_Color yellow = {0xFF, 0XFF, 0xFF};
+	int ticks = SDL_GetTicks();
+	int t ;
+	if(ticks > app->game.spawnTime){
+		t = 0;
+	} else{
+		t = (app->game.spawnTime - ticks) /1000;
+	}
+
+//	printf("eita %i, spawn: %i, tickts: %i\n", t, app->game.spawnTime, SDL_GetTicks());
+
+	char msg[256];
+	sprintf(msg, "zombies in %is", t);
+	text_write_raw(app->screen, 400 , 10, msg, yellow, 20);
 }
 
 void renderHead(App *app){

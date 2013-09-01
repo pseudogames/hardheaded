@@ -15,7 +15,7 @@ void renderLifeBars(App *app){
 }
 
 void checkPlayerLife(Player *player, App *app){
-	if(app->game.winner != NULL){
+	if(app->game.winner){
 		if(player != app->game.winner){
 			player->body.action = ACTION_DEATH;
 		
@@ -59,6 +59,8 @@ void renderGameplay(App *app){
 	renderPlayer(app, &app->game.indy);
 	renderPlayer(app, &app->game.allan);
 	renderHead(app);
+	if(app->game.winner)
+		renderWinner(app);
 
 	checkPlayerLife(&app->game.indy, app);
 	checkPlayerLife(&app->game.allan, app);
@@ -108,12 +110,14 @@ void playerChargeSpecialAttack(App *app, Player *player){
 				pow(ty - player->door.y,2)
 			);
 
-			if(dist < 40){
-				app->game.winner = player;
-			}
 
 			player->grabbing = 1;
 			head_body->action = ACTION_ATTACK;
+
+			if(dist < 30){
+				app->game.winner = player;
+				player->grabbing = 0;
+			}
 		}
 	}
 

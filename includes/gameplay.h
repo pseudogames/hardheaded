@@ -1,3 +1,5 @@
+#ifndef _GAMEPLAY_H
+#define _GAMEPLAY_H
 #include "hardheaded.h"
 #include "font.h"
 #include "render.h"
@@ -7,3 +9,4 @@ void renderGameplay(App *app);
 void playerAttack(App *app, Player *player);
 void playerChargeSpecialAttack(App *app, Player *player);
 void playerDie(App *app, Player *player);
+#endif

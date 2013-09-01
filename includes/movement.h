@@ -2,6 +2,7 @@
 #define _MOVEMENT_H
 #include <math.h>
 #include "hardheaded.h"
+#include "gameplay.h"
 
-void player_move(App *app, Body *body, int up, int right, int down, int left, int halt);
+void player_move(App *app, Player *player, int up, int right, int down, int left, int halt);
 #endif

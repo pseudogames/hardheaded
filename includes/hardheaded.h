@@ -63,6 +63,7 @@ typedef struct{
   int special_attack;
   float life;
   char* name;
+  int grabbing;
 } Player;
 
 typedef struct{

@@ -159,6 +159,7 @@ void renderInit(App *app){
 	  32, 32, 3, // frame size and count
 	  "data/head.png" // source
   );
+
   app->game.head.body.sprite = &app->game.head.sprite;
 }
 
@@ -207,4 +208,24 @@ void renderPlayerSpecialBar(App *app, SDL_Surface *screen, Player *player, int p
 	SDL_Rect rect = { 35 + playerOffset + 3, 73, width, 10};
 	SDL_FillRect(screen, &rect, color);
 }
+
+void renderHead(App *app){
+	Body *body = &app->game.head.body;
+	body->frame += 0.3;
+
+	if(body->frame >= body->sprite->frame_count){
+		body->frame = 0;
+	}
+
+	SDL_Rect src;
+	sprite_rotated_rect(
+			body->sprite, 
+			body->action, 
+			(int)body->frame,
+			(int)body->angle,
+			&src);
+
+	SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &body->pos);
+}
+
 

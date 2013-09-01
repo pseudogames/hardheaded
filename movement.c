@@ -77,8 +77,9 @@ void body_move(Game *game, Body *body, float angle, float vel)
 	}
 }
 
-void player_move(App *app, Body *body, int up, int right, int down, int left, int halt)
+void player_move(App *app, Player *player, int up, int right, int down, int left, int halt)
 {
+	Body *body = &player->body;
 
 	if(body->action == ACTION_DEATH) return;
 
@@ -91,6 +92,7 @@ void player_move(App *app, Body *body, int up, int right, int down, int left, in
 				body->frame = 0;
 			}
 		}
+
         float angle = ATAN2(dx,dy);
         body_move(&app->game, body, angle, !halt);
     }

@@ -53,6 +53,7 @@ void bindMenuKeys(App *app, SDLKey *key){
 				menu->selected++;
 			}
 			break;
+		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
 		case SDLK_RETURN:
 		case SDLK_SPACE:

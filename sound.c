@@ -23,7 +23,7 @@ void playMusic(const char* path, int qtd){
   }
 
   lastMusic = name;
-  printf("Name: %s\n", name);
+  //printf("Name: %s\n", name);
   music = Mix_LoadMUS(name);
 
   if(Mix_PlayMusic(music, qtd) == -1) {

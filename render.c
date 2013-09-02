@@ -375,26 +375,26 @@ void renderCredits(App *app)
 
 	text_write_raw(screen, 300, 25, "Credits", black, 96);
 
-	text_write_raw(screen, 100, 150, "team", red, 36);
-	text_write_raw(screen, 100, 200, "Programmer: Carlo \"zED\" Caputo", black, 20);
+	text_write_raw(screen, 100, 140, "team", red, 36);
+	text_write_raw(screen, 100, 180, "Programmer: Carlo \"zED\" Caputo", black, 20);
 
-	text_write_raw(screen, 100, 250, "Programmer: Pedro Mariano", black, 20);
+	text_write_raw(screen, 100, 220, "Programmer: Pedro Mariano", black, 20);
 
-	text_write_raw(screen, 600, 150, "music", red, 36);
-	text_write_raw(screen, 600, 200, "http://www.newgrounds.com/audio/listen/148265", black, 14);
+	text_write_raw(screen, 540, 140, "music", red, 36);
+	text_write_raw(screen, 540, 180, "http://www.newgrounds.com/audio/listen/148265", black, 14);
 	
 
-	text_write_raw(screen, 100, 300, "chars/tiles", red, 36);
-	text_write_raw(screen, 100, 350, "http://i872.photobucket.com/albums/ab289/Mollombo/ZombieSheet.png", black, 20);
-	text_write_raw(screen, 100, 400, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
-	text_write_raw(screen, 100, 450, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
+	text_write_raw(screen, 100, 260, "chars/tiles", red, 36);
+	text_write_raw(screen, 100, 300, "http://i872.photobucket.com/albums/ab289/Mollombo/ZombieSheet.png", black, 20);
+	text_write_raw(screen, 100, 340, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
+	text_write_raw(screen, 100, 380, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
 
-	text_write_raw(screen, 100, 500, "tileset", red, 36);
-	text_write_raw(screen, 100, 550, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
-	text_write_raw(screen, 100, 600, "fonts", red, 36);
-	text_write_raw(screen, 100, 650, "http://www.dafont.com/indiana.font", black, 20);
-	text_write_raw(screen, 100, 700, "http://www.dafont.com/drawing-blood.font", black, 20);
-	text_write_raw(screen, 100, 750, "http://www.dafont.com/drawing-blood.font", black, 20);
+	text_write_raw(screen, 100, 420, "tileset", red, 36);
+	text_write_raw(screen, 100, 460, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
+	text_write_raw(screen, 100, 500, "fonts", red, 36);
+	text_write_raw(screen, 100, 540, "http://www.dafont.com/indiana.font", black, 20);
+	text_write_raw(screen, 100, 580, "http://www.dafont.com/drawing-blood.font", black, 20);
+	text_write_raw(screen, 100, 620, "http://www.dafont.com/pwnewarrows.font", black, 20);
 }
 
 

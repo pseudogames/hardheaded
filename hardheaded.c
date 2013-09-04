@@ -13,6 +13,8 @@
 #include "render.h"
 #include "sound.h"
 
+#include "data/all.h"
+
 #define FPS 30
 
 #define MAX(a,b) ((a)>(b)?(a):(b))

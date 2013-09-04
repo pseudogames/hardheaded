@@ -14,20 +14,29 @@ endif
 
 OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o
 
+INCS=data/all.h
+
 .PHONY: all clean depend
 
-all: depend $(OUTPUT)
+all: $(OUTPUT)
 
 clean:
+	make -C data clean
 	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out
+
+data/all.h:
+	make -C data all
 
 depend: .depend
 
-.depend: $(patsubst %.o,%.c,$(OBJS))
+.depend: $(patsubst %.o,%.c,$(OBJS)) | data/all.h
 	$(CC) $(CFLAGS) -MM $^ > .depend
 
-include .depend
+ifneq ($(MAKECMDGOALS),clean)
+	-include .depend
+endif
 
-$(OUTPUT): $(OBJS)
+
+$(OUTPUT): $(INCS) $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 

@@ -27,3 +27,5 @@ survivor.exe
 gmon.out
 *.log
 hardheaded
+*.wav
+*.mp3

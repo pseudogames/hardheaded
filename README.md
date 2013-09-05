@@ -23,6 +23,8 @@
 	    * <http://www.freesound.org/people/thecluegeek/sounds/140585/>
 		* <http://www.freesound.org/people/esperar/sounds/171942/>
 		* <http://www.freesound.org/people/klankbeeld/sounds/149111/>
+* ini parser
+    * <http://ndevilla.free.fr/iniparser/>
 
 # TODO
 

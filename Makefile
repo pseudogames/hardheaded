@@ -35,7 +35,7 @@ depend: .depend
 	$(CC) $(CFLAGS) -MM $^ > .depend
 
 ifneq ($(MAKECMDGOALS),clean)
-	-include .depend
+-include .depend
 endif
 
 $(OUTPUT): $(INCS) $(OBJS) iniparser/libiniparser.a

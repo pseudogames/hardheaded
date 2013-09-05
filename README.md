@@ -26,6 +26,7 @@
 
 # TODO
 
+* release build
 * fix close quarters combat
 * sound effects
     * indy death
@@ -35,7 +36,8 @@
 	* whiplash
 	* zombie attack
 	* silence on endgame
-* persistent hiscore
 * plot hints
 * wave balance
+* persistent hiscore
+
 

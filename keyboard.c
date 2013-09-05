@@ -53,7 +53,8 @@ void bindMenuKeys(App *app, SDLKey *key){
 		}
 	}
 
-	if( *key == keybind.player1.attack || *key == keybind.player2.attack || *key == SDLK_RETURN || *key == SDLK_SPACE ) {
+	if( *key == keybind.player1.attack || *key == keybind.player2.attack ||
+		*key == SDLK_RETURN || *key == SDLK_SPACE ) {
 		if(app->credits == 4){
 			app->credits = 0;
 		}  else if (app->credits == 0) {

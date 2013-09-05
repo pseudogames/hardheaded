@@ -5,14 +5,13 @@ ifdef WIN
   CC=i386-mingw32-gcc
   OUTPUT=hardheaded.exe
 else
-  CFLAGS=`sdl-config --cflags` -Iincludes  -ggdb #-pg
-
+  CFLAGS=`sdl-config --cflags` -Iincludes -ggdb #-pg
   LIBS=`sdl-config --libs` -L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf -lm # -pg
   CC=gcc
   OUTPUT=hardheaded
 endif
 
-OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o
+OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o config.c
 
 INCS=data/all.h
 
@@ -21,11 +20,14 @@ INCS=data/all.h
 all: $(OUTPUT)
 
 clean:
-	make -C data clean
+	# make -C data clean
 	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out
 
 data/all.h:
-	make -C data all
+	make -C $$(dirname "$@") all
+
+iniparser/libiniparser.a:
+	make -C $$(dirname "$@")
 
 depend: .depend
 
@@ -36,7 +38,6 @@ ifneq ($(MAKECMDGOALS),clean)
 	-include .depend
 endif
 
-
-$(OUTPUT): $(INCS) $(OBJS)
+$(OUTPUT): $(INCS) $(OBJS) iniparser/libiniparser.a
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 

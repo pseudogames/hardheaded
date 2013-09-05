@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "render.h"
 #include "sound.h"
+#include "config.h"
 
 #include "data/all.h"
 
@@ -151,6 +152,7 @@ int main(int argc, char* args[]) {
   appInit(&app);
   renderInit(&app);
   gameInit(&app);
+  conf_keys_load("keys.ini");
 
   init_font();
 

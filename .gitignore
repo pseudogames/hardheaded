@@ -30,3 +30,7 @@ hardheaded
 *.wav
 *.mp3
 data/*.[ch]
+keys.ini
+*.so.0
+*.so
+*.a

@@ -26,7 +26,6 @@
 
 # TODO
 
-* better credits screen
 * fix close quarters combat
 * sound effects
     * indy death

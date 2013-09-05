@@ -57,10 +57,12 @@ void bindMenuKeys(App *app, SDLKey *key){
 		case SDLK_RSHIFT:
 		case SDLK_RETURN:
 		case SDLK_SPACE:
-			if(app->credits){
+			if(app->credits == 3){
 				app->credits = 0;
-			} else {
+			}  else if (app->credits == 0) {
 				chooseMenu(app, menu);
+			} else {
+				app->credits++;
 			}
 			break;
 	}

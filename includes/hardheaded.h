@@ -166,6 +166,7 @@ typedef struct {
   int enemy_frame_count;
   int enemy_variation_count;
   SDL_Surface *blood;
+  SDL_Surface *partnership;
 } App;
 
 #endif

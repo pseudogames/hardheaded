@@ -197,6 +197,7 @@ void renderInit(App *app){
   app->hearts.threequarter= IMG_Load("data/34heart_small.png");
   app->hearts.empty = IMG_Load("data/emptyheart_small.png");
   app->special_bar = IMG_Load("data/chargebarr.png");
+  app->partnership = IMG_Load("data/patrocinador.jpg");
 
   sprite_init(&app->game.indy.sprite, 
 	  0, 0, // origin
@@ -375,26 +376,40 @@ void renderCredits(App *app)
 
 	text_write_raw(screen, 300, 25, "Credits", black, 96);
 
-	text_write_raw(screen, 100, 140, "team", red, 36);
-	text_write_raw(screen, 100, 180, "Programmer: Carlo \"zED\" Caputo", black, 20);
+	if(app->credits ==1){
+		text_write_raw(screen, 100, 160, "team", red, 36);
+		text_write_raw(screen, 100, 200, "Programmer: Carlo \"zED\" Caputo", black, 20);
+		text_write_raw(screen, 100, 240, "Programmer: Pedro Mariano", black, 20);
 
-	text_write_raw(screen, 100, 220, "Programmer: Pedro Mariano", black, 20);
+		text_write_raw(screen, 100, 280, "chars based on:", red, 36);
+		text_write_raw(screen, 100, 340, "sprite database", red, 20);
+		text_write_raw(screen, 100, 360, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
 
-	text_write_raw(screen, 540, 140, "music", red, 36);
-	text_write_raw(screen, 540, 180, "http://www.newgrounds.com/audio/listen/148265", black, 14);
-	
+		text_write_raw(screen, 100, 400, "spelunky", red, 20);
+		text_write_raw(screen, 100, 430, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
 
-	text_write_raw(screen, 100, 260, "chars/tiles", red, 36);
-	text_write_raw(screen, 100, 300, "http://i872.photobucket.com/albums/ab289/Mollombo/ZombieSheet.png", black, 20);
-	text_write_raw(screen, 100, 340, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
-	text_write_raw(screen, 100, 380, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
+		text_write_raw(screen, 100, 470, "Kazzador/Enterbrail", red, 20);
+		text_write_raw(screen, 100, 510, "http://forums.rpgmakerweb.com/index.php?/topic/", black, 20);
+		text_write_raw(screen, 100, 535, "683-kazzadors-additional-generator-parts-sprites/", black, 20);
 
-	text_write_raw(screen, 100, 420, "tileset", red, 36);
-	text_write_raw(screen, 100, 460, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
-	text_write_raw(screen, 100, 500, "fonts", red, 36);
-	text_write_raw(screen, 100, 540, "http://www.dafont.com/indiana.font", black, 20);
-	text_write_raw(screen, 100, 580, "http://www.dafont.com/drawing-blood.font", black, 20);
-	text_write_raw(screen, 100, 620, "http://www.dafont.com/pwnewarrows.font", black, 20);
+		text_write_raw(screen, 100, 570, "tileset", red, 36);
+		text_write_raw(screen, 100, 620, "The Legend of Zelda: The Minish Cap", red, 20);
+		text_write_raw(screen, 100, 650, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
+	} else if(app->credits == 2) {
+
+		text_write_raw(screen, 100, 240, "music", red, 36);
+		text_write_raw(screen, 100, 280, "Indiana Jones theme 8bits", red, 20);
+		text_write_raw(screen, 100, 330, "http://www.newgrounds.com/audio/listen/148265", black, 20);
+		text_write_raw(screen, 100, 400, "fonts", red, 36);
+		text_write_raw(screen, 100, 460, "http://www.dafont.com/indiana.font", black, 20);
+		text_write_raw(screen, 100, 500, "http://www.dafont.com/drawing-blood.font", black, 20);
+		text_write_raw(screen, 100, 540, "http://www.dafont.com/pwnewarrows.font", black, 20);
+	} else if(app->credits == 3){
+		text_write_raw(screen, 130, 170, "Este jogo AWESOME foi desenvolvido durante a SPJam 2013", black, 20);
+		text_write_raw(screen, 220, 210, "realizada pela Vortex Game Studios na PUC-SP", black, 20);
+		SDL_Rect logo = {-220, -250, screen->w, screen->h};
+		SDL_BlitSurface(app->partnership, &logo, screen, NULL);
+	}
 }
 
 

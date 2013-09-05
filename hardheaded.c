@@ -153,7 +153,7 @@ int main(int argc, char* args[]) {
   renderInit(&app);
   gameInit(&app);
   conf_keys_load("keys.ini");
-
+  loadSFX();
   init_font();
 
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0 ) return 1;
@@ -184,7 +184,6 @@ int main(int argc, char* args[]) {
 		  }
 	  }
 	  
-
 	  SDL_Flip(app.screen);
 	  handleDelay(startTime);
   }

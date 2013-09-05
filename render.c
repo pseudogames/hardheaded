@@ -380,21 +380,22 @@ void renderCredits(App *app)
 		text_write_raw(screen, 100, 160, "team", red, 36);
 		text_write_raw(screen, 100, 200, "Programmer: Carlo \"zED\" Caputo", black, 20);
 		text_write_raw(screen, 100, 240, "Programmer: Pedro Mariano", black, 20);
+		text_write_raw(screen, 100, 280, "Programmer: Maxwell Dayvson", black, 20);
 
-		text_write_raw(screen, 100, 280, "chars based on:", red, 36);
-		text_write_raw(screen, 100, 340, "sprite database (players)", red, 20);
-		text_write_raw(screen, 100, 360, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
+		text_write_raw(screen, 100, 320, "chars based on:", red, 36);
+		text_write_raw(screen, 100, 360, "sprite database (players)", red, 20);
+		text_write_raw(screen, 100, 400, "http://spritedatabase.net/files/pc/771/Sprite/IndianaJones.png", black, 20);
 
-		text_write_raw(screen, 100, 400, "spelunky (head)", red, 20);
-		text_write_raw(screen, 100, 430, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
+		text_write_raw(screen, 100, 440, "spelunky (head)", red, 20);
+		text_write_raw(screen, 100, 470, "http://spelunky.wikia.com/wiki/Golden_Idol/Classic", black, 20);
 
-		text_write_raw(screen, 100, 470, "Kazzador/Enterbrail (enemies)", red, 20);
-		text_write_raw(screen, 100, 510, "http://forums.rpgmakerweb.com/index.php?/topic/", black, 20);
-		text_write_raw(screen, 100, 535, "683-kazzadors-additional-generator-parts-sprites/", black, 20);
+		text_write_raw(screen, 100, 500, "Kazzador/Enterbrail (enemies)", red, 20);
+		text_write_raw(screen, 100, 530, "http://forums.rpgmakerweb.com/index.php?/topic/", black, 20);
+		text_write_raw(screen, 100, 575, "683-kazzadors-additional-generator-parts-sprites/", black, 20);
 
-		text_write_raw(screen, 100, 570, "tileset", red, 36);
-		text_write_raw(screen, 100, 620, "The Legend of Zelda: The Minish Cap", red, 20);
-		text_write_raw(screen, 100, 650, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
+		text_write_raw(screen, 100, 600, "tileset", red, 36);
+		text_write_raw(screen, 100, 640, "The Legend of Zelda: The Minish Cap", red, 20);
+		text_write_raw(screen, 100, 670, "http://www.pyxosoft.com/media/resources/loz_minish_cap/", black, 20);
 	} else if(app->credits == 2) {
 		text_write_raw(screen, 100, 180, "music", red, 36);
 		text_write_raw(screen, 100, 230, "Indiana Jones theme 8bits", red, 20);

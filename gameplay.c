@@ -1,5 +1,6 @@
 #include "gameplay.h"
 #include <math.h>
+#include "sound.h"
 
 void renderLifeBars(App *app){
 	SDL_Surface *screen = app->screen;
@@ -176,6 +177,9 @@ void playerAttack(App *app, Player *player){
 
 	if(player->special_attack >= 100) {
 		player->power_body.action = ACTION_ATTACK;
+		playSpecialAttack();
+	}else{
+		playAttack();
 	}
 
 	body->action = ACTION_ATTACK;
@@ -193,6 +197,11 @@ void playerDie(App *app, Player *player){
 	Body *body = &player->body;
 	body->action = ACTION_DEATH;
 	body->frame = 0;
+	if(&app->game.allan == player){
+		playAllanDeath();
+	}else if(&app->game.indy == player){
+		playIndyDeath();
+	}
 }
 
 void spawnEnemy(App *app)

@@ -380,7 +380,7 @@ void renderCredits(App *app)
 		text_write_raw(screen, 100, 160, "team", red, 36);
 		text_write_raw(screen, 100, 200, "Programmer: Carlo \"zED\" Caputo", black, 20);
 		text_write_raw(screen, 100, 240, "Programmer: Pedro Mariano", black, 20);
-		text_write_raw(screen, 100, 280, "Programmer: Maxwell Dayvson", black, 20);
+		text_write_raw(screen, 100, 280, "SFX: Maxwell Dayvson", black, 20);
 
 		text_write_raw(screen, 100, 320, "chars based on:", red, 36);
 		text_write_raw(screen, 100, 360, "sprite database (players)", red, 20);

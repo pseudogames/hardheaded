@@ -1,9 +1,14 @@
 #include "sound.h"
 
 Mix_Music *music = NULL;
+Mix_Chunk *indy_die_ptr;
+Mix_Chunk *allan_die_ptr;
+Mix_Chunk *special_ptr;
+Mix_Chunk *attack_ptr[5];
+Mix_Chunk *wakeup_ptr[3];
+
 char* lastMusic = "";
 Audio a;
-const char* levelMusics[3] = {"ascending.mp3", "arpanauts.mp3", "underclocked.mp3"};
 
 void sound_terminate()
 {
@@ -31,13 +36,43 @@ void playMusic(const char* path, int qtd){
 	// well, there's no music, but most games don't break without music...
   }
 }
+
 void playSound(Mix_Chunk *sound){
   Mix_PlayChannel(1, sound, 0);
 }
 
-void playRandomMusic(){
-  const char* musicName = levelMusics[rand()%3];
-  playMusic(musicName, -1);
+void loadSFX(){
+  indy_die_ptr = Mix_LoadWAV("data/wilhelm_scream.ogg");
+  allan_die_ptr = Mix_LoadWAV("data/howie-scream.ogg");
+  special_ptr = Mix_LoadWAV("data/special_whip.ogg");
+  wakeup_ptr[0] = Mix_LoadWAV("data/wakeup_1.ogg");
+  wakeup_ptr[1] = Mix_LoadWAV("data/wakeup_2.ogg");
+  wakeup_ptr[2] = Mix_LoadWAV("data/wakeup_3.ogg");
+  attack_ptr[0] = Mix_LoadWAV("data/whip_1.ogg");
+  attack_ptr[1] = Mix_LoadWAV("data/whip_2.ogg");
+  attack_ptr[2] = Mix_LoadWAV("data/whip_3.ogg");
+  attack_ptr[3] = Mix_LoadWAV("data/whip_4.ogg");
+  attack_ptr[4] = Mix_LoadWAV("data/whip_5.ogg");
+}
+
+void playIndyDeath(){
+  playSound(indy_die_ptr);
+}
+
+void playAllanDeath(){
+  playSound(allan_die_ptr);
+}
+
+void playWakeup(){
+  playSound(wakeup_ptr[rand() %  3]);
+}
+
+void playAttack(){
+  playSound(attack_ptr[rand() %  5]); 
+}
+
+void playSpecialAttack(){
+  playSound(special_ptr);
 }
 
 void soundInit() {

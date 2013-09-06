@@ -3,11 +3,11 @@
 #
 
 # Compiler settings
-CC      = gcc
+#CC      = gcc
 CFLAGS  = -O2 -fPIC -Wall -ansi -pedantic
 
 # Ar settings to build the library
-AR	    = ar
+#AR	    = ar
 ARFLAGS = rcv
 
 SHLD = ${CC} ${CFLAGS}
@@ -52,11 +52,4 @@ clean:
 
 veryclean:
 	$(RM) $(OBJS) libiniparser.a libiniparser.so*
-	rm -rf ./html ; mkdir html
-	cd test ; $(MAKE) veryclean
 
-docs:
-	@(cd doc ; $(MAKE))
-	
-check:
-	@(cd test ; $(MAKE))

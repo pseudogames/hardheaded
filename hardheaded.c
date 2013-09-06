@@ -14,7 +14,7 @@
 #include "sound.h"
 #include "config.h"
 
-#include "data/all.h"
+//#include "data/all.h"
 
 #define FPS 30
 

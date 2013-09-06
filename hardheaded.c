@@ -190,7 +190,7 @@ int main(int argc, char* args[]) {
 				  break;
 		  }
 	  }
-	  
+
 	  SDL_Flip(app.screen);
 	  handleDelay(startTime);
   }

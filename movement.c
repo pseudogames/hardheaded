@@ -187,7 +187,7 @@ void movePrepare(App *app)
 	{
 		if(app->game.board.enemies[i].alive)
 		{
-			if(app->game.board.enemies[i].body.action != ACTION_MOVE) {
+			if(app->game.board.enemies[i].body.action == ACTION_DEATH) {
 				continue;
 			}
 			int x = app->game.board.enemies[i].body.pos.x/tileSize;

@@ -28,11 +28,7 @@
 
 # TODO
 
-* fix close quarters combat
 * sound effects
-    * indy respawn
-	* allan respawn
-	* zombie attack
 	* silence on endgame
 * plot hints
 * wave balance

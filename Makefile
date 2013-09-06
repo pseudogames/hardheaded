@@ -60,7 +60,7 @@ data/zombie_3.h
 all: $(OUTPUT)
 
 clean:
-	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out
+	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out keys.ini
 	make -C iniparser veryclean
 	make -C data clean
 

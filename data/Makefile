@@ -1,36 +1,29 @@
 
-OBJS=\
-	$(patsubst %.ogg, %.o, \
-	$(patsubst %.ttf, %.o, \
-	$(patsubst %.png, %.o, \
-	$(patsubst %.jpg, %.o, \
+INCS=\
+	$(patsubst %.ogg, %.h, \
+	$(patsubst %.ttf, %.h, \
+	$(patsubst %.png, %.h, \
+	$(patsubst %.jpg, %.h, \
 		$(wildcard *.png *.jpg *.ogg *.ttf) \
 	))))
-
-MIDS=$(patsubst %.o, %.c, $(OBJS))
 
 .PHONY: all data clean
 
 all: data
 
-data: $(OBJS) all.h
+data: $(INCS)
 
 clean:
-	rm -vf $(OBJS) $(MIDS) all.h
+	rm -vf $(INCS)
 
-%.c : %.ttf
+%.h : %.ttf
 	xxd -i $^ > $@
-%.c: %.png
+%.h: %.png
 	xxd -i $^ > $@
-%.c: %.jpg
+%.h: %.jpg
 	xxd -i $^ > $@
-%.c: %.ogg
+%.h: %.ogg
 	xxd -i $^ > $@
 
-%.o: %.c
-	gcc $< -c -o $@
-
-all.h: $(MIDS)
-	sed -n 's/^\(.*\) = .*/extern \1;/p' $^ | tee $@
 
 

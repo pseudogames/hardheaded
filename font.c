@@ -1,6 +1,9 @@
 #include "font.h"
 #include "render.h"
-#include "data/all.h"
+
+//#include "data/indiana.h"
+extern unsigned char indiana_ttf[];
+extern unsigned int indiana_ttf_len;
 
 #define TTF_POINT_LIMIT 99
 TTF_Font *ttf_point_cache[TTF_POINT_LIMIT];

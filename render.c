@@ -1,7 +1,28 @@
 #include <SDL_image.h>
 #include <math.h>
 #include "render.h"
-#include "data/all.h"
+
+#include "data/blood.h"
+#include "data/logo.h"
+#include "data/indy-idol.h"
+#include "data/fullheart_small.h"
+#include "data/14heart_small.h"
+#include "data/24heart_small.h"
+#include "data/34heart_small.h"
+#include "data/emptyheart_small.h"
+#include "data/chargebarr.h"
+#include "data/patrocinador.h"
+
+#include "data/indy.h"
+#include "data/allan.h"
+#include "data/zombie.h"
+#include "data/head.h"
+#include "data/power.h"
+
+#include "data/indiana.h"
+#include "data/arrows.h"
+
+
 
 SDL_Color red = {0xAA, 0X55, 0x00};
 SDL_Color trueRed = {0XFF, 0x00, 0x00};
@@ -188,7 +209,11 @@ void renderBody(App *app, Body *body){
 }
 
 void renderInit(App *app){
-  app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
+  app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF
+#if RELEASE
+		  |SDL_FULLSCREEN
+#endif
+  );
   app->blood =              IMG_Load_RW(SDL_RWFromConstMem(blood_png,            blood_png_len),           0);
   app->logo =               IMG_Load_RW(SDL_RWFromConstMem(logo_png,             logo_png_len),            0);
   app->menu.indiana =       IMG_Load_RW(SDL_RWFromConstMem(indy_idol_png,        indy_idol_png_len),       0);

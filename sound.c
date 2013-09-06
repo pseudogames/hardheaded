@@ -1,5 +1,16 @@
 #include "sound.h"
-#include "data/all.h"
+
+#include "data/wilhelm_scream.h"
+#include "data/howie-scream.h"
+#include "data/special_whip.h"
+#include "data/wakeup_1.h"
+#include "data/wakeup_2.h"
+#include "data/wakeup_3.h"
+#include "data/whip_1.h"
+#include "data/whip_2.h"
+#include "data/whip_3.h"
+#include "data/whip_4.h"
+#include "data/whip_5.h"
 
 Mix_Music *music = NULL;
 Mix_Chunk *indy_die_ptr;

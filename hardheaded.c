@@ -14,18 +14,20 @@
 #include "sound.h"
 #include "config.h"
 
-#include "data/all.h"
-
 #define FPS 30
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
+
+#include "data/map01.h"
+#include "data/map01_hit.h"
+#include "data/indiana-low.h"
 
 void loadMap(App *app) {
   char image_path[256];
   char hit_path[256];
   char wave_path[256];
-  app->game.board.image = IMG_Load_RW(SDL_RWFromConstMem(map01_png,map01_png_len),0);
-  app->game.board.hit = IMG_Load_RW(SDL_RWFromConstMem(map01_hit_png,map01_hit_png_len),0);
+  app->game.board.image = IMG_Load_RW(SDL_RWFromConstMem(map01_png,     map01_png_len),0);
+  app->game.board.hit   = IMG_Load_RW(SDL_RWFromConstMem(map01_hit_png, map01_hit_png_len),0);
 
   moveInit(app);
 }

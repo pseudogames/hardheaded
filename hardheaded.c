@@ -66,14 +66,14 @@ void gameInit(App *app){
   app->game.wave[1].enemy_count_per_spawn=30;
   app->game.wave[1].enemy_variation=3;
 
-  app->game.wave[2].time=90000;
+  app->game.wave[2].time=12000;
   app->game.wave[2].enemy_spawn_interval=1000;
   app->game.wave[2].enemy_count=200;
   app->game.wave[2].enemy_count_on_screen=100;
   app->game.wave[2].enemy_count_per_spawn=40;
   app->game.wave[2].enemy_variation=5;
 
-  app->game.wave[3].time=100000;
+  app->game.wave[3].time=120000;
   app->game.wave[3].enemy_spawn_interval=250;
   app->game.wave[3].enemy_count=300;
   app->game.wave[3].enemy_count_on_screen=150;

@@ -158,7 +158,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	}
 
 	if(!player->grabbing && player->special_attack < 100 && app->game.head.body.life > 0) {
-		player->special_attack += 5;
+		player->special_attack += 3;
 		player->power_body.action = ACTION_MOVE;
 	}
 
@@ -186,9 +186,10 @@ void playerAttack(App *app, Player *player){
 	body->action = ACTION_ATTACK;
 	body->frame = 0;
 
-	shoot(app, &player->body, 10, 0, tileSize*1.5);
-	shoot(app, &player->body, 50, 0, tileSize*1);
-	shoot(app, &player->body, 100, 180, tileSize*.5);
+	for(i=0; i< 360; i+=10) {
+		float range = (i > 180 ? i-180 : 180-i) / 180. * tileSize*1.2;
+		shoot(app, &player->body, 20, i, range);
+	}
 
 	player->special_attack = 0;
 }
@@ -282,6 +283,11 @@ void spawnEnemy(App *app)
 int hit(App *app, Body *source, Body *target){
 	if(target == NULL || source == NULL) {
 		return 0;
+	}
+
+	if(target == &app->game.indy.body  && source == &app->game.indy.power_body
+	|| target == &app->game.allan.body && source == &app->game.allan.power_body ){
+		return;
 	}
 
 	float dist = sqrt(
@@ -384,11 +390,10 @@ int hit(App *app, Body *source, Body *target){
 inline int draw(App *app, Body *body, int x, int y)
 {
 
-#if 1
+#if 0
 	SDL_Rect rect = { x-1, y-1, 3, 3 };
 	Uint32 color = SDL_MapRGB(app->screen->format, 0xFF, 0xFF,0x00 );
 	SDL_FillRect(app->screen, &rect, color);
-	//if(rand()%500 == 0) SDL_Flip(app->screen);
 #endif
 
 	int target = is_hit(&app->game, body, x, y);

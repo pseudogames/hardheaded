@@ -148,7 +148,7 @@ void renderPlayer(App *app, Player *player){
 		|| player->special_attack > 7){
 
 		player->power_body.frame += player->special_attack / 100.;
-		player->power_body.vel = tileSize*1.5;
+		player->power_body.vel = tileSize*.8;
 
 
 		if(player->power_body.action == ACTION_ATTACK && player->special_attack < 98){

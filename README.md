@@ -7,8 +7,8 @@ O jogo possui apenas os direcionais e o botão principal de ataque.
 Para voltar ao menu, use o botao de saída (esc é o padrão).
 
 ##Ataques:
-- Chichote: botão de ataque
-- Poder (basta segurar o chicote até que a barra amarela fique completa),
+- Chichote: botão de ataque.
+- Poder: basta segurar o chicote até que a barra amarela fique completa.
 - Pegar a cabeça: Segure o poder e passe em cima da cabeça amarela.
 
 ## Teclas:

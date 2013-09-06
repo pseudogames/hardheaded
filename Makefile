@@ -3,12 +3,13 @@ ifdef WIN
   SDLCONFIG=/tmp/mxe/usr/bin/i686-pc-mingw32-sdl-config
   PREFIX=/tmp/mxe/usr/i686-pc-mingw32/
   CFLAGS=`$(SDLCONFIG) --cflags` -Iincludes -I$(PREFIX)/include -O3 -DRELEASE
-  LDFLAGS= # -static
+  LDFLAGS=-static
   LIBS=-lSDL_ttf -lfreetype -lSDL_gfx -lSDL_image -ljpeg -lpng -lSDL_mixer -lvorbisfile -lvorbis -logg -lmikmod -lmodplug -lsmpeg -lbz2 -lz -lstdc++ `$(SDLCONFIG) --libs` -mconsole
   OUTPUT=hardheaded.exe
 else
+  CC=gcc
   CFLAGS=`sdl-config --cflags` -Iincludes -ggdb #-pg
-  LIBS=-L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf `sdl-config --libs` -lm # -pg
+  LIBS=`sdl-config --libs` -L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf -lm # -pg
   OUTPUT=hardheaded
 endif
 

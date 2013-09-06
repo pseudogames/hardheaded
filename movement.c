@@ -315,8 +315,8 @@ void moveInit(App *app)
 				app->game.head.body.pos.y = y * tileSize + tileSize/2;
 				app->game.head.body.angle = 270;
 
-			//	app->game.head.body.pos.x = app->game.indy.body.pos.x + 40;
-			//	app->game.head.body.pos.y = app->game.indy.body.pos.y;
+				//app->game.head.body.pos.x = app->game.indy.body.pos.x + 40;
+				//app->game.head.body.pos.y = app->game.indy.body.pos.y;
 			}
 		}
 	}

@@ -140,16 +140,18 @@ void playerChargeSpecialAttack(App *app, Player *player){
 		if(is_empty(&app->game, body, (int)body->pos.x,(int)ty))
 			body->pos.y = ty;
 
-		float dist = sqrt(
-			pow(app->game.head.body.pos.x - player->door.x, 2)+
-			pow(app->game.head.body.pos.y - player->door.y, 2)
-		);
-
 		player->special_attack = 0;
 		player->grabbing = 1;
 		head_body->action = ACTION_ATTACK;
 
-		if(dist < tileSize*1.5){
+	}
+
+	if(player->grabbing) {
+		float dist = sqrt(
+				pow(app->game.head.body.pos.x - player->door.x, 2)+
+				pow(app->game.head.body.pos.y - player->door.y, 2)
+				);
+		if(dist < tileSize*.45){
 			app->game.winner = player;
 			player->grabbing = 0;
 		}

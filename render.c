@@ -1,6 +1,7 @@
 #include <SDL_image.h>
 #include <math.h>
 #include "render.h"
+#include "data/all.h"
 
 SDL_Color red = {0xAA, 0X55, 0x00};
 SDL_Color trueRed = {0XFF, 0x00, 0x00};
@@ -188,28 +189,28 @@ void renderBody(App *app, Body *body){
 
 void renderInit(App *app){
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF) ;
-  app->blood = IMG_Load("data/blood.png");
-  app->logo = IMG_Load("data/logo.png");
-  app->menu.indiana = IMG_Load("data/indy-idol.png");
-  app->hearts.full = IMG_Load("data/fullheart_small.png");
-  app->hearts.onequarter= IMG_Load("data/14heart_small.png");
-  app->hearts.twoquarter= IMG_Load("data/24heart_small.png");
-  app->hearts.threequarter= IMG_Load("data/34heart_small.png");
-  app->hearts.empty = IMG_Load("data/emptyheart_small.png");
-  app->special_bar = IMG_Load("data/chargebarr.png");
-  app->partnership = IMG_Load("data/patrocinador.jpg");
+  app->blood =              IMG_Load_RW(SDL_RWFromConstMem(blood_png,            blood_png_len),           0);
+  app->logo =               IMG_Load_RW(SDL_RWFromConstMem(logo_png,             logo_png_len),            0);
+  app->menu.indiana =       IMG_Load_RW(SDL_RWFromConstMem(indy_idol_png,        indy_idol_png_len),       0);
+  app->hearts.full =        IMG_Load_RW(SDL_RWFromConstMem(fullheart_small_png,  fullheart_small_png_len), 0);
+  app->hearts.onequarter=   IMG_Load_RW(SDL_RWFromConstMem(__14heart_small_png,  __14heart_small_png_len), 0);
+  app->hearts.twoquarter=   IMG_Load_RW(SDL_RWFromConstMem(__24heart_small_png,  __24heart_small_png_len), 0);
+  app->hearts.threequarter= IMG_Load_RW(SDL_RWFromConstMem(__34heart_small_png,  __34heart_small_png_len), 0);
+  app->hearts.empty =       IMG_Load_RW(SDL_RWFromConstMem(emptyheart_small_png, emptyheart_small_png_len),0);
+  app->special_bar =        IMG_Load_RW(SDL_RWFromConstMem(chargebarr_png,       chargebarr_png_len),      0);
+  app->partnership =        IMG_Load_RW(SDL_RWFromConstMem(patrocinador_jpg,     patrocinador_jpg_len),    0);
 
   sprite_init(&app->game.indy.sprite, 
 	  0, 0, // origin
 	  32, 96, 4, // frame size and count
-	  "data/indy.png" // source
+	  indy_png, indy_png_len // source
   );
   app->game.indy.body.sprite = &app->game.indy.sprite;
 
   sprite_init(&app->game.allan.sprite, 
 	  0, 0, // origin
 	  32, 96, 4, // frame size and count
-	  "data/allan.png" // source
+	  allan_png, allan_png_len // source
   );
   app->game.allan.body.sprite = &app->game.allan.sprite;
 
@@ -218,13 +219,13 @@ void renderInit(App *app){
   sprite_init(&app->zombie, 
 	  0, 0, // origin
 	  32, 32, app->enemy_frame_count * app->enemy_variation_count, // frame size and count
-	  "data/zombie.png" // source
+	  zombie_png, zombie_png_len // source
   );
 
   sprite_init(&app->game.head.sprite, 
 	  0, 0, // origin
 	  32, 32, 3, // frame size and count
-	  "data/head.png" // source
+	  head_png, head_png_len // source
   );
 
   app->game.head.body.sprite = &app->game.head.sprite;
@@ -232,7 +233,7 @@ void renderInit(App *app){
   sprite_init(&app->game.allan.power, 
 	  0, 0, // origin
 	  32, 32, 3, // frame size and count
-	  "data/power.png" // source
+	  power_png, power_png_len // source
   );
 
   app->game.allan.power_body.sprite = &app->game.allan.power;
@@ -241,7 +242,7 @@ void renderInit(App *app){
   sprite_init(&app->game.indy.power, 
 	  0, 0, // origin
 	  32, 32, 3, // frame size and count
-	  "data/power.png" // source
+	  power_png, power_png_len // source
   );
 
   app->game.indy.power_body.sprite = &app->game.indy.power;
@@ -349,15 +350,15 @@ void renderHints(App *app){
 		if(indy->grabbing == 0 && allan->grabbing == 0){
 			char *msg = "GRAB";
 			if(indy->body.action == ACTION_DEATH || indy->body.action == ACTION_DEATH) msg = "GUARD";
-			text_write_raw_ttf(app->screen, head->pos.x , head->pos.y - tileSize/2 - 60, "I", trueRed, 60, "data/arrows.ttf");
-			text_write_raw_ttf(app->screen, head->pos.x + 80 , head->pos.y - tileSize/2 - 60, msg, trueRed, 20, "data/indiana.ttf");
+			text_write_raw_ttf(app->screen, head->pos.x , head->pos.y - tileSize/2 - 60, "I", trueRed, 60, arrows_ttf, arrows_ttf_len);
+			text_write_raw_ttf(app->screen, head->pos.x + 80 , head->pos.y - tileSize/2 - 60, msg, trueRed, 20, indiana_ttf, indiana_ttf_len);
 		} else {
 			if(indy->grabbing){
-				text_write_raw_ttf(app->screen, indy->door.x , indy->door.y - tileSize/2 - 20, "I", trueRed, 60, "data/arrows.ttf");
-				text_write_raw_ttf(app->screen, indy->door.x + 60, indy->door.y - tileSize/2 -40, "DROP", trueRed, 20, "data/indiana.ttf");
+				text_write_raw_ttf(app->screen, indy->door.x , indy->door.y - tileSize/2 - 20, "I", trueRed, 60, arrows_ttf, arrows_ttf_len);
+				text_write_raw_ttf(app->screen, indy->door.x + 60, indy->door.y - tileSize/2 -40, "DROP", trueRed, 20, indiana_ttf, indiana_ttf_len);
 			} else {
-				text_write_raw_ttf(app->screen, allan->door.x -tileSize/2 - 60 , allan->door.y - tileSize/2 - 20, "F", trueRed, 60, "data/arrows.ttf");
-				text_write_raw_ttf(app->screen, allan->door.x - tileSize * 4 - 20, allan->door.y - tileSize/2 + 40, "DROP", trueRed, 20, "data/indiana.ttf");
+				text_write_raw_ttf(app->screen, allan->door.x -tileSize/2 - 60 , allan->door.y - tileSize/2 - 20, "F", trueRed, 60, arrows_ttf, arrows_ttf_len);
+				text_write_raw_ttf(app->screen, allan->door.x - tileSize * 4 - 20, allan->door.y - tileSize/2 + 40, "DROP", trueRed, 20, indiana_ttf, indiana_ttf_len);
 			}
 		
 		}

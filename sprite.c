@@ -84,7 +84,7 @@ void sprite_gen_rotation(Sprite *sprite)
     SDL_FreeSurface(element);
 }
 
-void sprite_init(Sprite *sprite, int ox, int oy, int fx, int fy, int c, char *filename)
+void sprite_init(Sprite *sprite, int ox, int oy, int fx, int fy, int c, const void *mem, int len)
 {
     memset(sprite,0,sizeof(Sprite));
     sprite->origin.x = ox;
@@ -92,7 +92,7 @@ void sprite_init(Sprite *sprite, int ox, int oy, int fx, int fy, int c, char *fi
     sprite->frame_size.x = fx;
     sprite->frame_size.y = fy;
     sprite->frame_count = c;
-    sprite->source = IMG_Load( filename );
+    sprite->source = IMG_Load_RW(SDL_RWFromConstMem( mem, len), 0);
     sprite->rotated = NULL;
     sprite_gen_rotation(sprite);
 }

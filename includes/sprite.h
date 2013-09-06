@@ -21,7 +21,7 @@ typedef struct {
     SDL_Surface *rotated;
 } Sprite;
 
-void sprite_init(Sprite *sprite, int ox, int oy, int fx, int fy, int c, char *filename);
+void sprite_init(Sprite *sprite, int ox, int oy, int fx, int fy, int c, const void *mem, int len);
 void sprite_rotated_rect(Sprite *sprite, Action action, int frame, int angle, SDL_Rect *rect);
 
 #endif

@@ -1,4 +1,5 @@
 #include "sound.h"
+#include "data/all.h"
 
 Mix_Music *music = NULL;
 Mix_Chunk *indy_die_ptr;
@@ -37,17 +38,17 @@ void playSound(Mix_Chunk *sound){
 }
 
 void loadSFX(){
-  indy_die_ptr = Mix_LoadWAV("data/wilhelm_scream.ogg");
-  allan_die_ptr = Mix_LoadWAV("data/howie-scream.ogg");
-  special_ptr = Mix_LoadWAV("data/special_whip.ogg");
-  wakeup_ptr[0] = Mix_LoadWAV("data/wakeup_1.ogg");
-  wakeup_ptr[1] = Mix_LoadWAV("data/wakeup_2.ogg");
-  wakeup_ptr[2] = Mix_LoadWAV("data/wakeup_3.ogg");
-  attack_ptr[0] = Mix_LoadWAV("data/whip_1.ogg");
-  attack_ptr[1] = Mix_LoadWAV("data/whip_2.ogg");
-  attack_ptr[2] = Mix_LoadWAV("data/whip_3.ogg");
-  attack_ptr[3] = Mix_LoadWAV("data/whip_4.ogg");
-  attack_ptr[4] = Mix_LoadWAV("data/whip_5.ogg");
+  indy_die_ptr  = Mix_LoadWAV_RW(SDL_RWFromConstMem(wilhelm_scream_ogg, wilhelm_scream_ogg_len),0);
+  allan_die_ptr = Mix_LoadWAV_RW(SDL_RWFromConstMem(howie_scream_ogg  , howie_scream_ogg_len),0);
+  special_ptr   = Mix_LoadWAV_RW(SDL_RWFromConstMem(special_whip_ogg  , special_whip_ogg_len),0);
+  wakeup_ptr[0] = Mix_LoadWAV_RW(SDL_RWFromConstMem(wakeup_1_ogg      , wakeup_1_ogg_len),0);
+  wakeup_ptr[1] = Mix_LoadWAV_RW(SDL_RWFromConstMem(wakeup_2_ogg      , wakeup_2_ogg_len),0);
+  wakeup_ptr[2] = Mix_LoadWAV_RW(SDL_RWFromConstMem(wakeup_3_ogg      , wakeup_3_ogg_len),0);
+  attack_ptr[0] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_1_ogg        , whip_1_ogg_len),0);
+  attack_ptr[1] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_2_ogg        , whip_2_ogg_len),0);
+  attack_ptr[2] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_3_ogg        , whip_3_ogg_len),0);
+  attack_ptr[3] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_4_ogg        , whip_4_ogg_len),0);
+  attack_ptr[4] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_5_ogg        , whip_5_ogg_len),0);
 }
 
 void playIndyDeath(){

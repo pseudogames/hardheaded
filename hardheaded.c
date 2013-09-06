@@ -24,11 +24,8 @@ void loadMap(App *app) {
   char image_path[256];
   char hit_path[256];
   char wave_path[256];
-  char *map_name = "map01";
-  sprintf(image_path, "data/%s.png", map_name);
-  sprintf(hit_path, "data/%s_hit.png", map_name);
-  app->game.board.image = IMG_Load(image_path);
-  app->game.board.hit = IMG_Load(hit_path);
+  app->game.board.image = IMG_Load_RW(SDL_RWFromConstMem(map01_png,map01_png_len),0);
+  app->game.board.hit = IMG_Load_RW(SDL_RWFromConstMem(map01_hit_png,map01_hit_png_len),0);
 
   moveInit(app);
 }

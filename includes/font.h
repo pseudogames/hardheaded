@@ -7,12 +7,9 @@
 #define NUM_COLORS 256
 
 
-TTF_Font *ttf_adler_font;
-TTF_Font *ttf_acid_font;
-
 void init_font();
 void terminate_font();
 void text_write(SDL_Surface *screen, int x, int y, char *term, int selected);
-void text_write_raw_ttf(SDL_Surface *screen, int x, int y, char *message, SDL_Color color, int points, char* font);
+void text_write_raw_ttf(SDL_Surface *screen, int x, int y, char *message, SDL_Color color, int points, const void* mem, int len);
 void text_write_raw(SDL_Surface *screen, int x, int y, char *message, SDL_Color color, int points);
 #endif

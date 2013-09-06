@@ -60,21 +60,17 @@ As únicas libs do sistema necessárias são as do SDL.
 		* <http://www.freesound.org/people/esperar/sounds/171942/>
 		* <http://www.freesound.org/people/klankbeeld/sounds/149111/>
 * Zombies
-	* http://www.freesound.org/data/previews/181/181375_3260030-lq.mp3
-	* http://www.freesound.org/data/previews/63/63629_842115-lq.mp3
-	* http://www.freesound.org/data/previews/169/169844_1122547-lq.mp3
-	* http://www.freesound.org/data/previews/169/169844_1122547-lq.mp3
-	* http://www.freesound.org/data/previews/106/106392_367313-lq.mp3
-	* http://dw4.convertfiles.com/files/0952260001378443404/106392_367313-lq.ogg
+	* <http://www.freesound.org/data/previews/181/181375_3260030-lq.mp3>
+	* <http://www.freesound.org/data/previews/63/63629_842115-lq.mp3>
+	* <http://www.freesound.org/data/previews/169/169844_1122547-lq.mp3>
+	* <http://www.freesound.org/data/previews/169/169844_1122547-lq.mp3>
+	* <http://www.freesound.org/data/previews/106/106392_367313-lq.mp3>
+	* <http://dw4.convertfiles.com/files/0952260001378443404/106392_367313-lq.ogg>
 * ini parser
     * <http://ndevilla.free.fr/iniparser/>
 
 # TODO
 
-* sound effects
-	* silence on endgame
-* plot hints
-* wave balance
 * persistent hiscore
 
 

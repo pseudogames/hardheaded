@@ -127,7 +127,7 @@ void playerChargeSpecialAttack(App *app, Player *player){
 	Body *body = &player->body;
 	Body *head_body = &app->game.head.body;
 
-	if(!player->grabbing && near(body, head_body) && player->special_attack < 7 && !app->game.winner && !app->game.head.body.life <= 0){
+	if(!player->grabbing && near(body, head_body) && player->special_attack > 90 && !app->game.winner && app->game.head.body.life > 0){
 		float a = body->angle * M_PI / 180;
 		float dx = cos(a) * HOLD_DISTANCE;
 		float dy = sin(a) * HOLD_DISTANCE;
@@ -140,20 +140,18 @@ void playerChargeSpecialAttack(App *app, Player *player){
 		if(is_empty(&app->game, body, (int)body->pos.x,(int)ty))
 			body->pos.y = ty;
 
-		if(is_empty(&app->game, body, (int)tx,(int)ty)) {
-			float dist = sqrt(
-				pow(app->game.head.body.pos.x - player->door.x, 2)+
-				pow(app->game.head.body.pos.y - player->door.y, 2)
-			);
+		float dist = sqrt(
+			pow(app->game.head.body.pos.x - player->door.x, 2)+
+			pow(app->game.head.body.pos.y - player->door.y, 2)
+		);
 
+		player->special_attack = 0;
+		player->grabbing = 1;
+		head_body->action = ACTION_ATTACK;
 
-			player->grabbing = 1;
-			head_body->action = ACTION_ATTACK;
-
-			if(dist < tileSize*1.5){
-				app->game.winner = player;
-				player->grabbing = 0;
-			}
+		if(dist < tileSize*1.5){
+			app->game.winner = player;
+			player->grabbing = 0;
 		}
 	}
 

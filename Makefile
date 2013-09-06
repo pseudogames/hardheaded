@@ -11,9 +11,9 @@ else
   OUTPUT=hardheaded
 endif
 
-OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o config.c
+OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o config.c $(wildcard data/*.o)
 
-# INCS=data/all.h
+INCS=data/all.h
 
 .PHONY: all clean depend
 
@@ -22,10 +22,10 @@ all: $(OUTPUT)
 clean:
 	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out
 	make -C iniparser veryclean
-#	make -C data clean
+	make -C data clean
 
-#data/all.h:
-#	make -C $$(dirname "$@")
+data/all.h:
+	make -C $$(dirname "$@")
 
 iniparser/libiniparser.a:
 	make -C $$(dirname "$@")

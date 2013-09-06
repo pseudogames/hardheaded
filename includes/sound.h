@@ -7,6 +7,7 @@ typedef struct{
     int buffers;
 } Audio;
 
+void playMusic(const void* mem, int len, int qtd);
 void playMenuMusic();
 void soundInit();
 void halt_music();

@@ -14,7 +14,7 @@
 #include "sound.h"
 #include "config.h"
 
-//#include "data/all.h"
+#include "data/all.h"
 
 #define FPS 30
 
@@ -178,7 +178,7 @@ int main(int argc, char* args[]) {
 				  break;
 			  case STATE_PAUSED:
 			  case STATE_MENU:
-				  playMusic("indiana-low.ogg", -1);
+				  playMusic(indiana_low_ogg, indiana_low_ogg_len, -1);
 				  renderMenu(&app);
 				  break;
 		  }

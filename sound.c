@@ -7,7 +7,7 @@ Mix_Chunk *special_ptr;
 Mix_Chunk *attack_ptr[5];
 Mix_Chunk *wakeup_ptr[3];
 
-char* lastMusic = "";
+const void* lastMusic = NULL;
 Audio a;
 
 void sound_terminate()
@@ -15,21 +15,16 @@ void sound_terminate()
 	//Mix_Quit();
 }
 
-void playMusic(const char* path, int qtd){
-  char name[300];
-
-  sprintf(name, "data/%s", path);
-  if(lastMusic == name){
+void playMusic(const void* mem, int len, int qtd){
+  if(lastMusic == mem){
 	return;
   }
-
-  if(lastMusic != ""){
+  if(lastMusic != NULL){
 	halt_music();
   }
 
-  lastMusic = name;
-  //printf("Name: %s\n", name);
-  music = Mix_LoadMUS(name);
+  lastMusic = mem;
+  music = Mix_LoadMUS_RW(SDL_RWFromConstMem(mem,len));
 
   if(Mix_PlayMusic(music, qtd) == -1) {
 	printf("Mix_PlayMusic: %s\n", Mix_GetError());

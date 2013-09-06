@@ -15,8 +15,8 @@ Para voltar ao menu, use o botao de saída (esc é o padrão).
 
 ####Player 1 (Mr. Indy Jones)
 ```
-	Movimentos w,a,s,d   
-	Ataque: Shift esquerda
+Movimentos w,a,s,d   
+Ataque: Shift esquerda
 ```
 
 ####Player 2 (Mr. Allan Q.)

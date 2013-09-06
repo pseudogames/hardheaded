@@ -20,3 +20,5 @@ void playAttack();
 void playSpecialAttack();
 void playIndyDeath();
 void playAllanDeath();
+void playNewWave();
+void playBite();

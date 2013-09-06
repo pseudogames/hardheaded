@@ -59,21 +59,21 @@ void gameInit(App *app){
   app->game.wave[0].enemy_count_per_spawn=5;
   app->game.wave[0].enemy_variation=1;
 
-  app->game.wave[1].time=20000;
+  app->game.wave[1].time=60000;
   app->game.wave[1].enemy_spawn_interval=2000;
   app->game.wave[1].enemy_count=60;
   app->game.wave[1].enemy_count_on_screen=20;
-  app->game.wave[1].enemy_count_per_spawn=10;
+  app->game.wave[1].enemy_count_per_spawn=5;
   app->game.wave[1].enemy_variation=2;
 
-  app->game.wave[2].time=10000;
+  app->game.wave[2].time=90000;
   app->game.wave[2].enemy_spawn_interval=1000;
   app->game.wave[2].enemy_count=120;
   app->game.wave[2].enemy_count_on_screen=30;
   app->game.wave[2].enemy_count_per_spawn=20;
   app->game.wave[2].enemy_variation=4;
 
-  app->game.wave[3].time=5000;
+  app->game.wave[3].time=100000;
   app->game.wave[3].enemy_spawn_interval=250;
   app->game.wave[3].enemy_count=100;
   app->game.wave[3].enemy_count_on_screen=50;
@@ -117,6 +117,7 @@ void gameInit(App *app){
 }
 
 void setWave(App *app, int wave_index) {
+	playNewWave();
 	app->game.wave_index = wave_index;
 	if(app->game.wave_index > app->game.wave_count-1)
 		app->game.wave_index = app->game.wave_count-1;

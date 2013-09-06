@@ -35,6 +35,7 @@ void checkPlayerLife(Player *player, App *app){
 			if(player->body.life > PLAYER_HEALTH) {
 				player->body.life = PLAYER_HEALTH;
 				player->body.action = ACTION_MOVE;
+				playWakeup();
 			}
 		}
 	} else if(player->body.life <= 0) {
@@ -219,6 +220,7 @@ void spawnEnemy(App *app)
 	//if(game->on_screen_enemies>0 && t < app->game.spawnTime)
 	if(t < app->game.board.spawnTime)
 		return;
+
 	// printf("spawn started %d\n", t);
 
 	int spawnDelay = wave->enemy_spawn_interval;
@@ -291,8 +293,8 @@ int hit(App *app, Body *source, Body *target){
 	int alive = target->life > 0;
 	target->life -= damage;
 
-	if(target->life > 0){
-		//playSound(target->onHitSound);
+	if(target->life > 0 && source != &app->game.allan.body && source != &app->game.indy.body ){
+		playBite();
 	}
 
 	if(target->life <= 0){

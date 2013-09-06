@@ -50,7 +50,10 @@ data/whip_3.h \
 data/whip_4.h \
 data/whip_5.h \
 data/wilhelm_scream.h \
-data/zombie.h
+data/zombie.h \
+data/zombie_1.h \
+data/zombie_2.h \
+data/zombie_3.h
 
 .PHONY: all clean depend
 

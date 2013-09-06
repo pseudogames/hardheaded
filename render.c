@@ -165,7 +165,9 @@ void renderPlayer(App *app, Player *player){
 			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
 
 			player->body.life += player->power_body.life;
+			player->body.kills += player->power_body.kills;
 			player->power_body.life = 0;
+			player->power_body.kills = 0;
 
 			if(!is_air(&app->game, &player->power_body, (int)tx, (int)ty)){
 				player->power_body.action = ACTION_DEATH;
@@ -281,6 +283,9 @@ void renderPlayerLife(App *app, SDL_Surface *screen, Player *player, int playerO
 	int i;
 	int ipart = (int) player->body.life; 
 	float fpart = player->body.life - ipart;
+	if(player->body.life <= PLAYER_HEALTH * 0.43 && (SDL_GetTicks()/500) % 2 == 0){
+		return;
+	}
 
 	text_write_raw(screen, 35 + playerOffset, 10, player->name, yellow, 20);
 	{

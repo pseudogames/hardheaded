@@ -4,11 +4,12 @@
 #include <SDL_mixer.h>
 #include "sprite.h"
 
-#define DAMAGE 0.75
-#define ZOMBIE_HEALTH DAMAGE
-#define HEAD_HEALTH (20*DAMAGE)
-#define PLAYER_HEALTH (12*DAMAGE)
-#define ZOMBIE_SCORE (DAMAGE/7)
+#define ZOMBIE_DAMAGE 0.75
+#define PLAYER_DAMAGE 0.1
+#define ZOMBIE_HEALTH PLAYER_DAMAGE
+#define HEAD_HEALTH (20*ZOMBIE_DAMAGE)
+#define PLAYER_HEALTH (12*ZOMBIE_DAMAGE)
+#define ZOMBIE_SCORE (ZOMBIE_DAMAGE/7)
 #define WAVE_COUNT 32
 #define ENEMY_COUNT 1000
 #include "aStarLibrary.h" // must be after the defines above
@@ -68,6 +69,7 @@ typedef struct {
   float life;
   float score;
   int kills;
+  float damage;
 } Body;
 
 typedef struct{

@@ -86,6 +86,7 @@ void gameInit(App *app){
   app->game.board.zombie_memory2 = 0;
 
   app->game.indy.name = "Mr. Indy J.";
+  app->game.indy.body.damage = PLAYER_DAMAGE;
   app->game.indy.body.life = PLAYER_HEALTH;
   app->game.indy.body.kills = 0;
   app->game.indy.body.score = 0;
@@ -97,10 +98,11 @@ void gameInit(App *app){
   app->game.indy.grabbing = 0;
 
   app->game.allan.name = "Mr. Allan Q.";
+  app->game.allan.body.damage = PLAYER_DAMAGE;
   app->game.allan.body.life = PLAYER_HEALTH;
-  app->game.indy.body.kills = 0;
-  app->game.indy.body.action= ACTION_MOVE;
-  app->game.indy.body.frame= 0;
+  app->game.allan.body.kills = 0;
+  app->game.allan.body.action= ACTION_MOVE;
+  app->game.allan.body.frame= 0;
   app->game.allan.body.score = 0;
   app->game.allan.body.ang_vel = 0.25;
   app->game.allan.body.max_vel = 4;

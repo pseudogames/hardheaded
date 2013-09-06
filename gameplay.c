@@ -176,6 +176,7 @@ void playerAttack(App *app, Player *player){
 
 	if(player->special_attack >= 100) {
 		player->power_body.action = ACTION_ATTACK;
+		player->power_body.damage = PLAYER_DAMAGE;
 		playSpecialAttack();
 	}else{
 		playAttack();
@@ -257,6 +258,7 @@ void spawnEnemy(App *app)
 			// printf("spawn %d\n", i);
 			Body *enemybody = &enemy->body;
 			enemybody->score = ZOMBIE_SCORE;
+			enemybody->damage = ZOMBIE_DAMAGE;
 			enemybody->life = ZOMBIE_HEALTH;
 			enemybody->kills = 0;
 			enemybody->ang_vel = 0.05;
@@ -293,7 +295,7 @@ int hit(App *app, Body *source, Body *target){
 		pow(target->pos.y - source->pos.y,2)
 	);
 
-	float damage = DAMAGE;
+	float damage = source->damage;
 	int alive = target->life > 0;
 	target->life -= damage;
 

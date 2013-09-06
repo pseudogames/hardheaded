@@ -148,7 +148,7 @@ void renderPlayer(App *app, Player *player){
 		|| player->special_attack > 7){
 
 		player->power_body.frame += player->special_attack / 100.;
-		player->power_body.vel = tileSize*.8;
+		player->power_body.vel = tileSize*.5;
 
 
 		if(player->power_body.action == ACTION_ATTACK && player->special_attack < 98){
@@ -157,12 +157,14 @@ void renderPlayer(App *app, Player *player){
 			float dy = sin(a) * player->power_body.vel;
 			float tx = player->power_body.pos.x + dx;
 			float ty = player->power_body.pos.y - dy;
+			int i;
 
 			player->power_body.frame ++;
 
-			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
-			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
-			shoot(app, &player->power_body, 100, 0, player->power_body.vel*2);
+			for(i=0; i< 360; i+=6) {
+				float range = (i > 180 ? i-180 : 180-i) / 180. * player->power_body.vel*2;
+				shoot(app, &player->power_body, 20, i, range);
+			}
 
 			player->body.life += player->power_body.life;
 			player->body.kills += player->power_body.kills;

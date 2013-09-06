@@ -29,7 +29,6 @@
 # TODO
 
 * fix close quarters combat
-* all zombie sprites
 * sound effects
     * indy respawn
 	* allan respawn

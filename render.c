@@ -240,7 +240,7 @@ void renderInit(App *app){
   app->game.allan.body.sprite = &app->game.allan.sprite;
 
   app->enemy_frame_count = 3;
-  app->enemy_variation_count = 2;
+  app->enemy_variation_count = 8;
   sprite_init(&app->zombie, 
 	  0, 0, // origin
 	  32, 32, app->enemy_frame_count * app->enemy_variation_count, // frame size and count

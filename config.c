@@ -3,8 +3,8 @@
 #include "config.h"
 
 KeyBind keybind = {
-	{ SDLK_ESCAPE, SDLK_w,  SDLK_s,    SDLK_a,    SDLK_d,     SDLK_LSHIFT }, // player1
-	{ SDLK_ESCAPE, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_RALT  }  // player2
+	{ SDLK_ESCAPE, SDLK_w,  SDLK_s,    SDLK_a,    SDLK_d,     SDLK_LALT}, // player1
+	{ SDLK_ESCAPE, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_RSHIFT  }  // player2
 };
 
 SDLKey My_SDL_GetKeyFromName(char *name) {

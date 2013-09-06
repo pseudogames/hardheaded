@@ -16,13 +16,13 @@ Para voltar ao menu, use o botao de saída (esc é o padrão).
 ####Player 1 (Mr. Indy Jones)
 ```
 Movimentos w,a,s,d   
-Ataque: Shift esquerda
+Ataque: Alt esquerda
 ```
 
 ####Player 2 (Mr. Allan Q.)
 ```
 Movimentos: setas
-Ataque: alt direita
+Ataque: Shift direita
 ```
 
 ### Configuração das teclas:

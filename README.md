@@ -71,6 +71,9 @@ As únicas libs do sistema necessárias são as do SDL.
 
 # TODO
 
+* fix sound of wave start (playing too much)
+* make last wave deadly
+* 2 round matches, revert players (?)
 * persistent hiscore
 
 

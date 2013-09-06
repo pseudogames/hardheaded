@@ -1,3 +1,39 @@
+# Instruções(pt-br)
+## Gameplay:
+O gameplay ideal é com 2 pessoas, entretanto uma só pode jogar tranquilamente.   
+O intuito do jogo é trazer a cabeça dourada para a porta na sua base.    
+
+O jogo possui apenas os direcionais e o botão principal de ataque.    
+Para voltar ao menu, use o botao de saída (esc é o padrão).
+
+##Ataques:
+- Chichote: botão de ataque
+- Poder (basta segurar o chicote até que a barra amarela fique completa),
+- Pegar a cabeça: Segure o poder e passe em cima da cabeça amarela.
+
+## Teclas:
+
+####Player 1 (Mr. Indy Jones)
+```
+	Movimentos w,a,s,d   
+	Ataque: Shift esquerda
+```
+
+####Player 2 (Mr. Allan Q.)
+```
+Movimentos: setas
+Ataque: alt direita
+```
+
+### Configuração das teclas:
+Caso você queira configurar as teclas de acordo com sua preferência basta editar o arquivo keys.ini.
+
+
+###Build linux:
+O projeto é feito em C com SDL.   
+Caso queira baixar o código fonte no github e buildar no seu computador.    
+As únicas libs do sistema necessárias são as do SDL. 
+
 # CREDITS
 
 * fonts

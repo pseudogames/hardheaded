@@ -378,7 +378,7 @@ void renderHints(App *app){
 	if((SDL_GetTicks()/500) % 2 == 0){
 
 		if(indy->grabbing == 0 && allan->grabbing == 0){
-			char *msg = "GRAB";
+			char *msg = "HOLD";
 			if(indy->body.action == ACTION_DEATH || indy->body.action == ACTION_DEATH) msg = "GUARD";
 			text_write_raw_ttf(app->screen, head->pos.x , head->pos.y - tileSize/2 - 60, "I", trueRed, 60, arrows_ttf, arrows_ttf_len);
 			text_write_raw_ttf(app->screen, head->pos.x + 80 , head->pos.y - tileSize/2 - 60, msg, trueRed, 20, indiana_ttf, indiana_ttf_len);

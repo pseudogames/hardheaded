@@ -8,7 +8,7 @@
 #define ZOMBIE_HEALTH DAMAGE
 #define HEAD_HEALTH (20*DAMAGE)
 #define PLAYER_HEALTH (12*DAMAGE)
-#define ZOMBIE_SCORE (DAMAGE/10)
+#define ZOMBIE_SCORE (DAMAGE/7)
 #define WAVE_COUNT 32
 #define ENEMY_COUNT 1000
 #include "aStarLibrary.h" // must be after the defines above

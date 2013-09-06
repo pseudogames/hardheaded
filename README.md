@@ -28,14 +28,11 @@
 
 # TODO
 
-* release build
 * fix close quarters combat
+* all zombie sprites
 * sound effects
-    * indy death
-	* allan death
     * indy respawn
 	* allan respawn
-	* whiplash
 	* zombie attack
 	* silence on endgame
 * plot hints

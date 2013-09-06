@@ -5,7 +5,7 @@
 #include "render.h"
 #include "movement.h"
 
-#define HOLD_DISTANCE 36
+#define HOLD_DISTANCE 16
 #define PICK_DISTANCE 32
 
 void renderGameplay(App *app);

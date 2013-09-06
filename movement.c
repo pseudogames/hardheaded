@@ -127,7 +127,7 @@ void movePlayer(App *app, Player *player, int up, int right, int down, int left,
 		if(is_empty(&app->game, &app->game.head.body, tx,ty)) {
 			app->game.head.body.pos.x = tx;
 			app->game.head.body.pos.y = ty;
-			app->game.head.body.angle = body->angle;
+			app->game.head.body.angle = (int)( body->angle + 90 ) % 360;
 			body->vel = 1;
 		} else {
 			// player->grabbing = 0;

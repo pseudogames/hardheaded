@@ -4,7 +4,8 @@ ifdef WIN
   PREFIX=/tmp/mxe/usr/i686-pc-mingw32/
   CFLAGS=`$(SDLCONFIG) --cflags` -Iincludes -I$(PREFIX)/include -O3 -DRELEASE
   LDFLAGS=-static
-  LIBS=-lSDL_ttf -lfreetype -lSDL_gfx -lSDL_image -ljpeg -lpng -lSDL_mixer -lvorbisfile -lvorbis -logg -lmikmod -lmodplug -lsmpeg -lbz2 -lz -lstdc++ `$(SDLCONFIG) --libs` -mconsole
+  LIBS=-lSDL_ttf -lfreetype -lSDL_gfx -lSDL_image -ljpeg -lpng -lSDL_mixer -lvorbisfile -lvorbis -logg -lmodplug -lsmpeg -lbz2 -lz -lstdc++ `$(SDLCONFIG) --libs` -mconsole
+  # LIBS=-lSDL_ttf -lfreetype -lSDL_gfx -lSDL_image -ljpeg -lpng -lSDL_mixer -lvorbisfile -lvorbis -logg -lmikmod -lmodplug -lsmpeg -lbz2 -lz -lstdc++ `$(SDLCONFIG) --libs` -mconsole
   OUTPUT=hardheaded.exe
 else
   CC=gcc
@@ -13,7 +14,7 @@ else
   OUTPUT=hardheaded
 endif
 
-OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o config.o
+OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o config.o iniparser/src/dictionary.o iniparser/src/iniparser.o
 
 INCS=\
 data/14heart_small.h \
@@ -60,26 +61,22 @@ data/zombie_3.h
 all: $(OUTPUT)
 
 clean:
-	rm -fv hardheaded hardheaded.exe *.o .depend gmon.out keys.ini
-	make -C iniparser veryclean
+	rm -fv hardheaded hardheaded.exe $(OBJS) .depend gmon.out keys.ini
 	make -C data clean
 
 $(INCS):
 	make -C data
 
-iniparser/libiniparser.a:
-	make -C iniparser
-
-depend: .depend
+delend: .depend
 
 .depend: $(patsubst %.o,%.c,$(OBJS)) | $(INCS)
-	$(CC) $(CFLAGS) -MM $^ > .depend
+	$(CC) $(CFLAGS) -MM $^ > $@
 
 ifneq ($(MAKECMDGOALS),clean)
 -include .depend
 endif
 
-$(OUTPUT): $(OBJS) iniparser/libiniparser.a | $(INCS)
+$(OUTPUT): $(OBJS) | $(INCS)
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 	mkdir -p HardHeaded.app/Contents/MacOS/
 	cp -fv $@ HardHeaded.app/Contents/MacOS/HardHeaded

@@ -81,4 +81,6 @@ endif
 
 $(OUTPUT): $(OBJS) iniparser/libiniparser.a | $(INCS)
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+	mkdir -p HardHeaded.app/Contents/MacOS/
+	cp -fv $@ HardHeaded.app/Contents/MacOS/HardHeaded
 

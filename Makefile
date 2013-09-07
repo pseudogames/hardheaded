@@ -10,7 +10,9 @@ ifdef WIN
 else
   CC=gcc
   CFLAGS=`sdl-config --cflags` -Iincludes -ggdb #-pg
-  LIBS=`sdl-config --libs` -L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf -lm # -pg
+  LFDLAGS=-static 
+  # LIBS=-L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf `sdl-config --libs` -lm # -pg # linux
+  LIBS=-L/opt/local/lib /opt/local/lib/libSDL_ttf.a /opt/local/lib/libfreetype.a /opt/local/lib/libSDL_gfx.a /opt/local/lib/libSDL_image.a /opt/local/lib/libjpeg.a /opt/local/lib/libpng.a /opt/local/lib/libSDL_mixer.a /opt/local/lib/libvorbisfile.a /opt/local/lib/libvorbis.a /opt/local/lib/libogg.a /opt/local/lib/libmikmod.a /opt/local/lib/libflac.a /opt/local/lib/libsmpeg.a /opt/local/lib/libbz2.a /opt/local/lib/libz.a -lstdc++ `sdl-config --static-libs` -mconsole # mac
   OUTPUT=hardheaded
 endif
 
@@ -61,7 +63,7 @@ data/zombie_3.h
 all: $(OUTPUT)
 
 clean:
-	rm -fv hardheaded hardheaded.exe $(OBJS) .depend gmon.out keys.ini
+	rm -fv hardheaded hardheaded.exe $(OBJS) .depend gmon.out keys.ini HardHeaded.app/Contents/MacOS/HardHeaded
 	make -C data clean
 
 $(INCS):

@@ -1,7 +1,7 @@
 ifdef WIN
-  export CC=/tmp/mxe/usr/bin/i686-pc-mingw32-gcc
-  SDLCONFIG=/tmp/mxe/usr/bin/i686-pc-mingw32-sdl-config
-  PREFIX=/tmp/mxe/usr/i686-pc-mingw32/
+  export CC=~/mxe/usr/bin/i686-pc-mingw32-gcc
+  SDLCONFIG=~/mxe/usr/i686-pc-mingw32/bin/sdl-config
+  PREFIX=~/mxe/usr/i686-pc-mingw32/
   CFLAGS=`$(SDLCONFIG) --cflags` -Iincludes -I$(PREFIX)/include -O3 -DRELEASE
   LDFLAGS=-static
   LIBS=-lSDL_ttf -lfreetype -lSDL_gfx -lSDL_image -ljpeg -lpng -lSDL_mixer -lvorbisfile -lvorbis -logg -lmodplug -lsmpeg -lbz2 -lz -lstdc++ `$(SDLCONFIG) --libs` -mconsole
@@ -9,16 +9,15 @@ ifdef WIN
   OUTPUT=hardheaded.exe
 else
   CC=gcc
-
-  #ref: -I/Library/Frameworks/SDL.framework/Headers SDLmain.m -framework SDL -framework Cocoa
-  #ref: -L/opt/local/lib /opt/local/lib/libSDLmain.a -Wl,-framework,AppKit /opt/local/lib/libSDL.a -L/opt/local/lib -lX11 -lXext -lXrandr -lXrender -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit
-
-  CFLAGS=-I/Library/Frameworks/SDL.framework/Headers `sdl-config --cflags` -Iincludes -ggdb -force_cpusubtype_ALL -mmacosx-version-min=10.4 #-pg
   LFDLAGS=-static 
-  # LIBS=-L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf `sdl-config --libs` -lm # -pg # linux
-  # LIBS=-L/opt/local/lib /opt/local/lib/libSDL_ttf.a /opt/local/lib/libfreetype.a /opt/local/lib/libSDL_gfx.a /opt/local/lib/libSDL_image.a /opt/local/lib/libjpeg.a /opt/local/lib/libpng.a /opt/local/lib/libSDL_mixer.a /opt/local/lib/libvorbisfile.a /opt/local/lib/libvorbis.a /opt/local/lib/libogg.a /opt/local/lib/libmikmod.a /opt/local/lib/libflac.a /opt/local/lib/libsmpeg.a /opt/local/lib/libbz2.a /opt/local/lib/libz.a -lstdc++ `sdl-config --static-libs` -mconsole # macports
-  LIBS=-I/Library/Frameworks/SDL.framework/Headers -L/opt/local/lib /opt/local/lib/libSDL_ttf.a /opt/local/lib/libfreetype.a /opt/local/lib/libSDL_gfx.a /opt/local/lib/libSDL_image.a /opt/local/lib/libjpeg.a /opt/local/lib/libpng.a /opt/local/lib/libSDL_mixer.a /opt/local/lib/libvorbisfile.a /opt/local/lib/libvorbis.a /opt/local/lib/libogg.a /opt/local/lib/libmikmod.a /opt/local/lib/libflac.a /opt/local/lib/libsmpeg.a /opt/local/lib/libbz2.a /opt/local/lib/libz.a -lstdc++ SDLmain.m -framework SDL -framework Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit # mac
+  CFLAGS=`sdl-config --cflags` -Iincludes -ggdb #-pg
   OUTPUT=hardheaded
+ifdef MAC
+  CFLAGS += -I/Library/Frameworks/SDL.framework/Headers -force_cpusubtype_ALL -mmacosx-version-min=10.4
+  LIBS=-I/Library/Frameworks/SDL.framework/Headers -L/opt/local/lib /opt/local/lib/libSDL_ttf.a /opt/local/lib/libfreetype.a /opt/local/lib/libSDL_gfx.a /opt/local/lib/libSDL_image.a /opt/local/lib/libjpeg.a /opt/local/lib/libpng.a /opt/local/lib/libSDL_mixer.a /opt/local/lib/libvorbisfile.a /opt/local/lib/libvorbis.a /opt/local/lib/libogg.a /opt/local/lib/libmikmod.a /opt/local/lib/libflac.a /opt/local/lib/libsmpeg.a /opt/local/lib/libbz2.a /opt/local/lib/libz.a -lstdc++ SDLmain.m -framework SDL -framework Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit
+else # linux
+  LIBS=-L/opt/local/lib -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lSDL_ttf `sdl-config --libs` -lm # -pg
+endif
 endif
 
 OBJS=hardheaded.o render.o keyboard.o font.o menu.o gameplay.o sprite.o movement.o aStarLibrary.o sound.o config.o iniparser/src/dictionary.o iniparser/src/iniparser.o
@@ -63,7 +62,7 @@ data/zombie_1.h \
 data/zombie_2.h \
 data/zombie_3.h
 
-.PHONY: all clean depend
+.PHONY: all clean depend mac win
 
 all: $(OUTPUT)
 
@@ -84,7 +83,15 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 
 $(OUTPUT): $(OBJS) | $(INCS)
+	echo bb $(TARGET) $(CC)
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+
+win:
+	echo aa $(TARGET) $(CC)
+	make WIN=1
+
+mac:
+	make MAC=1
 	mkdir -p HardHeaded.app/Contents/MacOS/
 	cp -fv $@ HardHeaded.app/Contents/MacOS/HardHeaded
 	# mkdir -p HardHeaded.app/Contents/Frameworks/

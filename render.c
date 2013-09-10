@@ -22,6 +22,8 @@
 #include "data/indiana.h"
 #include "data/arrows.h"
 
+#include "data/icon.h"
+
 
 
 SDL_Color red = {0xAA, 0X55, 0x00};
@@ -212,12 +214,19 @@ void renderBody(App *app, Body *body){
 	SDL_BlitSurface(body->sprite->rotated, &src, app->screen, &dest);
 }
 
+
 void renderInit(App *app){
+
+	
   app->screen = SDL_SetVideoMode(1024, 768, 32, SDL_HWSURFACE |SDL_DOUBLEBUF
 #if RELEASE
 		  |SDL_FULLSCREEN
 #endif
   );
+
+  SDL_WM_SetIcon(IMG_Load_RW(SDL_RWFromConstMem(icon_png, icon_png_len), 0), NULL);
+  SDL_WM_SetCaption("HardHeaded", "HardHeaded");
+
   app->blood =              IMG_Load_RW(SDL_RWFromConstMem(blood_png,            blood_png_len),           0);
   app->logo =               IMG_Load_RW(SDL_RWFromConstMem(logo_png,             logo_png_len),            0);
   app->menu.indiana =       IMG_Load_RW(SDL_RWFromConstMem(indy_idol_png,        indy_idol_png_len),       0);

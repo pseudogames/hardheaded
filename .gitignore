@@ -35,3 +35,6 @@ keys.ini
 *.so
 *.a
 hardheaded.exe
+HardHeaded.app/Contents/MacOS/HardHeaded
+*.zip
+tmp

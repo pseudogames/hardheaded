@@ -98,6 +98,9 @@ void bindKeyboard(App *app){
 	SDL_Event event;
 	while(SDL_PollEvent(&event)){
 		switch(event.type) {
+			case SDL_QUIT:
+				app->state = STATE_EXIT;
+				break;
 			case SDL_KEYDOWN:
 				if(app->state == STATE_MENU || app->state == STATE_PAUSED || app->credits){
 					bindMenuKeys(app, &event.key.keysym.sym);

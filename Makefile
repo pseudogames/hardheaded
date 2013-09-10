@@ -93,7 +93,7 @@ win:
 mac:
 	make MAC=1
 	mkdir -p HardHeaded.app/Contents/MacOS/
-	cp -fv $@ HardHeaded.app/Contents/MacOS/HardHeaded
+	cp -fv $(OUTPUT) HardHeaded.app/Contents/MacOS/HardHeaded
 	# mkdir -p HardHeaded.app/Contents/Frameworks/
 	# cp -Rv /Library/Frameworks/SDL.framework HardHeaded.app/Contents/Frameworks/
 	install_name_tool -change @rpath/SDL.framework/Versions/A/SDL @executable_path/../Frameworks/SDL.framework/Versions/A/SDL HardHeaded.app/Contents/MacOS/HardHeaded

@@ -38,3 +38,4 @@ hardheaded.exe
 HardHeaded.app/Contents/MacOS/HardHeaded
 *.zip
 tmp
+SDL.framework-*

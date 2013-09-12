@@ -34,8 +34,9 @@ void renderMenu(App *app){
 	SDL_Rect highlightChar = {-600, -450, screen->w, screen->h};
 	SDL_BlitSurface(menu->indiana, &highlightChar, screen, NULL);
 
-	SDL_Rect logoPos = {-450, -650, screen->w, screen->h};
-	SDL_BlitSurface(app->logo, &logoPos, screen, NULL);
+	text_write_raw(screen, 380, 720, "pseudogames.com", black, 20);
+	SDL_Rect logoPos = {450, 650, 0,0};
+	SDL_BlitSurface(app->logo, NULL, screen, &logoPos);
 
 	int resumePadding = 0;
 

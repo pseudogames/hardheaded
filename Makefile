@@ -85,10 +85,12 @@ endif
 $(OUTPUT): $(OBJS) | $(INCS)
 	echo bb $(TARGET) $(CC)
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+	cp -nv keys.ini.example.txt keys.ini
 
 win:
 	echo aa $(TARGET) $(CC)
 	make WIN=1
+	cd ../ && zip -r9 hardheaded/hardheaded-windows.zip hardheaded/hardheaded.exe hardheaded/keys.ini
 
 # http://www.libsdl.org/download-1.2.php#SDL-1.2.15-OSX10.4.dmg 
 
@@ -99,6 +101,5 @@ mac:
 	# mkdir -p HardHeaded.app/Contents/Frameworks/
 	# cp -Rv /Library/Frameworks/SDL.framework HardHeaded.app/Contents/Frameworks/
 	install_name_tool -change @rpath/SDL.framework/Versions/A/SDL @executable_path/../Frameworks/SDL.framework/Versions/A/SDL HardHeaded.app/Contents/MacOS/HardHeaded
-	cp -nv keys.ini.example.txt keys.ini
 	cd ../ && zip -r9 hardheaded/hardheaded-macosx.zip hardheaded/HardHeaded.app hardheaded/keys.ini
 

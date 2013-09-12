@@ -55,6 +55,7 @@ void playSound(Mix_Chunk *sound){
 }
 
 void loadSFX(){
+	int i;
   indy_die_ptr  = Mix_LoadWAV_RW(SDL_RWFromConstMem(wilhelm_scream_ogg, wilhelm_scream_ogg_len),0);
   allan_die_ptr = Mix_LoadWAV_RW(SDL_RWFromConstMem(howie_scream_ogg  , howie_scream_ogg_len),0);
   bite_ptr= Mix_LoadWAV_RW(SDL_RWFromConstMem(bite_ogg  , bite_ogg_len),0);
@@ -67,9 +68,9 @@ void loadSFX(){
   attack_ptr[2] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_3_ogg        , whip_3_ogg_len),0);
   attack_ptr[3] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_4_ogg        , whip_4_ogg_len),0);
   attack_ptr[4] = Mix_LoadWAV_RW(SDL_RWFromConstMem(whip_5_ogg        , whip_5_ogg_len),0);
-  wave_ptr[1] = Mix_LoadWAV_RW(SDL_RWFromConstMem(zombie_1_ogg        , zombie_1_ogg_len),0);
-  wave_ptr[2] = Mix_LoadWAV_RW(SDL_RWFromConstMem(zombie_2_ogg        , zombie_2_ogg_len),0);
-  wave_ptr[3] = Mix_LoadWAV_RW(SDL_RWFromConstMem(zombie_3_ogg        , zombie_3_ogg_len),0);
+  wave_ptr[0] = Mix_LoadWAV_RW(SDL_RWFromConstMem(zombie_1_ogg        , zombie_1_ogg_len),0);
+  wave_ptr[1] = Mix_LoadWAV_RW(SDL_RWFromConstMem(zombie_2_ogg        , zombie_2_ogg_len),0);
+  wave_ptr[2] = Mix_LoadWAV_RW(SDL_RWFromConstMem(zombie_3_ogg        , zombie_3_ogg_len),0);
 }
 
 void playIndyDeath(){

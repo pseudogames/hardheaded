@@ -1,18 +1,18 @@
 
 [player1]
 start = escape
-up = "e"
-down = d
-left = s
-right = f
-attack = left shift
+up = w
+down = s
+left = a
+right = d
+attack = left alt
 
 [player2]
 start = escape
-up = home
-down = end
-left = delete
-right = page down
+up = up
+down = down
+left = left
+right = right
 attack = right shift
 
 ; available keys:

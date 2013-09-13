@@ -32,13 +32,18 @@ Caso você queira configurar as teclas de acordo com sua preferência basta edit
 ###Build linux:
 O projeto é feito em C com SDL.   
 Caso queira baixar o código fonte no github e buildar no seu computador.    
-As únicas libs do sistema necessárias são as do SDL. 
+As únicas libs do sistema necessárias são as do SDL:
+* SDL
+* SDL_image
+* SDL_ttf
+* SDL_gfx
+* SDL_mixer
 
 # CREDITS
 
 * fonts
-    * <http://www.dafont.com/indiana.font
-    * <http://www.dafont.com/drawing-blood.font
+    * <http://www.dafont.com/indiana.font>
+    * <http://www.dafont.com/drawing-blood.font>
 * enemy
     * <http://i872.photobucket.com/albums/ab289/Mollombo/ZombieSheet.png>
 * players
@@ -48,7 +53,7 @@ As únicas libs do sistema necessárias são as do SDL.
 * tileset
     * <http://www.pyxosoft.com/media/resources/loz_minish_cap/>
 * music
-    * http://www.newgrounds.com/audio/listen/148265
+    * <http://www.newgrounds.com/audio/listen/148265>
 * sfx
     * indy death: wilhem scream: <http://www.freesound.org/people/Syna-Max/sounds/64940/>
     * allan death: howie scream: <http://www.freesound.org/people/M3GAMAN/sounds/197914/>
